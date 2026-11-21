@@ -23,10 +23,31 @@
     { "source": "/en/policies/refunds/", "destination": "/chinh-sach/thanh-toan-hoan-tien/index.html" },
     { "source": "/en/policies/licenses", "destination": "/chinh-sach/giay-phep/index.html" },
     { "source": "/en/policies/licenses/", "destination": "/chinh-sach/giay-phep/index.html" },
+    { "source": "/blog/anh-dang-facebook-bi-lech-mau", "destination": "/gioi-thieu/index.html" },
+    { "source": "/blog/anh-dang-facebook-bi-lech-mau/", "destination": "/gioi-thieu/index.html" },
+    { "source": "/en/blog/photos-look-different-on-facebook", "destination": "/gioi-thieu/index.html" },
+    { "source": "/en/blog/photos-look-different-on-facebook/", "destination": "/gioi-thieu/index.html" },
     { "source": "/v1/t/:file", "destination": "/cache_t/:file" },
     { "source": "/__api/v1/t/:file", "destination": "/cache_t/:file" }
   ],
   "headers": [
+    {
+      "source": "/(native-models\\.json|prep\\.json)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "cross-origin"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300"
+        }
+      ]
+    },
     {
       "source": "/(vendor|hptul|cache_t|fonts)/(.*)",
       "headers": [
