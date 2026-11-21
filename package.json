@@ -1,0 +1,12 @@
+{
+  "name": "devstu-infor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Trang web giới thiệu ứng dụng chỉnh ảnh AI DEVSTU (chuẩn bị deploy Vercel)",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "start": "node scripts/dev-server.mjs"
+  },
+  "author": "ducdoan-04 <ducdoan04.work@gmail.com>"
+}

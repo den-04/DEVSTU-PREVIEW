@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Giới thiệu DEVSTU · Kiến trúc Tauri v2, Rust SIMD &amp; 7 mô hình AI Offline</title>
+  <meta name="description" content="Tìm hiểu về DEVSTU AI Photo Retouching Suite phát triển bởi ducdoan-04 tại Đà Nẵng: kiến trúc Tauri v2, Rust SIMD, ONNX WebGPU và 7 hệ mô hình AI chạy trực tiếp trên thiết bị.">
+  <meta name="theme-color" content="#141416">
+  <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/home.css">
+  <script src="/assets/js/i18n.js" defer></script>
+  <script src="/assets/js/site.js" defer></script>
+  <script src="/assets/js/home.js" defer></script>
+</head>
+<body class="home-app">
+  <a class="skip" href="#noi-dung">Bỏ qua, tới nội dung chính</a>
+  <div class="lp g-root">
+    <nav class="g-nav site-nav" aria-label="Điều hướng chính">
+      <a class="brand" href="/"><img src="/icons/logo-64.png" alt="DEVSTU" width="28" height="28"><span>DEVSTU</span></a>
+      <div class="nav-links g-nav__links">
+        <a href="/#tinh-nang">Tính năng</a>
+        <a href="/#lam-dep-da-ai">AI Retouch</a>
+        <a href="/bang-gia/">Bảng giá</a>
+        <a href="/tai-xuong/">Tải xuống</a>
+        <a href="/gioi-thieu/" aria-current="page">Giới thiệu</a>
+        <a href="/chinh-sach/">Chính sách</a>
+      </div>
+      <div class="right">
+        <details class="lang-dd">
+          <summary aria-label="Chọn ngôn ngữ">
+            <svg class="lang-dd__globe" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a13.5 13.5 0 0 1 0 18M12 3a13.5 13.5 0 0 0 0 18"></path></svg>
+            <span data-lang-code>VI</span>
+            <svg class="lang-dd__chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+          </summary>
+          <div class="lang-dd__menu" role="menu" aria-label="Ngôn ngữ">
+            <button type="button" role="menuitemradio" data-set-lang="vi" aria-current="true"><span>Tiếng Việt</span><small>Vietnamese</small></button>
+            <button type="button" role="menuitemradio" data-set-lang="en" aria-current="false"><span>English</span><small>English</small></button>
+          </div>
+        </details>
+        <a class="g-btn g-btn--primary g-btn--sm" href="/tai-xuong/">Tải app</a>
+        <button type="button" class="menu-btn" aria-controls="mobile-menu" aria-expanded="false" aria-label="Mở menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+      </div>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <a href="/#tinh-nang">Tính năng</a>
+      <a href="/#lam-dep-da-ai">AI Retouch</a>
+      <a href="/bang-gia/">Bảng giá</a>
+      <a href="/tai-xuong/">Tải xuống</a>
+      <a href="/gioi-thieu/">Giới thiệu</a>
+      <a href="/chinh-sach/">Chính sách</a>
+      <p class="mm-lang">Ngôn ngữ</p>
+      <div class="mm-langs">
+        <button type="button" data-set-lang="vi" aria-current="true">Tiếng Việt</button>
+        <button type="button" data-set-lang="en" aria-current="false">English</button>
+      </div>
+    </div>
+
+    <main id="noi-dung">
+      <div class="hm" id="hm" lang="vi">
+        <section class="hm-pr-hero" aria-labelledby="hm-h1">
+          <div class="hm-wrap hm-stepsec">
+            <div>
+              <span class="hm-tier hm-tier--cyan" style="margin:0 0 12px">Về dự án DEVSTU</span>
+              <h1 id="hm-h1">DEVSTU — AI Photo Retouching Suite</h1>
+              <p class="hm-lead hm-pr-lead">Bộ ứng dụng xử lý và phục dựng ảnh chuyên nghiệp chạy hoàn toàn trên thiết bị (On-Device / Offline Suite), được xây dựng bởi <strong>ducdoan-04</strong> tại Đà Nẵng, Việt Nam.</p>
+              <blockquote class="hm-ab-quote">“Làm sao xử lý trọn bộ ảnh cưới, chân dung RAW 16-bit bằng AI chất lượng studio mà không phải tải ảnh lên mây hay trả credit cho từng tấm xuất ra?”</blockquote>
+            </div>
+            <figure style="justify-self:center;max-width:340px" data-rv>
+              <img src="/icons/logo2.png" alt="Biểu tượng DEVSTU" style="border-radius:42px;box-shadow:0 24px 70px rgba(14,165,233,.25)">
+            </figure>
+          </div>
+        </section>
+
+        <section class="hm-sec hm-sec--2" aria-labelledby="hm-stack">
+          <div class="hm-wrap">
+            <h2 id="hm-stack" data-rv>Kiến trúc Công nghệ &amp; 7 hệ mô hình AI</h2>
+            <div class="hm-pr-ways" data-rv>
+              <div>
+                <h3>Rust Tauri v2 &amp; Embedded Server</h3>
+                <p>Đóng gói native siêu nhẹ tích hợp Edge WebView2, máy chủ HTTP nội bộ viết bằng Rust (&lt;10 MB RAM) hỗ trợ đầy đủ COOP/COEP cho SharedArrayBuffer &amp; WebGPU.</p>
+              </div>
+              <div>
+                <h3>Rust SIMD Engine &amp; Oklab</h3>
+                <p>Nhân xử lý ảnh đa luồng SIMD cho STU Ultra kết hợp đường ống màu chuẩn công nghiệp Oklab/OKLCH, đường cong RGB, 8 kênh HSL và 111 LUT.</p>
+              </div>
+              <div>
+                <h3>LibRaw 16-bit &amp; libheif</h3>
+                <p>Giải mã trực tiếp tệp RAW Sony ARW, Canon CR2/CR3, Nikon NEF, Fuji RAF và HEIC iPhone ngay trên máy client bằng WebAssembly.</p>
+              </div>
+              <div>
+                <h3>BiRefNet Lite &amp; MODNet</h3>
+                <p>Tách nền và chọn chủ thể độ phân giải cao 1024×1024 giữ từng sợi tóc bay, cùng chế độ tách nhanh 6.6 MB cho ảnh thẻ &amp; studio.</p>
+              </div>
+              <div>
+                <h3>LaMa, Depth v2 &amp; SCUNet</h3>
+                <p>LaMa Inpainting xoá vật thể 512×512, Depth Anything v2 tạo bản đồ độ sâu bokeh quang học, và SCUNet khử nhiễu ISO cao ảnh RAW.</p>
+              </div>
+              <div>
+                <h3>6 mô hình U-Net Skin AI &amp; MediaPipe</h3>
+                <p>Gồm <code>da-retouch-v1</code>, <code>ranh-cuoi-v1</code>, <code>tao-khoi-v1</code>, <code>da-than-v1</code>, <code>ao-retouch-v1</code>, <code>toc-retouch-v1</code> kết hợp MediaPipe 478 điểm mốc khuôn mặt.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="hm-final">
+          <div class="hm-wrap">
+            <div class="hm-drop" data-rv>
+              <h2>Liên hệ &amp; hợp tác</h2>
+              <p>Tác giả: <strong>ducdoan-04</strong> · Đà Nẵng, Việt Nam · Email: <a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a></p>
+              <div class="hm-ctas">
+                <a class="hm-btn" href="/tai-xuong/">Tải app DEVSTU</a>
+                <a class="hm-btn hm-btn--ghost" href="/">Về trang chủ</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="g-footer site-footer">
+      <div style="max-width: 1180px; margin: 0 auto">
+        <div class="top">
+          <div class="by"><span>Phát triển bởi</span><a href="/gioi-thieu/"><img src="/icons/logo-64.png" alt="DEVSTU" width="24" height="24"><span>DEVSTU · ducdoan-04</span></a></div>
+          <div class="lang-foot"><button type="button" class="on" data-set-lang="vi" aria-current="true">Tiếng Việt</button><span aria-hidden="true">·</span><button type="button" data-set-lang="en" aria-current="false">English</button></div>
+        </div>
+        <div class="g-footer__cols">
+          <div>
+            <h4>DEVSTU</h4>
+            <ul>
+              <li><a href="/#tinh-nang">Tính năng</a></li>
+              <li><a href="/#lam-dep-da-ai">Làm đẹp da AI</a></li>
+              <li><a href="/bang-gia/">Bảng giá</a></li>
+              <li><a href="/tai-xuong/">Tải xuống</a></li>
+              <li><a href="/gioi-thieu/">Giới thiệu DEVSTU</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Công nghệ AI</h4>
+            <ul>
+              <li><a href="/#xoa-vat-the">LaMa Xoá vật thể</a></li>
+              <li><a href="/#xoa-vat-the">Depth Anything v2 Bokeh</a></li>
+              <li><a href="/#chan-dung">U-Net Skin AI &amp; STU Ultra</a></li>
+              <li><a href="/#rieng-tu">Kiến trúc Rust + WebGPU</a></li>
+              <li><a href="/tai-xuong/#cau-hinh">Kiểm tra cấu hình máy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Chính sách</h4>
+            <ul>
+              <li><a href="/chinh-sach/bao-mat/">Chính sách bảo mật</a></li>
+              <li><a href="/chinh-sach/dieu-khoan/">Điều khoản sử dụng</a></li>
+              <li><a href="/chinh-sach/cookie/">Chính sách cookie</a></li>
+              <li><a href="/chinh-sach/thanh-toan-hoan-tien/">Thanh toán và hoàn tiền</a></li>
+              <li><a href="/chinh-sach/giay-phep/">Giấy phép phần mềm</a></li>
+              <li><button type="button" class="ft-btn" data-cookie-open>Cài đặt cookie</button></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Liên hệ</h4>
+            <ul>
+              <li><a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a></li>
+              <li><a href="/gioi-thieu/">Tác giả: ducdoan-04</a></li>
+              <li><a href="/tai-xuong/">Hỗ trợ cài đặt Windows</a></li>
+              <li><a href="/#hoi-dap">Câu hỏi thường gặp</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="contact">DEVSTU — AI Photo Retouching Suite · Đà Nẵng, Việt Nam · <a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a></p>
+        <p class="g-footer__legal">© 2026 DEVSTU. Ảnh của bạn luôn được xử lý cục bộ trên thiết bị của bạn.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tải DEVSTU cho Windows &amp; Kiểm tra cấu hình máy</title>
+  <meta name="description" content="Tải ứng dụng chỉnh ảnh AI DEVSTU Desktop (Tauri v2 · Rust SIMD + WebGPU) cho Windows 10/11 và kiểm tra tốc độ GPU/CPU trực tiếp trên trình duyệt.">
+  <meta name="theme-color" content="#141416">
+  <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/home.css">
+  <script src="/assets/js/i18n.js" defer></script>
+  <script src="/assets/js/site.js" defer></script>
+  <script src="/assets/js/home.js" defer></script>
+</head>
+<body class="home-app">
+  <a class="skip" href="#noi-dung">Bỏ qua, tới nội dung chính</a>
+  <div class="lp g-root">
+    <nav class="g-nav site-nav" aria-label="Điều hướng chính">
+      <a class="brand" href="/"><img src="/icons/logo-64.png" alt="DEVSTU" width="28" height="28"><span>DEVSTU</span></a>
+      <div class="nav-links g-nav__links">
+        <a href="/#tinh-nang">Tính năng</a>
+        <a href="/#lam-dep-da-ai">AI Retouch</a>
+        <a href="/bang-gia/">Bảng giá</a>
+        <a href="/tai-xuong/" aria-current="page">Tải xuống</a>
+        <a href="/gioi-thieu/">Giới thiệu</a>
+        <a href="/chinh-sach/">Chính sách</a>
+      </div>
+      <div class="right">
+        <details class="lang-dd">
+          <summary aria-label="Chọn ngôn ngữ">
+            <svg class="lang-dd__globe" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a13.5 13.5 0 0 1 0 18M12 3a13.5 13.5 0 0 0 0 18"></path></svg>
+            <span data-lang-code>VI</span>
+            <svg class="lang-dd__chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+          </summary>
+          <div class="lang-dd__menu" role="menu" aria-label="Ngôn ngữ">
+            <button type="button" role="menuitemradio" data-set-lang="vi" aria-current="true"><span>Tiếng Việt</span><small>Vietnamese</small></button>
+            <button type="button" role="menuitemradio" data-set-lang="en" aria-current="false"><span>English</span><small>English</small></button>
+          </div>
+        </details>
+        <a class="g-btn g-btn--primary g-btn--sm" href="#tai-app">Tải app</a>
+        <button type="button" class="menu-btn" aria-controls="mobile-menu" aria-expanded="false" aria-label="Mở menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+      </div>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <a href="/#tinh-nang">Tính năng</a>
+      <a href="/#lam-dep-da-ai">AI Retouch</a>
+      <a href="/bang-gia/">Bảng giá</a>
+      <a href="/tai-xuong/">Tải xuống</a>
+      <a href="/gioi-thieu/">Giới thiệu</a>
+      <a href="/chinh-sach/">Chính sách</a>
+      <p class="mm-lang">Ngôn ngữ</p>
+      <div class="mm-langs">
+        <button type="button" data-set-lang="vi" aria-current="true">Tiếng Việt</button>
+        <button type="button" data-set-lang="en" aria-current="false">English</button>
+      </div>
+    </div>
+
+    <main id="noi-dung">
+      <div class="hm" id="hm" lang="vi">
+        <section class="hm-get-hero" aria-labelledby="hm-h1">
+          <div class="hm-wrap">
+            <h1 id="hm-h1">Tải DEVSTU Desktop</h1>
+            <p class="hm-lead hm-pr-lead">Đóng gói bằng Rust Tauri v2, tích hợp sẵn bộ công cụ AI chạy offline 100% (BiRefNet, LaMa, Depth v2, MediaPipe, SCUNet, U-Net Skin AI) và Rust SIMD Engine.</p>
+
+            <div class="hm-get-pick" id="tai-app" data-get-pick data-rv>
+              <div class="hm-get-card" data-os="win">
+                <span class="hm-get-rec" hidden>Hợp với máy này</span>
+                <svg class="hm-get-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h17a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-17a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM9 21h6M12 17v4"></path></svg>
+                <h2>Windows (Desktop Suite)</h2>
+                <p class="hm-get-sub">Windows 10, 11 (64-bit) · Tauri v2 + WebView2 + Rust SIMD + WebGPU</p>
+                <a class="hm-btn" href="https://drive.google.com/drive/folders/1wb_3PVQC3E1NNf6-V95L05esmXixaX0Y?usp=sharing" target="_blank" rel="noopener noreferrer" data-get="win">
+                  <svg class="hm-btn__ic" viewBox="0 0 24 24"><path d="M12 4v10M7.5 9.5 12 14l4.5-4.5M5 19h14"></path></svg>
+                  Tải DEVSTU cho Windows
+                </a>
+                <p class="hm-get-meta">Google Drive · DEVSTU.exe v1.0.0 · Chạy trực tiếp offline</p>
+              </div>
+
+              <div class="hm-get-card" data-os="mac">
+                <span class="hm-get-rec" hidden>Hợp với máy này</span>
+                <svg class="hm-get-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14a1 1 0 0 1 1 1V16H4V6.5a1 1 0 0 1 1-1zM2 16h20l-1 2.5H3z"></path></svg>
+                <h2>Trọn bộ Offline &amp; AI Models</h2>
+                <p class="hm-get-sub">Tải toàn bộ gói cài đặt kèm thư mục <code>vendor/</code> AI models trực tiếp từ Google Drive</p>
+                <a class="hm-btn hm-btn--ghost" href="https://drive.google.com/drive/folders/1wb_3PVQC3E1NNf6-V95L05esmXixaX0Y?usp=sharing" target="_blank" rel="noopener noreferrer">Mở thư mục tải Google Drive</a>
+                <p class="hm-get-meta">Cần hỗ trợ cài đặt? Liên hệ <a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Installer Guide Dialog -->
+        <dialog class="hm-get-dlg" data-dlg="win" data-file="DEVSTU (Google Drive)" aria-labelledby="hm-dlg-win">
+          <div class="hm-get-dlg__in">
+            <div class="hm-get-dlg__head">
+              <h2 id="hm-dlg-win">Hướng dẫn tải &amp; cài đặt DEVSTU</h2>
+              <button type="button" class="hm-get-x" data-close aria-label="Đóng"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+            </div>
+            <div class="hm-get-prog" data-prog>
+              <div class="hm-get-prog__row">
+                <b data-st>Đang mở thư mục tải DEVSTU trên Google Drive…</b>
+                <span data-pc>100 %</span>
+              </div>
+              <div class="hm-get-bar"><span data-fill style="width:100%"></span></div>
+              <p class="hm-note" style="margin-top:10px">Nếu trình duyệt chưa tự mở tab mới, bấm trực tiếp vào đây: <a href="https://drive.google.com/drive/folders/1wb_3PVQC3E1NNf6-V95L05esmXixaX0Y?usp=sharing" target="_blank" rel="noopener noreferrer"><strong>Mở thư mục tải DEVSTU trên Google Drive →</strong></a></p>
+            </div>
+            <ol class="hm-get-steps">
+              <li><h4>Giải nén thư mục DEVSTU</h4><p>Đảm bảo giữ nguyên tệp <code>DEVSTU.exe</code> cùng các thư mục <code>vendor/</code>, <code>assets/</code>, <code>icons/</code>, <code>fonts/</code> và <code>cache_t/</code>.</p></li>
+              <li><h4>Nếu Windows SmartScreen hiện cảnh báo</h4><p>Bấm <strong>Thông tin thêm (More info)</strong> → <strong>Vẫn chạy (Run anyway)</strong>. Ứng dụng không yêu cầu quyền Administrator.</p></li>
+              <li><h4>Khởi chạy &amp; sử dụng offline 100%</h4><p>Màn khởi động tự nạp máy chủ Rust nội bộ (&lt;10MB RAM) trong 5 giây và mở ngay giao diện chính ở chế độ WebGPU.</p></li>
+            </ol>
+          </div>
+        </dialog>
+
+        <!-- Hardware Requirements & Live WebGL 2 + CPU Benchmark -->
+        <section class="hm-sec hm-sec--2" id="cau-hinh" aria-labelledby="hm-get-req">
+          <div class="hm-wrap hm-get-reqwrap">
+            <div data-rv>
+              <h2 id="hm-get-req">Cấu hình máy</h2>
+              <p class="hm-lead" style="margin-top:16px">DEVSTU tận dụng WebGPU, WebGL 2 và Rust SIMD đa luồng. Bấm nút bên dưới để đo trực tiếp hiệu năng GPU và CPU của máy bạn ngay trên trình duyệt.</p>
+              <div class="hm-mc" data-mc hidden>
+                <button type="button" class="hm-btn" data-mc-go>Kiểm tra máy này</button>
+                <div class="hm-mc__out" data-mc-out aria-live="polite" hidden></div>
+              </div>
+            </div>
+
+            <dl class="hm-get-req" data-rv>
+              <div><dt>Hệ điều hành</dt><dd>Windows 10 / 11 (64-bit), tích hợp Microsoft Edge WebView2 (có sẵn trên Windows 11).</dd></div>
+              <div><dt>Cấu hình tối thiểu</dt><dd>CPU 4 luồng, RAM 8 GB, card đồ hoạ tích hợp hỗ trợ WebGL 2. Chỉnh RAW &amp; màu Oklab ổn định; mô hình AI chạy qua WASM SIMD.</dd></div>
+              <div><dt>Khuyên dùng (Mượt mà)</dt><dd>CPU từ 6 luồng, RAM 16 GB, ổ cứng SSD NVMe, card đồ hoạ tích hợp đời mới hoặc card rời. Kéo thanh trượt, tách tần số và đồng bộ hàng trăm ảnh mượt tức thì.</dd></div>
+              <div><dt>Tối ưu AI tốc độ cao</dt><dd>Card đồ hoạ rời hỗ trợ WebGPU (NVIDIA RTX 3060 / 4060 trở lên, VRAM ≥ 8 GB), RAM 16–32 GB cho tốc độ BiRefNet, LaMa, SCUNet và U-Net Skin AI dưới 1 giây.</dd></div>
+              <div><dt>Dung lượng ổ đĩa</dt><dd>Khoảng 500 MB – 1.2 GB cho trọn bộ mô hình AI chạy offline (không cần tải lại khi mất mạng).</dd></div>
+            </dl>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="g-footer site-footer">
+      <div style="max-width: 1180px; margin: 0 auto">
+        <div class="top">
+          <div class="by"><span>Phát triển bởi</span><a href="/gioi-thieu/"><img src="/icons/logo-64.png" alt="DEVSTU" width="24" height="24"><span>DEVSTU · ducdoan-04</span></a></div>
+          <div class="lang-foot"><button type="button" class="on" data-set-lang="vi" aria-current="true">Tiếng Việt</button><span aria-hidden="true">·</span><button type="button" data-set-lang="en" aria-current="false">English</button></div>
+        </div>
+        <div class="g-footer__cols">
+          <div>
+            <h4>DEVSTU</h4>
+            <ul>
+              <li><a href="/#tinh-nang">Tính năng</a></li>
+              <li><a href="/#lam-dep-da-ai">Làm đẹp da AI</a></li>
+              <li><a href="/bang-gia/">Bảng giá</a></li>
+              <li><a href="/tai-xuong/">Tải xuống</a></li>
+              <li><a href="/gioi-thieu/">Giới thiệu DEVSTU</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Công nghệ AI</h4>
+            <ul>
+              <li><a href="/#xoa-vat-the">LaMa Xoá vật thể</a></li>
+              <li><a href="/#xoa-vat-the">Depth Anything v2 Bokeh</a></li>
+              <li><a href="/#chan-dung">U-Net Skin AI &amp; STU Ultra</a></li>
+              <li><a href="/#rieng-tu">Kiến trúc Rust + WebGPU</a></li>
+              <li><a href="/tai-xuong/#cau-hinh">Kiểm tra cấu hình máy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Chính sách</h4>
+            <ul>
+              <li><a href="/chinh-sach/bao-mat/">Chính sách bảo mật</a></li>
+              <li><a href="/chinh-sach/dieu-khoan/">Điều khoản sử dụng</a></li>
+              <li><a href="/chinh-sach/cookie/">Chính sách cookie</a></li>
+              <li><a href="/chinh-sach/thanh-toan-hoan-tien/">Thanh toán và hoàn tiền</a></li>
+              <li><a href="/chinh-sach/giay-phep/">Giấy phép phần mềm</a></li>
+              <li><button type="button" class="ft-btn" data-cookie-open>Cài đặt cookie</button></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Liên hệ</h4>
+            <ul>
+              <li><a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a></li>
+              <li><a href="/gioi-thieu/">Tác giả: ducdoan-04</a></li>
+              <li><a href="/tai-xuong/">Hỗ trợ cài đặt Windows</a></li>
+              <li><a href="/#hoi-dap">Câu hỏi thường gặp</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="contact">DEVSTU — AI Photo Retouching Suite · Đà Nẵng, Việt Nam · <a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a></p>
+        <p class="g-footer__legal">© 2026 DEVSTU. Ảnh của bạn luôn được xử lý cục bộ trên thiết bị của bạn.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
