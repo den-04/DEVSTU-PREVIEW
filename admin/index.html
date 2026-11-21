@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#141416">
+  <title>DEVSTU Admin · Quản lý Tài khoản, Thông báo &amp; Key Premium</title>
+  <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/css/site.css?v=20261121">
+  <link rel="stylesheet" href="/admin/admin.css?v=20261121">
+  <script src="/admin/admin.js?v=20261121" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell g-root">
+    <header class="adm-topbar">
+      <div class="adm-topbar__left">
+        <a class="adm-brand" href="/">
+          <img src="/icons/logo-64.png" alt="DEVSTU" width="28" height="28">
+          <span>DEVSTU</span>
+        </a>
+        <span class="adm-pill adm-pill--blue">Admin Console</span>
+      </div>
+      <div class="adm-topbar__right" id="adm-userbar" hidden>
+        <div class="adm-me">
+          <span class="adm-me__avatar" id="adm-me-avatar">D</span>
+          <div class="adm-me__meta">
+            <strong id="adm-me-name">Admin</strong>
+            <small id="adm-me-email">—</small>
+          </div>
+        </div>
+        <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="adm-refresh-all">Làm mới</button>
+        <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="adm-logout-btn">Đăng xuất</button>
+      </div>
+      <div class="adm-topbar__right" id="adm-guestbar">
+        <a class="adm-btn adm-btn--ghost adm-btn--sm" href="/">Về trang chủ</a>
+      </div>
+    </header>
+
+    <main class="adm-main">
+      <!-- Auth Gate -->
+      <section class="adm-gate" id="adm-login-view" hidden aria-labelledby="adm-login-title">
+        <div class="adm-card adm-gate__card">
+          <div class="adm-gate__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h1 id="adm-login-title">Đăng nhập DEVSTU Admin</h1>
+          <p class="adm-sub">Xác thực trực tiếp qua tài khoản Supabase có quyền <code>admin</code>.</p>
+
+          <button type="button" class="adm-btn adm-btn--google" id="adm-google-btn">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.8-.4-2.8s.2-2 .4-2.8L1.6 6.4C.6 8.1 0 10 0 12s.6 3.9 1.6 5.6l3.7-2.8z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5L1.6 16.1C3.5 20.1 7.4 23 12 23z"/></svg>
+            <span>Tiếp tục với Google</span>
+          </button>
+
+          <div class="adm-divider"><span>hoặc dùng Gmail / Mật khẩu</span></div>
+
+          <div class="adm-auth-tabs" role="tablist" aria-label="Cách đăng nhập">
+            <button type="button" class="adm-auth-tab is-active" data-auth-mode="password">Mật khẩu</button>
+            <button type="button" class="adm-auth-tab" data-auth-mode="otp">Mã OTP 6 số</button>
+          </div>
+
+          <form id="adm-login-form" class="adm-form" novalidate>
+            <label class="adm-field">
+              <span>Gmail / Email Admin</span>
+              <input type="email" id="adm-email-in" placeholder="ducdoan04.work@gmail.com" autocomplete="email" required>
+            </label>
+
+            <label class="adm-field" id="adm-pass-wrap">
+              <span>Mật khẩu</span>
+              <input type="password" id="adm-pass-in" placeholder="Nhập mật khẩu Supabase" autocomplete="current-password">
+            </label>
+
+            <div id="adm-otp-wrap" hidden>
+              <label class="adm-field">
+                <span>Mã OTP 6 số (từ Gmail)</span>
+                <input type="text" id="adm-otp-in" inputmode="numeric" maxlength="10" placeholder="Nhập mã 6 số nếu đã gửi">
+              </label>
+            </div>
+
+            <p class="adm-err" id="adm-auth-err" role="alert" hidden></p>
+
+            <div class="adm-form__actions">
+              <button type="submit" class="adm-btn adm-btn--primary" id="adm-submit-login">Đăng nhập</button>
+              <button type="button" class="adm-btn adm-btn--ghost" id="adm-send-otp-btn" hidden>Gửi mã OTP</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Non-admin or Missing Schema Gate -->
+      <section class="adm-gate" id="adm-denied-view" hidden>
+        <div class="adm-card adm-gate__card adm-gate__card--wide">
+          <div class="adm-gate__icon adm-gate__icon--warn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18.1a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          </div>
+          <h1 id="adm-denied-title">Tài khoản chưa có quyền Admin</h1>
+          <p class="adm-sub" id="adm-denied-desc">Bạn đang đăng nhập bằng tài khoản thường. Hãy chạy câu lệnh dưới đây trong Supabase SQL Editor để cấp quyền quản trị.</p>
+          <div class="adm-codebox">
+            <pre id="adm-denied-sql"></pre>
+            <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="adm-copy-denied-sql">Copy SQL</button>
+          </div>
+          <div class="adm-form__actions">
+            <button type="button" class="adm-btn adm-btn--primary" id="adm-recheck-btn">Kiểm tra lại quyền</button>
+            <button type="button" class="adm-btn adm-btn--ghost" id="adm-denied-logout">Đổi tài khoản</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Admin Console -->
+      <section class="adm-console" id="adm-console-view" hidden>
+        <div class="adm-hero">
+          <div>
+            <h1>Bảng điều khiển DEVSTU</h1>
+            <p class="adm-sub">Quản lý tài khoản người dùng, gửi thông báo realtime trong app và phát hành key kích hoạt Premium.</p>
+          </div>
+          <nav class="adm-navtabs" role="tablist" aria-label="Chức năng quản trị">
+            <button type="button" class="adm-navtab is-active" data-tab="accounts" role="tab" aria-selected="true">
+              Quản lý tài khoản
+              <span class="adm-count" id="tab-cnt-accounts">0</span>
+            </button>
+            <button type="button" class="adm-navtab" data-tab="notifications" role="tab" aria-selected="false">
+              Gửi thông báo
+              <span class="adm-count" id="tab-cnt-notifications">0</span>
+            </button>
+            <button type="button" class="adm-navtab" data-tab="keys" role="tab" aria-selected="false">
+              Trang tạo Key
+              <span class="adm-count" id="tab-cnt-keys">0</span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- KPI Summary Strip -->
+        <div class="adm-stats">
+          <article class="adm-stat">
+            <span class="adm-stat__label">Tổng tài khoản</span>
+            <strong class="adm-stat__val" id="stat-total-users">—</strong>
+            <small class="adm-stat__meta" id="stat-users-meta">Admin · Khoá</small>
+          </article>
+          <article class="adm-stat">
+            <span class="adm-stat__label">Đang dùng Premium</span>
+            <strong class="adm-stat__val" id="stat-premium-users">—</strong>
+            <small class="adm-stat__meta" id="stat-premium-meta">Vĩnh viễn</small>
+          </article>
+          <article class="adm-stat">
+            <span class="adm-stat__label">Key còn hiệu lực</span>
+            <strong class="adm-stat__val" id="stat-active-keys">—</strong>
+            <small class="adm-stat__meta" id="stat-keys-meta">Tổng key · Lượt nhập</small>
+          </article>
+          <article class="adm-stat">
+            <span class="adm-stat__label">Thông báo &amp; Cloud Preset</span>
+            <strong class="adm-stat__val" id="stat-notifications">—</strong>
+            <small class="adm-stat__meta" id="stat-presets-meta">Bộ màu đã đồng bộ</small>
+          </article>
+        </div>
+
+        <!-- TAB 1: ACCOUNTS -->
+        <section class="adm-panel" id="panel-accounts" role="tabpanel">
+          <div class="adm-card">
+            <div class="adm-toolbar">
+              <div class="adm-search">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input type="search" id="acc-search" placeholder="Tìm theo email, tên, mã key, UID…">
+              </div>
+              <div class="adm-chips" id="acc-filters" role="group" aria-label="Lọc tài khoản">
+                <button type="button" class="adm-chip is-active" data-acc-filter="all">Tất cả</button>
+                <button type="button" class="adm-chip" data-acc-filter="premium">Premium</button>
+                <button type="button" class="adm-chip" data-acc-filter="free">Free</button>
+                <button type="button" class="adm-chip" data-acc-filter="google">Google</button>
+                <button type="button" class="adm-chip" data-acc-filter="email">Gmail / OTP</button>
+                <button type="button" class="adm-chip" data-acc-filter="admin">Admin</button>
+                <button type="button" class="adm-chip" data-acc-filter="banned">Đã khoá</button>
+              </div>
+            </div>
+
+            <div class="adm-table-wrap">
+              <table class="adm-table">
+                <thead>
+                  <tr>
+                    <th>Tài khoản</th>
+                    <th>Đăng nhập</th>
+                    <th>Vai trò</th>
+                    <th>Bản quyền / Key</th>
+                    <th>Cloud Preset</th>
+                    <th>Ngày tạo</th>
+                    <th class="is-right">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="acc-tbody">
+                  <tr><td colspan="7" class="adm-empty">Đang tải danh sách tài khoản…</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="adm-panel__foot">
+              <span id="acc-summary" class="adm-muted">0 tài khoản</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: NOTIFICATIONS -->
+        <section class="adm-panel" id="panel-notifications" role="tabpanel" hidden>
+          <div class="adm-split">
+            <div class="adm-card">
+              <h2>Soạn thông báo mới</h2>
+              <p class="adm-sub">Thông báo gửi tại đây sẽ hiện trực tiếp trong nút chuông <strong>Thông báo</strong> của ứng dụng DEVSTU.</p>
+
+              <form id="ntc-form" class="adm-form">
+                <div class="adm-audience-row" role="radiogroup" aria-label="Đối tượng nhận">
+                  <label class="adm-radio-card">
+                    <input type="radio" name="ntc-audience" value="all" checked>
+                    <div>
+                      <strong>Tất cả người dùng (All)</strong>
+                      <small>Gửi toàn hệ thống (kể cả tài khoản mới đăng nhập)</small>
+                    </div>
+                  </label>
+                  <label class="adm-radio-card">
+                    <input type="radio" name="ntc-audience" value="user">
+                    <div>
+                      <strong>1 người dùng cụ thể</strong>
+                      <small>Chỉ hiển thị cho đúng email được chọn</small>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="adm-field" id="ntc-target-wrap" hidden>
+                  <span>Email người nhận</span>
+                  <input type="email" id="ntc-target-email" list="ntc-user-datalist" placeholder="Nhập hoặc chọn email người dùng…">
+                  <datalist id="ntc-user-datalist"></datalist>
+                </div>
+
+                <label class="adm-field">
+                  <span>Tiêu đề thông báo</span>
+                  <input type="text" id="ntc-title" maxlength="140" placeholder="VD: Cập nhật DEVSTU v1.0.5 hoặc Quà tặng Premium 30 ngày" required>
+                </label>
+
+                <label class="adm-field">
+                  <span>Nội dung chi tiết</span>
+                  <textarea id="ntc-body" rows="4" maxlength="1200" placeholder="Nhập nội dung thông báo gửi tới người dùng (có thể kèm link https://...)" required></textarea>
+                </label>
+
+                <div class="adm-grid-2">
+                  <label class="adm-field">
+                    <span>Link đính kèm (tuỳ chọn)</span>
+                    <input type="url" id="ntc-link-url" placeholder="https://devstu.vercel.app/tai-xuong/">
+                  </label>
+                  <label class="adm-field">
+                    <span>Tên nút mở link</span>
+                    <input type="text" id="ntc-link-label" maxlength="40" placeholder="Xem chi tiết">
+                  </label>
+                </div>
+
+                <div class="adm-preview">
+                  <span class="adm-preview__cap">Xem trước trong DEVSTU App</span>
+                  <article class="adm-preview__box">
+                    <div class="adm-preview__h">
+                      <strong id="ntc-prev-title">Tiêu đề thông báo</strong>
+                      <time>Hôm nay</time>
+                    </div>
+                    <p id="ntc-prev-body">Nội dung thông báo sẽ hiển thị tại đây…</p>
+                    <span class="adm-preview__btn" id="ntc-prev-link" hidden>Xem chi tiết</span>
+                  </article>
+                </div>
+
+                <button type="submit" class="adm-btn adm-btn--primary" id="ntc-send-btn">Gửi thông báo</button>
+              </form>
+            </div>
+
+            <div class="adm-card">
+              <div class="adm-card__head">
+                <h2>Lịch sử thông báo đã gửi</h2>
+                <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="ntc-reload-btn">Tải lại</button>
+              </div>
+              <div class="adm-ntc-list" id="ntc-history-list">
+                <p class="adm-empty">Chưa có thông báo nào.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: KEYS GENERATOR & MANAGEMENT -->
+        <section class="adm-panel" id="panel-keys" role="tabpanel" hidden>
+          <div class="adm-split adm-split--keys">
+            <div class="adm-card">
+              <h2>Tạo Key kích hoạt Premium</h2>
+              <p class="adm-sub">Tạo nhanh 1 hoặc hàng loạt key ngẫu nhiên dạng <code>QUA-XXXX-XXXX</code> hoặc mã sự kiện như <code>HPP30</code>.</p>
+
+              <form id="key-form" class="adm-form">
+                <div class="adm-auth-tabs" role="tablist" aria-label="Kiểu tạo mã">
+                  <button type="button" class="adm-auth-tab is-active" data-key-mode="random">Sinh ngẫu nhiên</button>
+                  <button type="button" class="adm-auth-tab" data-key-mode="custom">Tự nhập mã</button>
+                </div>
+
+                <div id="key-random-fields" class="adm-grid-2">
+                  <label class="adm-field">
+                    <span>Số lượng key</span>
+                    <input type="number" id="key-qty" min="1" max="100" value="5">
+                  </label>
+                  <label class="adm-field">
+                    <span>Tiền tố (Prefix)</span>
+                    <input type="text" id="key-prefix" maxlength="10" value="DEVSTU" placeholder="QUA / DEVSTU">
+                  </label>
+                </div>
+
+                <div id="key-custom-fields" hidden>
+                  <label class="adm-field">
+                    <span>Danh sách mã (mỗi dòng 1 mã)</span>
+                    <textarea id="key-custom-codes" rows="4" placeholder="HPP30&#10;DEVSTU-VIP-2026"></textarea>
+                  </label>
+                </div>
+
+                <div class="adm-grid-2">
+                  <label class="adm-field">
+                    <span>Gói kích hoạt</span>
+                    <select id="key-plan">
+                      <option value="Premium">Premium</option>
+                      <option value="Pro STU Ultra">Pro STU Ultra</option>
+                      <option value="Studio Max">Studio Max</option>
+                    </select>
+                  </label>
+                  <label class="adm-field">
+                    <span>Số lượt dùng tối đa / mã</span>
+                    <input type="number" id="key-max-uses" min="1" max="100000" value="1">
+                  </label>
+                </div>
+
+                <div class="adm-duration-box">
+                  <label class="adm-check">
+                    <input type="checkbox" id="key-lifetime">
+                    <span><strong>Premium Vĩnh viễn</strong> (không hết hạn theo ngày)</span>
+                  </label>
+                  <div class="adm-grid-2" id="key-days-row">
+                    <label class="adm-field">
+                      <span>Số ngày sử dụng</span>
+                      <input type="number" id="key-days" min="1" max="3650" value="30">
+                    </label>
+                    <div class="adm-field">
+                      <span>Chọn nhanh</span>
+                      <div class="adm-chips">
+                        <button type="button" class="adm-chip" data-days="7">7 ngày</button>
+                        <button type="button" class="adm-chip" data-days="30">30 ngày</button>
+                        <button type="button" class="adm-chip" data-days="90">90 ngày</button>
+                        <button type="button" class="adm-chip" data-days="365">1 năm</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="adm-grid-2">
+                  <label class="adm-field">
+                    <span>Hạn cuối nhập mã (tuỳ chọn)</span>
+                    <input type="date" id="key-expires">
+                  </label>
+                  <label class="adm-field">
+                    <span>Ghi chú quản trị</span>
+                    <input type="text" id="key-note" maxlength="120" placeholder="VD: Tặng khách hàng FB / Đợt 1">
+                  </label>
+                </div>
+
+                <button type="submit" class="adm-btn adm-btn--primary" id="key-create-btn">Tạo Key ngay</button>
+              </form>
+
+              <div class="adm-created-box" id="key-created-box" hidden>
+                <div class="adm-card__head">
+                  <strong>Key vừa tạo (<span id="key-created-count">0</span>)</strong>
+                  <div class="adm-row-actions">
+                    <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="key-copy-batch">Copy tất cả</button>
+                    <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="key-dl-txt">Tải .txt</button>
+                  </div>
+                </div>
+                <pre id="key-created-list"></pre>
+              </div>
+            </div>
+
+            <div class="adm-card">
+              <div class="adm-card__head">
+                <h2>Danh sách Key Premium</h2>
+                <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="key-reload-btn">Tải lại</button>
+              </div>
+
+              <div class="adm-toolbar">
+                <div class="adm-search">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                  <input type="search" id="key-search" placeholder="Tìm mã key, ghi chú, gói…">
+                </div>
+                <div class="adm-chips" id="key-filters">
+                  <button type="button" class="adm-chip is-active" data-key-filter="all">Tất cả</button>
+                  <button type="button" class="adm-chip" data-key-filter="active">Còn lượt</button>
+                  <button type="button" class="adm-chip" data-key-filter="used">Hết lượt</button>
+                  <button type="button" class="adm-chip" data-key-filter="inactive">Đang khoá</button>
+                  <button type="button" class="adm-chip" data-key-filter="expired">Hết hạn</button>
+                </div>
+              </div>
+
+              <div class="adm-table-wrap">
+                <table class="adm-table">
+                  <thead>
+                    <tr>
+                      <th>Mã Key</th>
+                      <th>Gói &amp; Thời hạn</th>
+                      <th>Lượt dùng</th>
+                      <th>Trạng thái</th>
+                      <th>Người đã nhập</th>
+                      <th>Ghi chú</th>
+                      <th class="is-right">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="key-tbody">
+                    <tr><td colspan="7" class="adm-empty">Đang tải danh sách key…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <!-- Edit Account Premium Dialog -->
+    <dialog class="adm-dialog" id="acc-edit-dlg" aria-labelledby="acc-edit-title">
+      <form method="dialog" class="adm-dialog__in" id="acc-edit-form">
+        <div class="adm-dialog__head">
+          <h3 id="acc-edit-title">Cập nhật gói tài khoản</h3>
+          <button type="button" class="adm-icon-x" data-close-dlg="acc-edit-dlg" aria-label="Đóng">✕</button>
+        </div>
+        <p class="adm-sub" id="acc-edit-user">—</p>
+
+        <div class="adm-form">
+          <label class="adm-check">
+            <input type="checkbox" id="acc-edit-is-prem" checked>
+            <span><strong>Kích hoạt Premium</strong> (bỏ chọn để đưa về bản Standard miễn phí)</span>
+          </label>
+
+          <div id="acc-edit-prem-opts" class="adm-form">
+            <label class="adm-field">
+              <span>Gói</span>
+              <select id="acc-edit-plan">
+                <option value="Premium">Premium</option>
+                <option value="Pro STU Ultra">Pro STU Ultra</option>
+                <option value="Studio Max">Studio Max</option>
+              </select>
+            </label>
+            <label class="adm-check">
+              <input type="checkbox" id="acc-edit-life">
+              <span>Vĩnh viễn</span>
+            </label>
+            <label class="adm-field" id="acc-edit-days-wrap">
+              <span>Thời hạn từ hôm nay (ngày)</span>
+              <input type="number" id="acc-edit-days" min="1" max="3650" value="30">
+            </label>
+          </div>
+        </div>
+
+        <div class="adm-dialog__foot">
+          <button type="button" class="adm-btn adm-btn--ghost" data-close-dlg="acc-edit-dlg">Huỷ</button>
+          <button type="submit" class="adm-btn adm-btn--primary" id="acc-edit-save">Lưu thay đổi</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Confirm Dialog -->
+    <dialog class="adm-dialog" id="adm-confirm-dlg" aria-labelledby="adm-confirm-title">
+      <div class="adm-dialog__in">
+        <div class="adm-dialog__head">
+          <h3 id="adm-confirm-title">Xác nhận</h3>
+          <button type="button" class="adm-icon-x" data-close-dlg="adm-confirm-dlg" aria-label="Đóng">✕</button>
+        </div>
+        <p class="adm-sub" id="adm-confirm-msg">—</p>
+        <div class="adm-dialog__foot">
+          <button type="button" class="adm-btn adm-btn--ghost" id="adm-confirm-cancel">Huỷ</button>
+          <button type="button" class="adm-btn adm-btn--danger" id="adm-confirm-ok">Xác nhận</button>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="adm-toast-wrap" id="adm-toasts" aria-live="polite"></div>
+  </div>
+</body>
+</html>

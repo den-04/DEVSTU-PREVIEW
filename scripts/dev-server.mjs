@@ -37,7 +37,11 @@ const EN_REWRITES = {
   '/en/policies/refunds': 'chinh-sach/thanh-toan-hoan-tien/index.html',
   '/en/policies/licenses': 'chinh-sach/giay-phep/index.html',
   '/en/blog': 'blog/index.html',
-  '/en/blog/photos-look-different-on-facebook': 'blog/anh-dang-facebook-bi-lech-mau/index.html'
+  '/en/blog/photos-look-different-on-facebook': 'blog/anh-dang-facebook-bi-lech-mau/index.html',
+  '/admin': 'admin/index.html',
+  '/admin/accounts': 'admin/index.html',
+  '/admin/notifications': 'admin/index.html',
+  '/admin/keys': 'admin/index.html'
 };
 
 const server = http.createServer((req, res) => {

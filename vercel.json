@@ -106,9 +106,54 @@
     {
       "source": "/__api/v1/t/:file",
       "destination": "/cache_t/:file"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/accounts",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/accounts/",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/notifications",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/notifications/",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/keys",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/keys/",
+      "destination": "/admin/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/admin(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
     {
       "source": "/(native-models\\.json|prep\\.json)",
       "headers": [
