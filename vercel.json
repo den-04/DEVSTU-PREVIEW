@@ -3,32 +3,110 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/en", "destination": "/index.html" },
-    { "source": "/en/", "destination": "/index.html" },
-    { "source": "/en/pricing", "destination": "/bang-gia/index.html" },
-    { "source": "/en/pricing/", "destination": "/bang-gia/index.html" },
-    { "source": "/en/download", "destination": "/tai-xuong/index.html" },
-    { "source": "/en/download/", "destination": "/tai-xuong/index.html" },
-    { "source": "/en/about", "destination": "/gioi-thieu/index.html" },
-    { "source": "/en/about/", "destination": "/gioi-thieu/index.html" },
-    { "source": "/en/policies", "destination": "/chinh-sach/index.html" },
-    { "source": "/en/policies/", "destination": "/chinh-sach/index.html" },
-    { "source": "/en/policies/privacy", "destination": "/chinh-sach/bao-mat/index.html" },
-    { "source": "/en/policies/privacy/", "destination": "/chinh-sach/bao-mat/index.html" },
-    { "source": "/en/policies/terms", "destination": "/chinh-sach/dieu-khoan/index.html" },
-    { "source": "/en/policies/terms/", "destination": "/chinh-sach/dieu-khoan/index.html" },
-    { "source": "/en/policies/cookies", "destination": "/chinh-sach/cookie/index.html" },
-    { "source": "/en/policies/cookies/", "destination": "/chinh-sach/cookie/index.html" },
-    { "source": "/en/policies/refunds", "destination": "/chinh-sach/thanh-toan-hoan-tien/index.html" },
-    { "source": "/en/policies/refunds/", "destination": "/chinh-sach/thanh-toan-hoan-tien/index.html" },
-    { "source": "/en/policies/licenses", "destination": "/chinh-sach/giay-phep/index.html" },
-    { "source": "/en/policies/licenses/", "destination": "/chinh-sach/giay-phep/index.html" },
-    { "source": "/blog/anh-dang-facebook-bi-lech-mau", "destination": "/gioi-thieu/index.html" },
-    { "source": "/blog/anh-dang-facebook-bi-lech-mau/", "destination": "/gioi-thieu/index.html" },
-    { "source": "/en/blog/photos-look-different-on-facebook", "destination": "/gioi-thieu/index.html" },
-    { "source": "/en/blog/photos-look-different-on-facebook/", "destination": "/gioi-thieu/index.html" },
-    { "source": "/v1/t/:file", "destination": "/cache_t/:file" },
-    { "source": "/__api/v1/t/:file", "destination": "/cache_t/:file" }
+    {
+      "source": "/en",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/pricing",
+      "destination": "/bang-gia/index.html"
+    },
+    {
+      "source": "/en/pricing/",
+      "destination": "/bang-gia/index.html"
+    },
+    {
+      "source": "/en/download",
+      "destination": "/tai-xuong/index.html"
+    },
+    {
+      "source": "/en/download/",
+      "destination": "/tai-xuong/index.html"
+    },
+    {
+      "source": "/en/about",
+      "destination": "/gioi-thieu/index.html"
+    },
+    {
+      "source": "/en/about/",
+      "destination": "/gioi-thieu/index.html"
+    },
+    {
+      "source": "/en/policies",
+      "destination": "/chinh-sach/index.html"
+    },
+    {
+      "source": "/en/policies/",
+      "destination": "/chinh-sach/index.html"
+    },
+    {
+      "source": "/en/policies/privacy",
+      "destination": "/chinh-sach/bao-mat/index.html"
+    },
+    {
+      "source": "/en/policies/privacy/",
+      "destination": "/chinh-sach/bao-mat/index.html"
+    },
+    {
+      "source": "/en/policies/terms",
+      "destination": "/chinh-sach/dieu-khoan/index.html"
+    },
+    {
+      "source": "/en/policies/terms/",
+      "destination": "/chinh-sach/dieu-khoan/index.html"
+    },
+    {
+      "source": "/en/policies/cookies",
+      "destination": "/chinh-sach/cookie/index.html"
+    },
+    {
+      "source": "/en/policies/cookies/",
+      "destination": "/chinh-sach/cookie/index.html"
+    },
+    {
+      "source": "/en/policies/refunds",
+      "destination": "/chinh-sach/thanh-toan-hoan-tien/index.html"
+    },
+    {
+      "source": "/en/policies/refunds/",
+      "destination": "/chinh-sach/thanh-toan-hoan-tien/index.html"
+    },
+    {
+      "source": "/en/policies/licenses",
+      "destination": "/chinh-sach/giay-phep/index.html"
+    },
+    {
+      "source": "/en/policies/licenses/",
+      "destination": "/chinh-sach/giay-phep/index.html"
+    },
+    {
+      "source": "/en/blog",
+      "destination": "/blog/index.html"
+    },
+    {
+      "source": "/en/blog/",
+      "destination": "/blog/index.html"
+    },
+    {
+      "source": "/en/blog/photos-look-different-on-facebook",
+      "destination": "/blog/anh-dang-facebook-bi-lech-mau/index.html"
+    },
+    {
+      "source": "/en/blog/photos-look-different-on-facebook/",
+      "destination": "/blog/anh-dang-facebook-bi-lech-mau/index.html"
+    },
+    {
+      "source": "/v1/t/:file",
+      "destination": "/cache_t/:file"
+    },
+    {
+      "source": "/__api/v1/t/:file",
+      "destination": "/cache_t/:file"
+    }
   ],
   "headers": [
     {

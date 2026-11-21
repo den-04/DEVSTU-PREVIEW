@@ -22,7 +22,9 @@
     ['/chinh-sach/dieu-khoan/', '/en/policies/terms/'],
     ['/chinh-sach/cookie/', '/en/policies/cookies/'],
     ['/chinh-sach/thanh-toan-hoan-tien/', '/en/policies/refunds/'],
-    ['/chinh-sach/giay-phep/', '/en/policies/licenses/']
+    ['/chinh-sach/giay-phep/', '/en/policies/licenses/'],
+    ['/blog/', '/en/blog/'],
+    ['/blog/anh-dang-facebook-bi-lech-mau/', '/en/blog/photos-look-different-on-facebook/']
   ];
 
   var VI_TO_EN = {};
@@ -92,7 +94,7 @@
       if (nextUrl !== curUrl) {
         window.history.replaceState({ lang: lang }, '', nextUrl);
       }
-    } catch (_) {}
+    } catch (_) { }
   }
 
   function isEnglishUrl() {
@@ -121,6 +123,8 @@
     'Chính sách cookie | DEVSTU': 'Cookie Policy | DEVSTU',
     'Thanh toán và hoàn tiền | DEVSTU': 'Payment & Refunds | DEVSTU',
     'Giấy phép phần mềm | DEVSTU': 'Software Licenses | DEVSTU',
+    'Blog · Mẹo chỉnh ảnh & quản lý màu sắc | DEVSTU': 'Blog · Photo Editing & Color Management | DEVSTU',
+    'Ảnh đăng Facebook bị lệch màu: nguyên nhân và cách sửa | DEVSTU': 'Why Photos Look Different on Facebook: Causes & Fix | DEVSTU',
     '404 · Không tìm thấy trang | DEVSTU': '404 · Page Not Found | DEVSTU'
   };
 
@@ -144,7 +148,11 @@
     'Thông tin gói DEVSTU Standard, Pro · STU Ultra, Studio Max, cách thanh toán một lần không tự gia hạn và chính sách hỗ trợ hoàn tiền.':
       'DEVSTU Standard, Pro · STU Ultra, and Studio Max plans, one-time non-recurring payment details, and refund policy.',
     'Danh sách thư viện mã nguồn mở, mô hình AI và phông chữ mà DEVSTU Desktop Suite đang dùng, kèm tên tác giả và giấy phép của từng thành phần.':
-      'Open-source libraries, AI models, and fonts powering DEVSTU Desktop Suite along with their authors and licenses.'
+      'Open-source libraries, AI models, and fonts powering DEVSTU Desktop Suite along with their authors and licenses.',
+    'Mẹo chỉnh ảnh, quản lý màu sắc sRGB/Oklab và quy trình hậu kỳ AI nhanh trên DEVSTU Desktop.':
+      'Photo editing tips, sRGB/Oklab color management, and fast AI post-production workflows in DEVSTU Desktop.',
+    'Vì sao ảnh chỉnh đẹp trong Photoshop, Camera Raw lên Facebook, Zalo lại nhợt, da xám? Cài đặt đúng khi xuất ảnh sRGB và công cụ kiểm tra miễn phí trên thiết bị.':
+      'Why do photos edited in Photoshop or Camera Raw look dull and gray on Facebook? Correct sRGB export settings plus a free on-device color profile checker.'
   };
 
   // Specific elements containing mixed inline tags (<code>, <strong>, <a>), matched by normalized textContent so browser attribute serialization can never break matching
@@ -269,7 +277,61 @@
     'Các thư viện LGPL được nạp độc lập dưới dạng mô-đun .wasm mà không sửa đổi mã nguồn gốc; người dùng có quyền thay thế bằng phiên bản tương thích cùng giao diện.':
       'LGPL libraries are loaded dynamically as unmodified <code>.wasm</code> modules; users retain the right to replace them with interface-compatible builds.',
     'Tải trực tiếp file 3D LUT .cube (17×17×17) hoặc lấy link devstu.vercel.app/?m=... để nhập vào DEVSTU, Lightroom, Photoshop & DaVinci.':
-      'Download 3D LUT <code>.cube</code> (17×17×17) files directly or grab a <code>devstu.vercel.app/?m=...</code> link for DEVSTU, Lightroom, Photoshop &amp; DaVinci.'
+      'Download 3D LUT <code>.cube</code> (17×17×17) files directly or grab a <code>devstu.vercel.app/?m=...</code> link for DEVSTU, Lightroom, Photoshop &amp; DaVinci.',
+
+    // Blog article: Facebook color shift mixed-HTML blocks
+    'Chỉnh xong trong Photoshop thì màu đẹp, da hồng hào. Lưu ra, đăng lên Facebook hay gửi qua Zalo thì ảnh nhợt hẳn đi, da xám, màu xanh đỏ kém rực. Đây là lỗi rất hay gặp, và trong phần lớn trường hợp không phải do Facebook, mà do hồ sơ màu của file khi được lưu.':
+      'Your photo looks vibrant with healthy skin tones in Photoshop, yet once uploaded to Facebook or sent over Zalo it turns <strong>dull, muted, and grayish</strong>. This is a very common issue — and most of the time it is <strong>not Facebook’s fault</strong>, but the color profile saved inside the file.',
+    'Mỗi file ảnh có thể kèm một hồ sơ màu (ICC color profile) cho biết các giá trị RGB trong file tương ứng với màu gì. Hai hồ sơ hay gặp nhất:':
+      'Every image file can embed an <strong>ICC color profile</strong> telling apps what its RGB numbers actually mean. The two most common profiles are:',
+    'sRGB — hệ màu chuẩn của web, điện thoại, Facebook, Zalo và hầu hết trình duyệt.':
+      '<strong>sRGB</strong> — the universal standard for the web, smartphones, Facebook, Zalo, and most browsers.',
+    'Adobe RGB (và ProPhoto RGB, Display P3) — dải màu rộng hơn, thường là mặc định khi mở ảnh RAW trong Camera Raw hoặc Photoshop.':
+      '<strong>Adobe RGB</strong> (plus <strong>ProPhoto RGB</strong> and <strong>Display P3</strong>) — wider gamuts often set as defaults in Camera Raw or Photoshop.',
+    'Photoshop và DEVSTU đọc đúng hồ sơ màu, nên ảnh Adobe RGB vẫn hiện rực rỡ trong phần mềm. Nhưng nhiều nền tảng mạng xã hội hoặc trình xem ảnh bỏ qua hồ sơ màu và hiểu mọi giá trị như sRGB. Cùng một con số RGB, đọc theo sRGB thì độ bão hoà thấp hơn — khiến ảnh trông nhợt và da xám đi rõ rệt.':
+      'Photoshop and DEVSTU <strong>read color profiles properly</strong>, so Adobe RGB images look vivid inside them. However, many social platforms and viewers <strong>strip or ignore the profile</strong> and interpret raw numbers as sRGB — making the same numbers appear dull and desaturated.',
+    'Ảnh để Adobe RGB / ProPhoto RGB mà không chuyển sang sRGB khi xuất.':
+      '<strong>Exporting in Adobe RGB / ProPhoto RGB without converting to sRGB.</strong>',
+    'Lưu mà bỏ tích "Embed Color Profile" — file mất thẻ hồ sơ, mọi nơi đều đọc như sRGB kể cả trên máy của bạn.':
+      '<strong>Unchecking "Embed Color Profile"</strong> — the file loses its tag and every viewer reads it as sRGB.',
+    'Máy ảnh để chế độ Adobe RGB, dùng thẳng file JPEG: máy ảnh chỉ ghi nhãn trong EXIF (Uncalibrated) mà không nhúng hồ sơ ICC.':
+      '<strong>Camera set to Adobe RGB using straight-out-of-camera JPEGs:</strong> cameras only flag EXIF as Uncalibrated without embedding an ICC profile.',
+    'Nhúng nhầm hồ sơ màu của màn hình (file hồ sơ do thiết bị cân màu tạo ra) thay vì hồ sơ chuẩn sRGB.':
+      '<strong>Accidentally embedding your monitor calibration profile</strong> instead of standard sRGB.',
+    'Ảnh để CMYK (bản chuẩn bị in) đem đăng trực tiếp lên mạng xã hội.':
+      '<strong>Uploading CMYK print files</strong> directly to social media.',
+    'Cách chắc chắn nhất: trước khi lưu, vào Edit → Convert to Profile…, ở Destination Space chọn sRGB IEC61966-2.1, Intent để Relative Colorimetric, tích Use Black Point Compensation, bấm OK.':
+      '<strong>Most reliable method:</strong> before saving, go to <strong>Edit → Convert to Profile…</strong>, set <strong>Destination Space</strong> to <strong>sRGB IEC61966-2.1</strong>, Intent to <strong>Relative Colorimetric</strong>, check <strong>Use Black Point Compensation</strong>, and click OK.',
+    'Lưu ý: luôn dùng Convert to Profile, không dùng Assign Profile. Assign chỉ đổi nhãn hồ sơ mà không tính lại giá trị pixel — màu sẽ bị lệch ngay lập tức.':
+      'Note: always use <strong>Convert to Profile</strong>, never <strong>Assign Profile</strong>. Assign only renames the tag without recalculating pixel values — causing immediate color shifts.',
+    'File → Export → Export As…: tích Convert to sRGB và Embed Color Profile.':
+      '<strong>File → Export → Export As…</strong>: check both <strong>Convert to sRGB</strong> and <strong>Embed Color Profile</strong>.',
+    'Save for Web (Legacy): tích Convert to sRGB và Embed Color Profile.':
+      '<strong>Save for Web (Legacy)</strong>: check <strong>Convert to sRGB</strong> and <strong>Embed Color Profile</strong>.',
+    'Save As / Save a Copy → JPEG: tích Embed Color Profile: sRGB IEC61966-2.1 (trên Windows là ô ICC Profile).':
+      '<strong>Save As / Save a Copy → JPEG</strong>: check <strong>Embed Color Profile: sRGB IEC61966-2.1</strong> (labeled <strong>ICC Profile</strong> on Windows).',
+    'Nếu bạn chủ yếu chỉnh ảnh để đăng mạng và giao khách xem điện thoại, có thể đặt luôn hệ màu làm việc là sRGB: Edit → Color Settings → Working Spaces → RGB: sRGB IEC61966-2.1.':
+      'If you edit mainly for web and mobile delivery, set your working space directly to sRGB: <strong>Edit → Color Settings → Working Spaces → RGB: sRGB IEC61966-2.1</strong>.',
+    'Camera Raw: bấm vào dòng thông số ở giữa mép dưới cửa sổ (dạng "Adobe RGB (1998) – 16 bit – …") để mở Workflow Options. Chọn Color Space: sRGB IEC61966-2.1, Bit Depth: 8 bits/channel nếu ảnh chỉ để đăng web. Nếu muốn giữ 16-bit dải rộng để retouch tiếp thì nhớ đổi sang sRGB ở bước xuất cuối cùng.':
+      '<strong>Camera Raw:</strong> click the workflow link at the bottom center (e.g., "Adobe RGB (1998) – 16 bit – …") to open <strong>Workflow Options</strong>. Choose <strong>Color Space: sRGB IEC61966-2.1</strong> and <strong>8 bits/channel</strong> for web delivery. If you keep 16-bit wide gamut for retouching, convert to sRGB on final export.',
+    'Lightroom Classic: trong hộp thoại Export, mục File Settings, chọn Color Space: sRGB.':
+      '<strong>Lightroom Classic:</strong> in the <strong>Export</strong> dialog under <strong>File Settings</strong>, choose <strong>Color Space: sRGB</strong>.',
+    'DEVSTU Desktop: toàn bộ pipeline chỉnh màu xử lý bên trong không gian màu đồng nhất Oklab / OKLCH để bảo toàn sắc da, và tự động ánh xạ chuẩn về sRGB khi xuất JPEG/PNG nên ảnh đăng Facebook, Zalo giữ nguyên độ tươi và tông da như lúc chỉnh.':
+      '<strong>DEVSTU Desktop:</strong> the entire color pipeline processes internally in perceptual <strong>Oklab / OKLCH</strong> to protect skin tones and automatically maps cleanly to <strong>sRGB</strong> on JPEG/PNG export — so Facebook and Zalo uploads match your screen.',
+    'Kể cả khi file đã chuẩn sRGB, Facebook vẫn nén lại JPEG và tự thu nhỏ ảnh độ phân giải quá lớn. Để ảnh giữ độ nét tốt nhất:':
+      'Even with proper sRGB files, Facebook still <strong>recompresses JPEGs</strong> and <strong>downscales</strong> oversized photos. For sharpest results:',
+    'Xuất cạnh dài đúng 2048 px (Facebook giữ nguyên kích thước này, không tự resize lại).':
+      'Export with a long edge of exactly <strong>2048 px</strong> (Facebook preserves this dimension without resizing).',
+    'Xuất JPEG chất lượng cao (khoảng 85–92%), tránh nén quá thấp trước khi đăng.':
+      'Export high-quality JPEG (around <strong>85–92%</strong>) instead of over-compressing beforehand.',
+    'Khi đăng từ điện thoại, bật tuỳ chọn tải ảnh chất lượng cao (HD) trong cài đặt ứng dụng Facebook.':
+      'When uploading from mobile, enable <strong>Upload photos in HD</strong> in the Facebook app settings.',
+    'Nếu file đã chuẩn sRGB và đúng 2048 px nhưng vẫn thấy hơi khác trên máy khác, nguyên nhân thường nằm ở màn hình người xem: màn hình chưa cân màu, điện thoại đang bật Night Shift / True Tone / chế độ bảo vệ mắt, hoặc độ sáng màn hình khác nhau. Không file nào sửa được cài đặt màn hình người xem — việc quan trọng nhất là xuất đúng chuẩn sRGB để ảnh hiển thị đồng đều nhất ở mọi nơi.':
+      'If a proper 2048 px sRGB file still looks slightly different on another device, the cause is usually the <strong>viewer’s screen</strong>: uncalibrated displays, active <strong>Night Shift / True Tone / eye-comfort modes</strong>, or brightness differences. No file can override a viewer’s display settings — exporting clean <strong>sRGB</strong> gives the most consistent result everywhere.',
+    'Với máy tính làm việc của bạn, nên cân màu màn hình bằng thiết bị đo màu để màu sắc lúc retouch luôn chính xác.':
+      'On your own editing workstation, <strong>calibrate your monitor with a hardware colorimeter</strong> so what you see while retouching is trustworthy.',
+    'Kéo hoặc chọn ảnh JPEG/PNG đã xuất vào khung dưới đây để kiểm tra trực tiếp ICC Profile, phát hiện ảnh đang ở Adobe RGB / Display P3 / CMYK hoặc vượt cỡ 2048 px, và xuất nhanh bản chuẩn sRGB. Ảnh xử lý 100% trên trình duyệt của bạn, không tải lên bất kỳ máy chủ nào.':
+      'Drop or choose your exported JPEG/PNG below to inspect its <strong>ICC Profile</strong> directly, detect Adobe RGB / Display P3 / CMYK or oversized dimensions above 2048 px, and export a clean <strong>sRGB</strong> copy. <strong>100% processed locally in your browser — zero server uploads.</strong>'
   };
 
   // Exact text-node dictionary covering every page
@@ -913,6 +975,47 @@
     'Phông chữ': 'Fonts',
     'Be Vietnam Pro (và các bộ chữ dùng cho đóng logo studio trên ảnh) được sử dụng theo giấy phép SIL Open Font License 1.1.':
       'Be Vietnam Pro (and studio watermark typefaces) are licensed under the SIL Open Font License 1.1.',
+
+    // Blog Index & Facebook Color Shift Article (/blog/*)
+    'Mẹo chỉnh ảnh, quản lý màu sắc và quy trình hậu kỳ thực tế cùng DEVSTU.':
+      'Photo editing tips, color management guides, and real-world post-production workflows with DEVSTU.',
+    '21/11/2026 · 3 phút đọc': 'Nov 21, 2026 · 3 min read',
+    'Ảnh đăng Facebook bị lệch màu: nguyên nhân và cách sửa': 'Why Photos Look Different on Facebook: Causes & Fix',
+    'Vì sao ảnh chỉnh đẹp trong Photoshop, Camera Raw lên Facebook, Zalo lại nhợt, da xám? Cài đặt đúng khi xuất ảnh và công cụ kiểm tra sRGB miễn phí ngay trên máy.':
+      'Why do photos edited in Photoshop or Camera Raw look dull and gray on Facebook? Correct sRGB export settings plus a free on-device sRGB checker.',
+    'Tài nguyên miễn phí · .CUBE & ?m=': 'Free Resources · .CUBE & ?m=',
+    'Kho 8 LUT 3D miễn phí cho ảnh cưới, chân dung & film': '8 Free 3D LUTs for Weddings, Portraits & Film',
+    'Tải trực tiếp file .cube chuẩn 17×17×17 và link bộ màu devstu.vercel.app/?m=... dùng ngay trên DEVSTU, Lightroom, Photoshop và DaVinci.':
+      'Download 17×17×17 .cube LUTs and devstu.vercel.app/?m=... look links ready for DEVSTU, Lightroom, Photoshop, and DaVinci.',
+    'Kiến trúc · Offline AI': 'Architecture · Offline AI',
+    'Bên trong DEVSTU: Tauri v2, Rust SIMD & 7 mô hình AI chạy trên máy': 'Inside DEVSTU: Tauri v2, Rust SIMD & 7 On-Device AI Models',
+    'Cách DEVSTU giải mã RAW 16-bit bằng LibRaw, chỉnh màu Oklab và chạy 6 mô hình U-Net Skin AI offline 100% không cần tải ảnh lên mạng.':
+      'How DEVSTU decodes 16-bit RAW with LibRaw, grades in Oklab, and runs 6 U-Net Skin AI models 100% offline with zero uploads.',
+    'Viết bởi DEVSTU · ducdoan-04': 'Written by DEVSTU · ducdoan-04',
+    'Cập nhật 21/11/2026': 'Updated Nov 21, 2026',
+    '3 phút đọc': '3 min read',
+    'Nguyên nhân hay gặp nhất: ảnh không ở sRGB': 'Most common cause: the photo isn’t in sRGB',
+    'Các trường hợp cụ thể hay gặp:': 'Common real-world scenarios:',
+    'Cách xuất ảnh đúng trong Photoshop': 'How to export properly in Photoshop',
+    'Sau đó, tuỳ theo cách bạn lưu ảnh:': 'Then, depending on how you save:',
+    'Trong Camera Raw, Lightroom và DEVSTU': 'In Camera Raw, Lightroom & DEVSTU',
+    'Trong Camera Raw, Lightroom & DEVSTU': 'In Camera Raw, Lightroom & DEVSTU',
+    'Facebook cũng nén và thu nhỏ ảnh': 'Facebook also compresses & resizes photos',
+    'Những thứ không sửa được bằng file': 'What a file alone cannot fix',
+    'Kiểm tra nhanh độ lệch màu ngay tại đây (miễn phí)': 'Check your photo for color shifts right here (free)',
+    'Kiểm tra nhanh độ lệch màu': 'Instant color shift checker',
+    'Kéo ảnh vào đây hoặc bấm để chọn file': 'Drag photos here or click to select files',
+    'Hỗ trợ JPEG, PNG, WebP (tối đa 6 ảnh mỗi lượt) · Chạy 100% offline trên trình duyệt':
+      'Supports JPEG, PNG, WebP (up to 6 images at once) · Runs 100% offline in your browser',
+    'Tự thu cạnh dài về 2048 px tối ưu cho Facebook khi lưu': 'Automatically resize long edge to 2048 px for Facebook on export',
+    'quản lý màu': 'color management',
+    'hướng dẫn': 'guide',
+    'Chỉnh màu Oklab & xuất chuẩn sRGB trên DEVSTU': 'Grade in Oklab & export clean sRGB with DEVSTU',
+    'Xử lý RAW 16-bit, làm đẹp da AI U-Net và đồng bộ hàng loạt 100% offline ngay trên máy Windows của bạn.':
+      '16-bit RAW editing, U-Net AI skin retouching, and batch sync running 100% offline on your Windows PC.',
+    'Tài nguyên hữu ích': 'Helpful resources',
+    'Kho 8 LUT 3D .cube miễn phí': '8 Free 3D .cube LUTs',
+    'Tất cả bài viết Blog': 'All Blog Posts',
 
     // 404 Page
     'Không tìm thấy trang': 'Page not found',
