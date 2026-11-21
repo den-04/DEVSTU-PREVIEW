@@ -41,7 +41,8 @@ const EN_REWRITES = {
   '/admin': 'admin/index.html',
   '/admin/accounts': 'admin/index.html',
   '/admin/notifications': 'admin/index.html',
-  '/admin/keys': 'admin/index.html'
+  '/admin/keys': 'admin/index.html',
+  '/admin/bugs': 'admin/index.html'
 };
 
 const server = http.createServer((req, res) => {

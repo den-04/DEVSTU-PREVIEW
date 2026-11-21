@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,6 +13,7 @@
   <link rel="stylesheet" href="/admin/admin.css?v=20261121">
   <script src="/admin/admin.js?v=20261121" defer></script>
 </head>
+
 <body class="adm-body">
   <div class="adm-shell g-root">
     <header class="adm-topbar">
@@ -43,13 +45,26 @@
       <section class="adm-gate" id="adm-login-view" hidden aria-labelledby="adm-login-title">
         <div class="adm-card adm-gate__card">
           <div class="adm-gate__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="10" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
           </div>
           <h1 id="adm-login-title">Đăng nhập DEVSTU Admin</h1>
           <p class="adm-sub">Xác thực trực tiếp qua tài khoản Supabase có quyền <code>admin</code>.</p>
 
           <button type="button" class="adm-btn adm-btn--google" id="adm-google-btn">
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.8-.4-2.8s.2-2 .4-2.8L1.6 6.4C.6 8.1 0 10 0 12s.6 3.9 1.6 5.6l3.7-2.8z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5L1.6 16.1C3.5 20.1 7.4 23 12 23z"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path fill="#EA4335"
+                d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z" />
+              <path fill="#4285F4"
+                d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z" />
+              <path fill="#FBBC05"
+                d="M5.3 14.8c-.2-.8-.4-1.8-.4-2.8s.2-2 .4-2.8L1.6 6.4C.6 8.1 0 10 0 12s.6 3.9 1.6 5.6l3.7-2.8z" />
+              <path fill="#34A853"
+                d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5L1.6 16.1C3.5 20.1 7.4 23 12 23z" />
+            </svg>
             <span>Tiếp tục với Google</span>
           </button>
 
@@ -63,18 +78,19 @@
           <form id="adm-login-form" class="adm-form" novalidate>
             <label class="adm-field">
               <span>Gmail / Email Admin</span>
-              <input type="email" id="adm-email-in" placeholder="ducdoan04.work@gmail.com" autocomplete="email" required>
+              <input type="email" id="adm-email-in" placeholder="admin@gmail.com" autocomplete="email" required>
             </label>
 
             <label class="adm-field" id="adm-pass-wrap">
               <span>Mật khẩu</span>
-              <input type="password" id="adm-pass-in" placeholder="Nhập mật khẩu Supabase" autocomplete="current-password">
+              <input type="password" id="adm-pass-in" placeholder="Nhập mật khẩu admin" autocomplete="current-password">
             </label>
 
             <div id="adm-otp-wrap" hidden>
               <label class="adm-field">
                 <span>Mã OTP 6 số (từ Gmail)</span>
-                <input type="text" id="adm-otp-in" inputmode="numeric" maxlength="10" placeholder="Nhập mã 6 số nếu đã gửi">
+                <input type="text" id="adm-otp-in" inputmode="numeric" maxlength="10"
+                  placeholder="Nhập mã 6 số nếu đã gửi">
               </label>
             </div>
 
@@ -92,10 +108,15 @@
       <section class="adm-gate" id="adm-denied-view" hidden>
         <div class="adm-card adm-gate__card adm-gate__card--wide">
           <div class="adm-gate__icon adm-gate__icon--warn" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18.1a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 9v4M12 17h.01" />
+              <path d="M10.3 3.9 1.8 18.1a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+            </svg>
           </div>
           <h1 id="adm-denied-title">Tài khoản chưa có quyền Admin</h1>
-          <p class="adm-sub" id="adm-denied-desc">Bạn đang đăng nhập bằng tài khoản thường. Hãy chạy câu lệnh dưới đây trong Supabase SQL Editor để cấp quyền quản trị.</p>
+          <p class="adm-sub" id="adm-denied-desc">Bạn đang đăng nhập bằng tài khoản thường. Hãy chạy câu lệnh dưới đây
+            trong Supabase SQL Editor để cấp quyền quản trị.</p>
           <div class="adm-codebox">
             <pre id="adm-denied-sql"></pre>
             <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="adm-copy-denied-sql">Copy SQL</button>
@@ -112,7 +133,8 @@
         <div class="adm-hero">
           <div>
             <h1>Bảng điều khiển DEVSTU</h1>
-            <p class="adm-sub">Quản lý tài khoản người dùng, gửi thông báo realtime trong app và phát hành key kích hoạt Premium.</p>
+            <p class="adm-sub">Quản lý tài khoản người dùng, gửi thông báo realtime trong app và phát hành key kích hoạt
+              Premium.</p>
           </div>
           <nav class="adm-navtabs" role="tablist" aria-label="Chức năng quản trị">
             <button type="button" class="adm-navtab is-active" data-tab="accounts" role="tab" aria-selected="true">
@@ -126,6 +148,10 @@
             <button type="button" class="adm-navtab" data-tab="keys" role="tab" aria-selected="false">
               Trang tạo Key
               <span class="adm-count" id="tab-cnt-keys">0</span>
+            </button>
+            <button type="button" class="adm-navtab" data-tab="bugs" role="tab" aria-selected="false">
+              Báo lỗi
+              <span class="adm-count" id="tab-cnt-bugs">0</span>
             </button>
           </nav>
         </div>
@@ -152,6 +178,11 @@
             <strong class="adm-stat__val" id="stat-notifications">—</strong>
             <small class="adm-stat__meta" id="stat-presets-meta">Bộ màu đã đồng bộ</small>
           </article>
+          <article class="adm-stat">
+            <span class="adm-stat__label">Báo lỗi chờ xử lý</span>
+            <strong class="adm-stat__val" id="stat-bugs">—</strong>
+            <small class="adm-stat__meta" id="stat-bugs-meta">Tổng báo lỗi</small>
+          </article>
         </div>
 
         <!-- TAB 1: ACCOUNTS -->
@@ -159,7 +190,11 @@
           <div class="adm-card">
             <div class="adm-toolbar">
               <div class="adm-search">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                  aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m20 20-3.5-3.5" />
+                </svg>
                 <input type="search" id="acc-search" placeholder="Tìm theo email, tên, mã key, UID…">
               </div>
               <div class="adm-chips" id="acc-filters" role="group" aria-label="Lọc tài khoản">
@@ -187,7 +222,9 @@
                   </tr>
                 </thead>
                 <tbody id="acc-tbody">
-                  <tr><td colspan="7" class="adm-empty">Đang tải danh sách tài khoản…</td></tr>
+                  <tr>
+                    <td colspan="7" class="adm-empty">Đang tải danh sách tài khoản…</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -202,7 +239,8 @@
           <div class="adm-split">
             <div class="adm-card">
               <h2>Soạn thông báo mới</h2>
-              <p class="adm-sub">Thông báo gửi tại đây sẽ hiện trực tiếp trong nút chuông <strong>Thông báo</strong> của ứng dụng DEVSTU.</p>
+              <p class="adm-sub">Thông báo gửi tại đây sẽ hiện trực tiếp trong nút chuông <strong>Thông báo</strong> của
+                ứng dụng DEVSTU.</p>
 
               <form id="ntc-form" class="adm-form">
                 <div class="adm-audience-row" role="radiogroup" aria-label="Đối tượng nhận">
@@ -224,18 +262,22 @@
 
                 <div class="adm-field" id="ntc-target-wrap" hidden>
                   <span>Email người nhận</span>
-                  <input type="email" id="ntc-target-email" list="ntc-user-datalist" placeholder="Nhập hoặc chọn email người dùng…">
+                  <input type="email" id="ntc-target-email" list="ntc-user-datalist"
+                    placeholder="Nhập hoặc chọn email người dùng…">
                   <datalist id="ntc-user-datalist"></datalist>
                 </div>
 
                 <label class="adm-field">
                   <span>Tiêu đề thông báo</span>
-                  <input type="text" id="ntc-title" maxlength="140" placeholder="VD: Cập nhật DEVSTU v1.0.5 hoặc Quà tặng Premium 30 ngày" required>
+                  <input type="text" id="ntc-title" maxlength="140"
+                    placeholder="VD: Cập nhật DEVSTU v1.0.5 hoặc Quà tặng Premium 30 ngày" required>
                 </label>
 
                 <label class="adm-field">
                   <span>Nội dung chi tiết</span>
-                  <textarea id="ntc-body" rows="4" maxlength="1200" placeholder="Nhập nội dung thông báo gửi tới người dùng (có thể kèm link https://...)" required></textarea>
+                  <textarea id="ntc-body" rows="4" maxlength="1200"
+                    placeholder="Nhập nội dung thông báo gửi tới người dùng (có thể kèm link https://...)"
+                    required></textarea>
                 </label>
 
                 <div class="adm-grid-2">
@@ -282,7 +324,8 @@
           <div class="adm-split adm-split--keys">
             <div class="adm-card">
               <h2>Tạo Key kích hoạt Premium</h2>
-              <p class="adm-sub">Tạo nhanh 1 hoặc hàng loạt key ngẫu nhiên dạng <code>QUA-XXXX-XXXX</code> hoặc mã sự kiện như <code>HPP30</code>.</p>
+              <p class="adm-sub">Tạo nhanh 1 hoặc hàng loạt key ngẫu nhiên dạng <code>QUA-XXXX-XXXX</code> hoặc mã sự
+                kiện như <code>HPP30</code>.</p>
 
               <form id="key-form" class="adm-form">
                 <div class="adm-auth-tabs" role="tablist" aria-label="Kiểu tạo mã">
@@ -363,7 +406,8 @@
                 <div class="adm-card__head">
                   <strong>Key vừa tạo (<span id="key-created-count">0</span>)</strong>
                   <div class="adm-row-actions">
-                    <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="key-copy-batch">Copy tất cả</button>
+                    <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="key-copy-batch">Copy tất
+                      cả</button>
                     <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="key-dl-txt">Tải .txt</button>
                   </div>
                 </div>
@@ -379,7 +423,11 @@
 
               <div class="adm-toolbar">
                 <div class="adm-search">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                    aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="m20 20-3.5-3.5" />
+                  </svg>
                   <input type="search" id="key-search" placeholder="Tìm mã key, ghi chú, gói…">
                 </div>
                 <div class="adm-chips" id="key-filters">
@@ -405,10 +453,43 @@
                     </tr>
                   </thead>
                   <tbody id="key-tbody">
-                    <tr><td colspan="7" class="adm-empty">Đang tải danh sách key…</td></tr>
+                    <tr>
+                      <td colspan="7" class="adm-empty">Đang tải danh sách key…</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: BUG REPORTS -->
+        <section class="adm-panel" id="panel-bugs" role="tabpanel" hidden>
+          <div class="adm-card">
+            <div class="adm-card__head">
+              <div>
+                <h2>Báo lỗi từ ứng dụng DEVSTU</h2>
+                <p class="adm-sub">Toàn bộ phản hồi từ mục <strong>Báo lỗi</strong> trong app kèm thông số máy &amp; nhật ký lỗi.</p>
+              </div>
+              <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="bug-reload-btn">Tải lại</button>
+            </div>
+
+            <div class="adm-toolbar">
+              <div class="adm-search">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input type="search" id="bug-search" placeholder="Tìm theo #ID, email, nội dung lỗi, GPU…">
+              </div>
+              <div class="adm-chips" id="bug-filters">
+                <button type="button" class="adm-chip is-active" data-bug-filter="all">Tất cả</button>
+                <button type="button" class="adm-chip" data-bug-filter="open">Mới</button>
+                <button type="button" class="adm-chip" data-bug-filter="in_progress">Đang xử lý</button>
+                <button type="button" class="adm-chip" data-bug-filter="resolved">Đã sửa</button>
+                <button type="button" class="adm-chip" data-bug-filter="closed">Đóng</button>
+              </div>
+            </div>
+
+            <div class="adm-bug-list" id="bug-list">
+              <p class="adm-empty">Đang tải danh sách báo lỗi…</p>
             </div>
           </div>
         </section>
@@ -475,4 +556,5 @@
     <div class="adm-toast-wrap" id="adm-toasts" aria-live="polite"></div>
   </div>
 </body>
+
 </html>

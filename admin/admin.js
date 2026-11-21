@@ -24,6 +24,9 @@
     keys: [],
     lastBatchKeys: [],
     notifications: [],
+    bugFilter: 'all',
+    bugSearch: '',
+    bugs: [],
     editingUserId: null,
     confirmAction: null
   };
@@ -268,14 +271,15 @@
     const p = location.pathname.replace(/\/+$/, '');
     if (p.endsWith('/admin/notifications')) return 'notifications';
     if (p.endsWith('/admin/keys')) return 'keys';
+    if (p.endsWith('/admin/bugs')) return 'bugs';
     if (p.endsWith('/admin/accounts')) return 'accounts';
     const h = location.hash.replace(/^#/, '');
-    if (['accounts', 'notifications', 'keys'].includes(h)) return h;
+    if (['accounts', 'notifications', 'keys', 'bugs'].includes(h)) return h;
     return 'accounts';
   }
 
   function switchTab(tab, updateHash = true) {
-    if (!['accounts', 'notifications', 'keys'].includes(tab)) tab = 'accounts';
+    if (!['accounts', 'notifications', 'keys', 'bugs'].includes(tab)) tab = 'accounts';
     state.tab = tab;
     $$('.adm-navtab').forEach((btn) => {
       const active = btn.dataset.tab === tab;
@@ -285,6 +289,7 @@
     $('#panel-accounts').hidden = tab !== 'accounts';
     $('#panel-notifications').hidden = tab !== 'notifications';
     $('#panel-keys').hidden = tab !== 'keys';
+    $('#panel-bugs').hidden = tab !== 'bugs';
     if (updateHash && location.hash !== `#${tab}`) {
       history.replaceState(history.state, '', `${location.pathname}#${tab}`);
     }
@@ -355,7 +360,7 @@
 
   /* ---- Data Loaders ---- */
   async function loadAllData() {
-    await Promise.all([loadStats(), loadAccounts(), loadKeys(), loadNotifications()]);
+    await Promise.all([loadStats(), loadAccounts(), loadKeys(), loadNotifications(), loadBugs().catch(() => {})]);
   }
 
   async function loadStats() {
@@ -368,9 +373,12 @@
     $('#stat-keys-meta').textContent = `${st.total_keys ?? 0} tổng key · ${st.total_redemptions ?? 0} lượt nhập`;
     $('#stat-notifications').textContent = st.total_notifications ?? 0;
     $('#stat-presets-meta').textContent = `${st.total_presets ?? 0} preset đang lưu trên cloud`;
+    $('#stat-bugs').textContent = st.open_bugs ?? 0;
+    $('#stat-bugs-meta').textContent = `${st.total_bugs ?? 0} tổng báo lỗi`;
     $('#tab-cnt-accounts').textContent = st.total_users ?? 0;
     $('#tab-cnt-notifications').textContent = st.total_notifications ?? 0;
     $('#tab-cnt-keys').textContent = st.total_keys ?? 0;
+    $('#tab-cnt-bugs').textContent = st.open_bugs ?? st.total_bugs ?? 0;
   }
 
   async function loadAccounts() {
@@ -589,6 +597,93 @@
             </div>
           </td>
         </tr>`;
+      })
+      .join('');
+  }
+
+  /* ---- Bug Reports ---- */
+  async function loadBugs() {
+    try {
+      const list = await rpc('admin_list_bug_reports', {
+        p_search: state.bugSearch,
+        p_status: state.bugFilter,
+        p_limit: 150
+      });
+      state.bugs = Array.isArray(list) ? list : [];
+      renderBugs();
+    } catch (err) {
+      const box = $('#bug-list');
+      if (String(err?.message || '').includes('admin_list_bug_reports') || err?.code === 'PGRST202') {
+        box.innerHTML = '<p class="adm-empty">Chưa tạo bảng <code>bug_reports</code> trên Supabase — hãy chạy lại file <code>supabase_schema.sql</code> trong SQL Editor.</p>';
+        return;
+      }
+      throw err;
+    }
+  }
+
+  function bugStatusPill(status) {
+    if (status === 'in_progress') return '<span class="adm-pill adm-pill--amber">Đang xử lý</span>';
+    if (status === 'resolved') return '<span class="adm-pill adm-pill--green">Đã sửa</span>';
+    if (status === 'closed') return '<span class="adm-pill">Đã đóng</span>';
+    return '<span class="adm-pill adm-pill--red">Mới</span>';
+  }
+
+  function renderBugs() {
+    const box = $('#bug-list');
+    if (!state.bugs.length) {
+      box.innerHTML = '<p class="adm-empty">Chưa có báo lỗi nào khớp bộ lọc.</p>';
+      return;
+    }
+
+    box.innerHTML = state.bugs
+      .map((b) => {
+        const info = b.device_info && typeof b.device_info === 'object' ? b.device_info : {};
+        const entries = Object.entries(info);
+        const kvHtml = entries.length
+          ? `<div class="adm-bug-kv">${entries
+              .map(([k, v]) => `<div><span>${esc(k)}</span><strong>${esc(typeof v === 'boolean' ? (v ? 'Có' : 'Không') : v)}</strong></div>`)
+              .join('')}</div>`
+          : '<p class="adm-muted">Người dùng không gửi kèm thông số máy.</p>';
+        const logHtml = b.error_log
+          ? `<pre class="adm-bug-log">${esc(b.error_log)}</pre>`
+          : '<p class="adm-muted" style="margin-top:8px">Không có nhật ký lỗi.</p>';
+
+        return `<article class="adm-bug-card" data-bug-id="${esc(b.id)}">
+          <div class="adm-bug-head">
+            <div class="adm-bug-head__l">
+              <span class="adm-pill adm-pill--blue">#${esc(b.id)}</span>
+              <strong>${esc(b.email)}</strong>
+              ${b.user_name ? `<span class="adm-muted">(${esc(b.user_name)})</span>` : ''}
+              ${bugStatusPill(b.status)}
+              <span class="adm-pill">${esc((b.lang || 'vi').toUpperCase())}</span>
+            </div>
+            <div class="adm-bug-head__r">
+              <span class="adm-muted">${fmtDateTime(b.created_at)}</span>
+            </div>
+          </div>
+
+          <p class="adm-bug-msg">${esc(b.message)}</p>
+
+          <details class="adm-bug-details">
+            <summary>Thông số máy (${entries.length}) &amp; Nhật ký lỗi</summary>
+            ${kvHtml}
+            ${logHtml}
+          </details>
+
+          <div class="adm-bug-ctrl">
+            <select data-bug-status aria-label="Trạng thái">
+              <option value="open"${b.status === 'open' ? ' selected' : ''}>Mới</option>
+              <option value="in_progress"${b.status === 'in_progress' ? ' selected' : ''}>Đang xử lý</option>
+              <option value="resolved"${b.status === 'resolved' ? ' selected' : ''}>Đã sửa</option>
+              <option value="closed"${b.status === 'closed' ? ' selected' : ''}>Đóng</option>
+            </select>
+            <input type="text" data-bug-note value="${esc(b.admin_note || '')}" placeholder="Ghi chú nội bộ của admin…">
+            <button type="button" class="adm-btn adm-btn--primary adm-btn--sm" data-bug-act="save">Lưu</button>
+            <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" data-bug-act="reply-ntc">Trả lời bằng TB</button>
+            <a class="adm-btn adm-btn--ghost adm-btn--sm" href="mailto:${esc(b.email)}?subject=${encodeURIComponent(`[DEVSTU] Phản hồi báo lỗi #${b.id}`)}">Gửi Email</a>
+            <button type="button" class="adm-btn adm-btn--danger adm-btn--sm" data-bug-act="delete">Xoá</button>
+          </div>
+        </article>`;
       })
       .join('');
   }
@@ -1060,6 +1155,64 @@
           await rpc('admin_delete_key', { p_key_id: id });
           toast(`Đã xoá key ${item.code}`, 'ok');
           await Promise.all([loadStats(), loadKeys()]);
+        });
+      }
+    });
+
+    // Bug Reports Filter, Search & Actions
+    let bugSearchTimer = null;
+    $('#bug-search').addEventListener('input', (e) => {
+      state.bugSearch = e.target.value.trim();
+      clearTimeout(bugSearchTimer);
+      bugSearchTimer = setTimeout(() => loadBugs().catch((err) => toast(err.message, 'err')), 220);
+    });
+
+    $$('[data-bug-filter]').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        state.bugFilter = chip.dataset.bugFilter;
+        $$('[data-bug-filter]').forEach((c) => c.classList.toggle('is-active', c === chip));
+        loadBugs().catch((err) => toast(err.message, 'err'));
+      });
+    });
+
+    $('#bug-reload-btn').addEventListener('click', () => loadBugs().catch((err) => toast(err.message, 'err')));
+
+    $('#bug-list').addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-bug-act]');
+      if (!btn) return;
+      const card = btn.closest('[data-bug-id]');
+      const id = Number(card?.dataset.bugId);
+      const item = state.bugs.find((b) => Number(b.id) === id);
+      if (!item) return;
+
+      const act = btn.dataset.bugAct;
+      if (act === 'save') {
+        const statusSel = card.querySelector('[data-bug-status]');
+        const noteIn = card.querySelector('[data-bug-note]');
+        try {
+          await rpc('admin_update_bug_report', {
+            p_id: id,
+            p_status: statusSel.value,
+            p_admin_note: noteIn.value
+          });
+          toast(`Đã cập nhật báo lỗi #${id}`, 'ok');
+          await Promise.all([loadStats(), loadBugs()]);
+        } catch (err) {
+          toast(err.message, 'err');
+        }
+      } else if (act === 'reply-ntc') {
+        switchTab('notifications');
+        $('input[name="ntc-audience"][value="user"]').checked = true;
+        $('#ntc-target-wrap').hidden = false;
+        $('#ntc-target-email').value = item.email;
+        $('#ntc-title').value = `Phản hồi báo lỗi #${item.id}`;
+        $('#ntc-body').focus();
+        updateNotificationPreview();
+      } else if (act === 'delete') {
+        askConfirm('Xoá báo lỗi', `Xoá báo lỗi #${id} từ ${item.email}?`, async () => {
+          await rpc('admin_delete_bug_report', { p_id: id });
+          toast(`Đã xoá báo lỗi #${id}`, 'ok');
+          await Promise.all([loadStats(), loadBugs()]);
         });
       }
     });

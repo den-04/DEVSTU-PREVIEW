@@ -468,7 +468,7 @@
 /* KPI Strip */
 .adm-stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 20px;
 }
@@ -996,6 +996,124 @@
   .adm-split--keys {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* Bug Reports Panel */
+.adm-bug-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.adm-bug-card {
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #131317;
+  border: 1px solid var(--adm-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adm-bug-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.adm-bug-head__l,
+.adm-bug-head__r {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-bug-msg {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #e4e4e7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.adm-bug-details {
+  border: 1px solid var(--adm-border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, .02);
+}
+
+.adm-bug-details summary {
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.adm-bug-kv {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 6px 12px;
+  font-size: 12px;
+}
+
+.adm-bug-kv div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.adm-bug-kv span {
+  color: var(--adm-muted);
+}
+
+.adm-bug-kv strong {
+  color: #e4e4e7;
+  word-break: break-word;
+}
+
+.adm-bug-log {
+  margin: 10px 0 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: #0d0d10;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #d4d4d8;
+  max-height: 180px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.adm-bug-ctrl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, .06);
+}
+
+.adm-bug-ctrl select,
+.adm-bug-ctrl input {
+  border: 1px solid var(--adm-border-strong);
+  background: #121215;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 12.5px;
+}
+
+.adm-bug-ctrl input {
+  flex: 1 1 200px;
 }
 
 @media (max-width: 640px) {

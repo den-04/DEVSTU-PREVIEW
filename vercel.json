@@ -138,6 +138,14 @@
     {
       "source": "/admin/keys/",
       "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/bugs",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/bugs/",
+      "destination": "/admin/index.html"
     }
   ],
   "headers": [
