@@ -2054,7 +2054,7 @@
 
 .hm-pr-hero,
 .hm-get-hero {
-  padding: clamp(48px, 5.5vw, 88px) 0 clamp(56px, 6.5vw, 96px);
+  padding: clamp(48px, 5.5vw, 88px) 0 clamp(30px, 6.5vw, 30px);
   background: var(--hm-bg);
 }
 
@@ -2064,7 +2064,7 @@
 }
 
 .hm-pr-sw {
-  margin-top: clamp(32px, 4vw, 52px);
+  margin-top: clamp(10px, 4vw, 10px);
 }
 
 .hm-pr-tabs {
@@ -2119,7 +2119,7 @@
 
 .hm-pr-plans {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   margin-top: 24px;
 }
