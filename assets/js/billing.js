@@ -11,16 +11,20 @@
   const PENDING_CTX_KEY = 'devstu_pending_auth_ctx_v1';
 
   const loginPage = document.querySelector('[data-login-page]');
+  const ordersPage = document.querySelector('[data-orders-page]');
   const qrDlg = document.getElementById('dv-qr-dlg');
-  const ordersSec = document.getElementById('lich-su-don');
+  const ordersWrap = document.querySelector('[data-orders-wrap]');
+  const ordersGuest = document.querySelector('[data-orders-guest]');
+  const ordersActions = document.querySelector('[data-orders-actions]');
   const ordersList = document.querySelector('[data-orders-list]');
-  const isPricingPage = Boolean(document.querySelector('[data-buy-plan]') || qrDlg || ordersSec);
+  const isPricingPage = Boolean(document.querySelector('[data-buy-plan]'));
 
-  if (!loginPage && !isPricingPage) return;
+  if (!loginPage && !ordersPage && !isPricingPage) return;
 
   const isEn = () => Boolean(window.DEVSTU_I18N && window.DEVSTU_I18N.getLang() === 'en');
   const t = (vi, en) => (isEn() ? en : vi);
   const pricingPath = () => (isEn() ? '/en/pricing/' : '/bang-gia/');
+  const ordersPath = () => (isEn() ? '/en/orders/' : '/don-hang/');
   const loginPath = () => (isEn() ? '/en/login/' : '/dang-nhap/');
   const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const fmtVnd = (n) => `${Number(n || 0).toLocaleString('vi-VN')} đ`;
@@ -39,6 +43,7 @@
     session: null,
     authMode: 'otp',
     orders: [],
+    orderFilter: 'all',
     activeOrder: null,
     activeBank: null,
     pollTimer: null,
@@ -271,7 +276,7 @@
       location.href = ctx.next;
       return;
     }
-    location.href = `${pricingPath()}#lich-su-don`;
+    location.href = ordersPath();
   }
 
   function setAuthFeedback(err, ok) {
@@ -321,7 +326,8 @@
         alreadyEl.innerHTML = `
           <div>${esc(t('Bạn đang đăng nhập với tài khoản:', 'Signed in as:'))} <strong>${esc(u.email || '')}</strong></div>
           <div class="dv-auth-signed__acts">
-            <a class="dv-sm-btn dv-sm-btn--pri" href="${esc(pricingPath())}#lich-su-don">${esc(t('Xem Bảng giá & Kho Key', 'Pricing & Key History'))}</a>
+            <a class="dv-sm-btn dv-sm-btn--pri" href="${esc(ordersPath())}">${esc(t('Mở Lịch sử đơn & Kho Key', 'Open Orders & Key History'))}</a>
+            <a class="dv-sm-btn" href="${esc(pricingPath())}">${esc(t('Xem Bảng giá', 'Pricing'))}</a>
             <button type="button" class="dv-sm-btn" data-web-logout>${esc(t('Đăng xuất', 'Sign out'))}</button>
           </div>`;
       }
@@ -367,23 +373,42 @@
   }
 
   function renderOrders() {
-    if (!ordersSec || !ordersList) return;
+    if (!ordersPage || !ordersList) return;
+    const loginLink = ordersPage.querySelector('[data-orders-login-link]');
+    if (loginLink) {
+      loginLink.setAttribute('href', `${loginPath()}?next=${encodeURIComponent(ordersPath())}`);
+    }
     if (!state.session?.user) {
-      ordersSec.hidden = true;
+      if (ordersGuest) ordersGuest.hidden = false;
+      if (ordersWrap) ordersWrap.hidden = true;
+      if (ordersActions) ordersActions.hidden = true;
       return;
     }
-    ordersSec.hidden = false;
+    if (ordersGuest) ordersGuest.hidden = true;
+    if (ordersWrap) ordersWrap.hidden = false;
+    if (ordersActions) ordersActions.hidden = false;
 
-    if (!state.orders.length) {
-      ordersList.innerHTML = `<div class="dv-orders-empty">${esc(t(
-        'Bạn chưa có đơn hàng nào. Bấm “Mua ngay qua VietQR” ở gói Pro phía trên để nhận mã Key kích hoạt.',
-        'No orders yet. Click “Buy via VietQR” on the Pro plan above to get your activation Key.'
-      ))}</div>`;
+    const filtered = state.orders.filter((o) => {
+      if (state.orderFilter === 'paid') return o.status === 'paid';
+      if (state.orderFilter === 'pending') return o.status === 'pending' || o.status === 'manual_review';
+      if (state.orderFilter === 'closed') return ['cancelled', 'expired', 'failed'].includes(o.status);
+      return true;
+    });
+
+    if (!filtered.length) {
+      ordersList.innerHTML = `<div class="dv-orders-empty">${esc(
+        state.orders.length
+          ? t('Không có đơn hàng nào thuộc mục lọc này.', 'No orders match this filter.')
+          : t(
+            'Bạn chưa có đơn hàng nào. Chuyển sang tab Bảng giá và bấm “Mua ngay qua VietQR” để nhận mã Key kích hoạt.',
+            'No orders yet. Switch to the Pricing tab and click “Buy via VietQR” to get your activation Key.'
+          )
+      )}</div>`;
       return;
     }
 
     const email = state.session.user.email || '';
-    ordersList.innerHTML = state.orders.map((o) => {
+    ordersList.innerHTML = filtered.map((o) => {
       const sm = statusMeta(o.status);
       const periodLabel = o.is_lifetime ? t('Vĩnh viễn', 'Lifetime') : t(`${o.days || 365} ngày`, `${o.days || 365} days`);
       const used = Number(o.key_used_count || 0) >= Number(o.key_max_uses || 1);
@@ -439,7 +464,7 @@
   }
 
   async function loadMyOrders() {
-    if (!ordersSec) return;
+    if (!ordersPage) return;
     if (!state.session?.access_token) {
       state.orders = [];
       renderOrders();
@@ -490,7 +515,7 @@
           <div class="dv-qr-success__code">${esc(o.issued_key_code)}</div>
           <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
             <button type="button" class="hm-btn" data-copy-key="${esc(o.issued_key_code)}">${esc(t('Copy mã Key ngay', 'Copy Key'))}</button>
-            <a class="hm-btn hm-btn--ghost" href="/tai-xuong/">${esc(t('Tải DEVSTU Desktop', 'Download DEVSTU'))}</a>
+            <a class="hm-btn hm-btn--ghost" href="${esc(ordersPath())}">${esc(t('Xem trong Kho Key', 'View Key History'))}</a>
           </div>
         </div>`;
       return;
@@ -706,6 +731,13 @@
       }
       if (e.target.closest('[data-refresh-orders]')) {
         loadMyOrders();
+        return;
+      }
+      const filterBtn = e.target.closest('[data-user-ord-filter]');
+      if (filterBtn) {
+        state.orderFilter = filterBtn.dataset.userOrdFilter || 'all';
+        ordersPage?.querySelectorAll('[data-user-ord-filter]').forEach((b) => b.classList.toggle('is-on', b === filterBtn));
+        renderOrders();
       }
     });
 
@@ -870,8 +902,15 @@
     }
 
     if (isPricingPage) {
-      await loadMyOrders();
+      if (location.hash === '#lich-su-don') {
+        location.replace(ordersPath());
+        return;
+      }
       if (state.session?.access_token) resumePendingBuyOnPricing();
+    }
+
+    if (ordersPage) {
+      await loadMyOrders();
     }
 
     if (window.DEVSTU_I18N) {

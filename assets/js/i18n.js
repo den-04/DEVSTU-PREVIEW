@@ -25,7 +25,8 @@
     ['/chinh-sach/giay-phep/', '/en/policies/licenses/'],
     ['/blog/', '/en/blog/'],
     ['/blog/anh-dang-facebook-bi-lech-mau/', '/en/blog/photos-look-different-on-facebook/'],
-    ['/dang-nhap/', '/en/login/']
+    ['/dang-nhap/', '/en/login/'],
+    ['/don-hang/', '/en/orders/']
   ];
 
   var VI_TO_EN = {};
@@ -127,6 +128,7 @@
     'Blog · Mẹo chỉnh ảnh & quản lý màu sắc | DEVSTU': 'Blog · Photo Editing & Color Management | DEVSTU',
     'Ảnh đăng Facebook bị lệch màu: nguyên nhân và cách sửa | DEVSTU': 'Why Photos Look Different on Facebook: Causes & Fix | DEVSTU',
     'Đăng nhập tài khoản · DEVSTU': 'Sign In · DEVSTU',
+    'Lịch sử đơn hàng & Kho Key · DEVSTU': 'Order History & Key Vault · DEVSTU',
     '404 · Không tìm thấy trang | DEVSTU': '404 · Page Not Found | DEVSTU'
   };
 
@@ -156,7 +158,9 @@
     'Vì sao ảnh chỉnh đẹp trong Photoshop, Camera Raw lên Facebook, Zalo lại nhợt, da xám? Cài đặt đúng khi xuất ảnh sRGB và công cụ kiểm tra miễn phí trên thiết bị.':
       'Why do photos edited in Photoshop or Camera Raw look dull and gray on Facebook? Correct sRGB export settings plus a free on-device color profile checker.',
     'Đăng nhập tài khoản DEVSTU để thanh toán VietQR tự động, lưu lịch sử đơn hàng và nhận mã Key kích hoạt phần mềm.':
-      'Sign in to DEVSTU for automatic VietQR checkout, saved order history, and standalone activation Keys.'
+      'Sign in to DEVSTU for automatic VietQR checkout, saved order history, and standalone activation Keys.',
+    'Xem lại toàn bộ lịch sử đơn hàng VietQR và mã Key kích hoạt DEVSTU đã mua theo tài khoản của bạn.':
+      'Review your VietQR order history and retrieve purchased DEVSTU activation Keys saved to your account.'
   };
 
   // Specific elements containing mixed inline tags (<code>, <strong>, <a>), matched by normalized textContent so browser attribute serialization can never break matching
@@ -1039,11 +1043,22 @@
     'Kho 8 LUT 3D .cube miễn phí': '8 Free 3D .cube LUTs',
     'Tất cả bài viết Blog': 'All Blog Posts',
 
-    // Dedicated Login Page (/dang-nhap/)
+    // Dedicated Login Page (/dang-nhap/) & Orders Page (/don-hang/)
     'Lưu lịch sử đơn hàng VietQR & nhận mã Key kích hoạt ngay cả khi bạn lỡ đóng trình duyệt.':
       'Save your VietQR order history & retrieve activation Keys anytime — even if you close the browser.',
     '← Quay lại Bảng giá': '← Back to Pricing',
     'Thanh toán xong nhận mã Key riêng, không tự kích hoạt.': 'Receive a standalone Key upon payment (no auto-activation).',
+    'Lịch sử đơn & Kho Key': 'Orders & Key Vault',
+    'Mua thêm gói': 'Buy a Plan',
+    'Đăng nhập để xem Lịch sử đơn hàng & Kho Key': 'Sign in to view your Orders & Key Vault',
+    'Mã Key bạn đã mua qua VietQR được lưu an toàn theo tài khoản Google hoặc Email của bạn.':
+      'Activation Keys purchased via VietQR are safely saved to your Google or Email account.',
+    'Đăng nhập ngay': 'Sign in now',
+    'Xem bảng giá': 'View Pricing',
+    'Tất cả': 'All',
+    'Đã cấp Key': 'Key Issued',
+    'Đang chờ thanh toán': 'Awaiting Payment',
+    'Đã hủy / Hết hạn': 'Cancelled / Expired',
 
     // 404 Page
     'Không tìm thấy trang': 'Page not found',
@@ -1065,7 +1080,9 @@
     'Chọn kỳ hạn': 'Select billing period',
     'Nhập link bộ màu (devstu.vercel.app/?m=...)': 'Enter a look link (devstu.vercel.app/?m=...)',
     'Nhập 6 số sau khi bấm Gửi mã': 'Enter the 6-digit code sent to your email',
-    'Nhập mật khẩu': 'Enter your password'
+    'Nhập mật khẩu': 'Enter your password',
+    'Chuyển mục Bảng giá và Đơn hàng': 'Switch between Pricing and Orders',
+    'Lọc trạng thái đơn hàng': 'Filter order status'
   };
 
   function collectDom() {

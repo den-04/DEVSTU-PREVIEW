@@ -39,6 +39,7 @@ const EN_REWRITES = {
   '/en/blog': 'blog/index.html',
   '/en/blog/photos-look-different-on-facebook': 'blog/anh-dang-facebook-bi-lech-mau/index.html',
   '/en/login': 'dang-nhap/index.html',
+  '/en/orders': 'don-hang/index.html',
   '/admin': 'admin/index.html',
   '/admin/accounts': 'admin/index.html',
   '/admin/notifications': 'admin/index.html',

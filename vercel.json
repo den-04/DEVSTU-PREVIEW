@@ -108,6 +108,14 @@
       "destination": "/dang-nhap/index.html"
     },
     {
+      "source": "/en/orders",
+      "destination": "/don-hang/index.html"
+    },
+    {
+      "source": "/en/orders/",
+      "destination": "/don-hang/index.html"
+    },
+    {
       "source": "/v1/t/:file",
       "destination": "/cache_t/:file"
     },

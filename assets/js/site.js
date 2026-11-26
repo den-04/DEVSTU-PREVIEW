@@ -219,7 +219,7 @@
     var s = readWebSession();
     var u = s && s.user ? s.user : null;
     var pricingHref = isEn() ? '/en/pricing/' : '/bang-gia/';
-    var ordersHref = pricingHref + '#lich-su-don';
+    var ordersHref = isEn() ? '/en/orders/' : '/don-hang/';
 
     if (!u) {
       var loginHref = buildLoginHref();
