@@ -100,6 +100,14 @@
       "destination": "/blog/anh-dang-facebook-bi-lech-mau/index.html"
     },
     {
+      "source": "/en/login",
+      "destination": "/dang-nhap/index.html"
+    },
+    {
+      "source": "/en/login/",
+      "destination": "/dang-nhap/index.html"
+    },
+    {
       "source": "/v1/t/:file",
       "destination": "/cache_t/:file"
     },

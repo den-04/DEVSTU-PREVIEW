@@ -24,7 +24,8 @@
     ['/chinh-sach/thanh-toan-hoan-tien/', '/en/policies/refunds/'],
     ['/chinh-sach/giay-phep/', '/en/policies/licenses/'],
     ['/blog/', '/en/blog/'],
-    ['/blog/anh-dang-facebook-bi-lech-mau/', '/en/blog/photos-look-different-on-facebook/']
+    ['/blog/anh-dang-facebook-bi-lech-mau/', '/en/blog/photos-look-different-on-facebook/'],
+    ['/dang-nhap/', '/en/login/']
   ];
 
   var VI_TO_EN = {};
@@ -125,6 +126,7 @@
     'Giấy phép phần mềm | DEVSTU': 'Software Licenses | DEVSTU',
     'Blog · Mẹo chỉnh ảnh & quản lý màu sắc | DEVSTU': 'Blog · Photo Editing & Color Management | DEVSTU',
     'Ảnh đăng Facebook bị lệch màu: nguyên nhân và cách sửa | DEVSTU': 'Why Photos Look Different on Facebook: Causes & Fix | DEVSTU',
+    'Đăng nhập tài khoản · DEVSTU': 'Sign In · DEVSTU',
     '404 · Không tìm thấy trang | DEVSTU': '404 · Page Not Found | DEVSTU'
   };
 
@@ -152,7 +154,9 @@
     'Mẹo chỉnh ảnh, quản lý màu sắc sRGB/Oklab và quy trình hậu kỳ AI nhanh trên DEVSTU Desktop.':
       'Photo editing tips, sRGB/Oklab color management, and fast AI post-production workflows in DEVSTU Desktop.',
     'Vì sao ảnh chỉnh đẹp trong Photoshop, Camera Raw lên Facebook, Zalo lại nhợt, da xám? Cài đặt đúng khi xuất ảnh sRGB và công cụ kiểm tra miễn phí trên thiết bị.':
-      'Why do photos edited in Photoshop or Camera Raw look dull and gray on Facebook? Correct sRGB export settings plus a free on-device color profile checker.'
+      'Why do photos edited in Photoshop or Camera Raw look dull and gray on Facebook? Correct sRGB export settings plus a free on-device color profile checker.',
+    'Đăng nhập tài khoản DEVSTU để thanh toán VietQR tự động, lưu lịch sử đơn hàng và nhận mã Key kích hoạt phần mềm.':
+      'Sign in to DEVSTU for automatic VietQR checkout, saved order history, and standalone activation Keys.'
   };
 
   // Specific elements containing mixed inline tags (<code>, <strong>, <a>), matched by normalized textContent so browser attribute serialization can never break matching
@@ -1035,6 +1039,12 @@
     'Kho 8 LUT 3D .cube miễn phí': '8 Free 3D .cube LUTs',
     'Tất cả bài viết Blog': 'All Blog Posts',
 
+    // Dedicated Login Page (/dang-nhap/)
+    'Lưu lịch sử đơn hàng VietQR & nhận mã Key kích hoạt ngay cả khi bạn lỡ đóng trình duyệt.':
+      'Save your VietQR order history & retrieve activation Keys anytime — even if you close the browser.',
+    '← Quay lại Bảng giá': '← Back to Pricing',
+    'Thanh toán xong nhận mã Key riêng, không tự kích hoạt.': 'Receive a standalone Key upon payment (no auto-activation).',
+
     // 404 Page
     'Không tìm thấy trang': 'Page not found',
     'Đường dẫn bạn vừa mở không tồn tại hoặc đã được chuyển đi.': 'The page you requested does not exist or has been moved.',
@@ -1053,7 +1063,9 @@
     'Bộ lọc ảnh': 'Photo filter',
     'Chọn công cụ AI': 'Select AI tool',
     'Chọn kỳ hạn': 'Select billing period',
-    'Nhập link bộ màu (devstu.vercel.app/?m=...)': 'Enter a look link (devstu.vercel.app/?m=...)'
+    'Nhập link bộ màu (devstu.vercel.app/?m=...)': 'Enter a look link (devstu.vercel.app/?m=...)',
+    'Nhập 6 số sau khi bấm Gửi mã': 'Enter the 6-digit code sent to your email',
+    'Nhập mật khẩu': 'Enter your password'
   };
 
   function collectDom() {

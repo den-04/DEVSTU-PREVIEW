@@ -1,4 +1,5 @@
-// DEVSTU Web Login + VietQR Checkout + Order & Key History (issues Key on payment, never auto-activates)
+// DEVSTU Web Auth (/dang-nhap/) + VietQR Checkout & Order/Key History (/bang-gia/)
+// Payment issues a standalone Key in public.premium_keys and NEVER auto-activates profiles.is_premium.
 (() => {
   'use strict';
 
@@ -7,22 +8,31 @@
   const SESSION_KEY = 'devstu_web_sb_session_v1';
   const PKCE_KEY = 'devstu_web_sb_pkce_v1';
   const PENDING_BUY_KEY = 'devstu_pending_buy_v1';
+  const PENDING_CTX_KEY = 'devstu_pending_auth_ctx_v1';
 
-  const acctBar = document.querySelector('[data-billing-bar]');
-  if (!acctBar) return;
-
-  const authDlg = document.getElementById('dv-auth-dlg');
+  const loginPage = document.querySelector('[data-login-page]');
   const qrDlg = document.getElementById('dv-qr-dlg');
   const ordersSec = document.getElementById('lich-su-don');
   const ordersList = document.querySelector('[data-orders-list]');
+  const isPricingPage = Boolean(document.querySelector('[data-buy-plan]') || qrDlg || ordersSec);
 
-  const t = (vi, en) => (window.DEVSTU_I18N && window.DEVSTU_I18N.getLang() === 'en' ? en : vi);
+  if (!loginPage && !isPricingPage) return;
+
+  const isEn = () => Boolean(window.DEVSTU_I18N && window.DEVSTU_I18N.getLang() === 'en');
+  const t = (vi, en) => (isEn() ? en : vi);
+  const pricingPath = () => (isEn() ? '/en/pricing/' : '/bang-gia/');
+  const loginPath = () => (isEn() ? '/en/login/' : '/dang-nhap/');
   const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const fmtVnd = (n) => `${Number(n || 0).toLocaleString('vi-VN')} đ`;
   const fmtTime = (iso) => {
     if (!iso) return '—';
     const d = new Date(iso);
     return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
+
+  const PLAN_PRICE_LABEL = {
+    'Pro STU Ultra': { year: '19.000 đ / 1 năm', lifetime: '39.000 đ / Vĩnh viễn', yearEn: '19,000 VND / 1 year', lifetimeEn: '39,000 VND / Lifetime' },
+    'Studio Max': { year: '999.000 đ / 1 năm', lifetime: '1.799.000 đ / Vĩnh viễn', yearEn: '999,000 VND / 1 year', lifetimeEn: '1,799,000 VND / Lifetime' }
   };
 
   const state = {
@@ -34,6 +44,23 @@
     pollTimer: null,
     countdownTimer: null
   };
+
+  function notifyAuthChange(loggedIn) {
+    if (window.DEVSTU_AUTH_UI && typeof window.DEVSTU_AUTH_UI.refresh === 'function') {
+      window.DEVSTU_AUTH_UI.refresh();
+    }
+    try {
+      window.dispatchEvent(new CustomEvent('devstu:auth-change', { detail: { loggedIn: Boolean(loggedIn) } }));
+    } catch {}
+  }
+
+  function safeNextPath(raw) {
+    const s = String(raw || '').trim();
+    if (!s || !s.startsWith('/') || s.startsWith('//')) return '';
+    const clean = s.split('?')[0].split('#')[0].replace(/\/+$/, '');
+    if (clean === '/dang-nhap' || clean === '/en/login') return '';
+    return s;
+  }
 
   async function copyText(str, btn) {
     try {
@@ -74,6 +101,7 @@
     };
     localStorage.setItem(SESSION_KEY, JSON.stringify(s));
     state.session = s;
+    notifyAuthChange(true);
     return s;
   }
 
@@ -81,6 +109,7 @@
     localStorage.removeItem(SESSION_KEY);
     state.session = null;
     state.orders = [];
+    notifyAuthChange(false);
   }
 
   function b64url(bytes) {
@@ -151,8 +180,9 @@
       throw new Error(oauthErr);
     }
     if (code) {
-      const verifier = sessionStorage.getItem(PKCE_KEY) || '';
+      const verifier = sessionStorage.getItem(PKCE_KEY) || localStorage.getItem(PKCE_KEY) || '';
       sessionStorage.removeItem(PKCE_KEY);
+      localStorage.removeItem(PKCE_KEY);
       if (!verifier) { cleanOAuthUrl(url); return false; }
       const res = await authReq('/auth/v1/token?grant_type=pkce', {
         method: 'POST',
@@ -184,6 +214,123 @@
     history.replaceState(history.state, '', url.pathname + url.search);
   }
 
+  /* ---- Login Context & Redirect Helpers ---- */
+  function readAuthContext() {
+    const params = new URLSearchParams(location.search);
+    let plan = (params.get('plan') || '').trim();
+    let period = (params.get('period') || '').trim().toLowerCase();
+    let next = safeNextPath(params.get('next'));
+
+    if (!plan) {
+      try {
+        const stored = JSON.parse(localStorage.getItem(PENDING_CTX_KEY) || 'null');
+        if (stored && stored.exp && stored.exp > Date.now()) {
+          plan = stored.plan || '';
+          period = stored.period || '';
+          if (!next) next = safeNextPath(stored.next);
+        }
+      } catch {}
+    }
+    if (!plan) {
+      try {
+        const pb = JSON.parse(sessionStorage.getItem(PENDING_BUY_KEY) || 'null');
+        if (pb?.plan) {
+          plan = pb.plan;
+          period = pb.period || 'lifetime';
+        }
+      } catch {}
+    }
+    if (period && period !== 'year' && period !== 'lifetime') period = 'lifetime';
+    return { plan, period: period || 'lifetime', next };
+  }
+
+  function saveAuthContext(ctx) {
+    try {
+      localStorage.setItem(PENDING_CTX_KEY, JSON.stringify({
+        plan: ctx.plan || '',
+        period: ctx.period || 'lifetime',
+        next: ctx.next || '',
+        exp: Date.now() + 15 * 60 * 1000
+      }));
+    } catch {}
+  }
+
+  function clearAuthContext() {
+    try { localStorage.removeItem(PENDING_CTX_KEY); } catch {}
+  }
+
+  function redirectAfterLogin() {
+    const ctx = readAuthContext();
+    clearAuthContext();
+    if (ctx.plan) {
+      sessionStorage.setItem(PENDING_BUY_KEY, JSON.stringify({ plan: ctx.plan, period: ctx.period }));
+      location.href = `${pricingPath()}?checkout=1&plan=${encodeURIComponent(ctx.plan)}&period=${encodeURIComponent(ctx.period)}`;
+      return;
+    }
+    if (ctx.next) {
+      location.href = ctx.next;
+      return;
+    }
+    location.href = `${pricingPath()}#lich-su-don`;
+  }
+
+  function setAuthFeedback(err, ok) {
+    const eEl = loginPage?.querySelector('[data-auth-err]');
+    const oEl = loginPage?.querySelector('[data-auth-ok]');
+    if (eEl) { eEl.textContent = err || ''; eEl.hidden = !err; }
+    if (oEl) { oEl.textContent = ok || ''; oEl.hidden = !ok; }
+  }
+
+  function renderLoginPage() {
+    if (!loginPage) return;
+    const ctx = readAuthContext();
+    const intentEl = loginPage.querySelector('[data-login-intent]');
+    const alreadyEl = loginPage.querySelector('[data-login-already]');
+    const boxEl = loginPage.querySelector('[data-login-box]');
+    const backEl = loginPage.querySelector('[data-login-back]');
+
+    if (backEl) {
+      backEl.setAttribute('href', ctx.next || pricingPath());
+    }
+
+    if (intentEl) {
+      if (ctx.plan) {
+        const meta = PLAN_PRICE_LABEL[ctx.plan];
+        const priceTxt = meta
+          ? (isEn() ? (ctx.period === 'year' ? meta.yearEn : meta.lifetimeEn) : (ctx.period === 'year' ? meta.year : meta.lifetime))
+          : (ctx.period === 'year' ? t('1 năm', '1 year') : t('Vĩnh viễn', 'Lifetime'));
+        intentEl.hidden = false;
+        intentEl.innerHTML = `
+          <span>${esc(t('Đăng nhập để tiếp tục thanh toán VietQR:', 'Sign in to continue VietQR checkout:'))}</span>
+          <strong>${esc(ctx.plan)} · ${esc(priceTxt)}</strong>`;
+      } else {
+        intentEl.hidden = true;
+        intentEl.innerHTML = '';
+      }
+    }
+
+    const u = state.session?.user;
+    if (u) {
+      if (ctx.plan) {
+        redirectAfterLogin();
+        return;
+      }
+      if (boxEl) boxEl.hidden = true;
+      if (alreadyEl) {
+        alreadyEl.hidden = false;
+        alreadyEl.innerHTML = `
+          <div>${esc(t('Bạn đang đăng nhập với tài khoản:', 'Signed in as:'))} <strong>${esc(u.email || '')}</strong></div>
+          <div class="dv-auth-signed__acts">
+            <a class="dv-sm-btn dv-sm-btn--pri" href="${esc(pricingPath())}#lich-su-don">${esc(t('Xem Bảng giá & Kho Key', 'Pricing & Key History'))}</a>
+            <button type="button" class="dv-sm-btn" data-web-logout>${esc(t('Đăng xuất', 'Sign out'))}</button>
+          </div>`;
+      }
+    } else {
+      if (boxEl) boxEl.hidden = false;
+      if (alreadyEl) { alreadyEl.hidden = true; alreadyEl.innerHTML = ''; }
+    }
+  }
+
   /* ---- API Helpers (Vercel /api/orders/* with Supabase fallback) ---- */
   async function apiReq(url, { method = 'GET', body } = {}) {
     const s = await refreshSessionIfNeeded(false);
@@ -209,44 +356,7 @@
     return json;
   }
 
-  /* ---- Render Account Bar ---- */
-  function renderAcctBar() {
-    const u = state.session?.user;
-    if (!u) {
-      acctBar.innerHTML = `
-        <div class="dv-acct-bar__info">
-          <span class="dv-acct-bar__av" aria-hidden="true">QR</span>
-          <div class="dv-acct-bar__txt">
-            <strong>${esc(t('Đăng nhập để mua gói VietQR & lưu lịch sử Key', 'Sign in to buy via VietQR & save your Key history'))}</strong>
-            <small>${esc(t('Thanh toán xong nhận mã Key riêng (không tự kích hoạt). Lịch sử đơn luôn lưu lại để hỗ trợ nếu có sự cố.', 'Receive a standalone Key upon payment (no auto-activation). Order history is saved for support anytime.'))}</small>
-          </div>
-        </div>
-        <div class="dv-acct-bar__acts">
-          <button type="button" class="dv-sm-btn dv-sm-btn--pri" data-open-auth>${esc(t('Đăng nhập', 'Sign in'))}</button>
-        </div>`;
-      return;
-    }
-
-    const email = u.email || '';
-    const name = u.user_metadata?.full_name || u.user_metadata?.name || email.split('@')[0] || 'DEVSTU';
-    const av = u.user_metadata?.avatar_url || u.user_metadata?.picture || '';
-    const paidCount = state.orders.filter((o) => o.status === 'paid').length;
-
-    acctBar.innerHTML = `
-      <div class="dv-acct-bar__info">
-        <span class="dv-acct-bar__av">${av ? `<img src="${esc(av)}" alt="">` : esc((name[0] || 'U').toUpperCase())}</span>
-        <div class="dv-acct-bar__txt">
-          <strong>${esc(name)}</strong>
-          <small>${esc(email)} · ${esc(t(`${paidCount} Key đã mua`, `${paidCount} purchased Keys`))}</small>
-        </div>
-      </div>
-      <div class="dv-acct-bar__acts">
-        <a class="dv-sm-btn" href="#lich-su-don">${esc(t('Lịch sử đơn & Key', 'Orders & Keys'))}</a>
-        <button type="button" class="dv-sm-btn" data-web-logout>${esc(t('Đăng xuất', 'Sign out'))}</button>
-      </div>`;
-  }
-
-  /* ---- Render Orders & Keys History ---- */
+  /* ---- Render Orders & Keys History (on /bang-gia/) ---- */
   function statusMeta(st) {
     if (st === 'paid') return { cls: 'paid', label: t('Đã thanh toán · Đã cấp Key', 'Paid · Key Issued') };
     if (st === 'pending') return { cls: 'pending', label: t('Đang chờ thanh toán', 'Awaiting Payment') };
@@ -327,9 +437,9 @@
   }
 
   async function loadMyOrders() {
+    if (!ordersSec) return;
     if (!state.session?.access_token) {
       state.orders = [];
-      renderAcctBar();
       renderOrders();
       return;
     }
@@ -337,7 +447,6 @@
       const res = await apiReq('/api/orders/status');
       state.orders = Array.isArray(res.orders) ? res.orders : [];
     } catch {
-      // Fallback: call Supabase RPC directly when running static dev-server locally
       try {
         const s = await refreshSessionIfNeeded(false);
         const r = await fetch(`${SB_URL}/rest/v1/rpc/user_list_my_orders`, {
@@ -351,7 +460,6 @@
         }
       } catch {}
     }
-    renderAcctBar();
     renderOrders();
   }
 
@@ -476,10 +584,12 @@
     const s = await refreshSessionIfNeeded(false);
     if (!s?.access_token) {
       sessionStorage.setItem(PENDING_BUY_KEY, JSON.stringify({ plan, period }));
-      openAuthModal();
+      saveAuthContext({ plan, period, next: pricingPath() });
+      location.href = `${loginPath()}?next=${encodeURIComponent(pricingPath())}&plan=${encodeURIComponent(plan)}&period=${encodeURIComponent(period)}`;
       return;
     }
     sessionStorage.removeItem(PENDING_BUY_KEY);
+    if (!qrDlg) return;
 
     const body = qrDlg.querySelector('[data-qr-body]');
     body.innerHTML = `<p class="dv-dlg__sub" style="margin:12px 0;text-align:center">${esc(t('Đang khởi tạo mã VietQR…', 'Creating VietQR order…'))}</p>`;
@@ -501,6 +611,7 @@
   }
 
   async function reopenPendingOrder(code) {
+    if (!qrDlg) return;
     const body = qrDlg.querySelector('[data-qr-body]');
     body.innerHTML = `<p class="dv-dlg__sub" style="margin:12px 0;text-align:center">${esc(t('Đang tải thông tin đơn hàng…', 'Loading order…'))}</p>`;
     qrDlg.showModal();
@@ -514,22 +625,7 @@
     }
   }
 
-  /* ---- Auth Modal Wiring ---- */
-  function openAuthModal() {
-    if (!authDlg) return;
-    setAuthFeedback('', '');
-    authDlg.showModal();
-  }
-
-  function setAuthFeedback(err, ok) {
-    const eEl = authDlg?.querySelector('[data-auth-err]');
-    const oEl = authDlg?.querySelector('[data-auth-ok]');
-    if (eEl) { eEl.textContent = err || ''; eEl.hidden = !err; }
-    if (oEl) { oEl.textContent = ok || ''; oEl.hidden = !ok; }
-  }
-
   function bindEvents() {
-    // Click Buy button on Pricing card (auto-reads active 1-year / lifetime radio!)
     document.addEventListener('click', (e) => {
       const buyBtn = e.target.closest('[data-buy-plan]');
       if (buyBtn) {
@@ -539,16 +635,12 @@
         startCheckout(plan, isYear ? 'year' : 'lifetime');
         return;
       }
-      if (e.target.closest('[data-open-auth]')) {
-        openAuthModal();
-        return;
-      }
       if (e.target.closest('[data-web-logout]')) {
         const tok = state.session?.access_token;
         if (tok) authReq('/auth/v1/logout', { method: 'POST', token: tok }).catch(() => {});
         clearSession();
-        renderAcctBar();
         renderOrders();
+        renderLoginPage();
         return;
       }
       const copyKeyBtn = e.target.closest('[data-copy-key]');
@@ -575,36 +667,47 @@
       }
     });
 
-    // Close modals
-    for (const dlg of [authDlg, qrDlg]) {
-      if (!dlg) continue;
-      dlg.querySelector('[data-dlg-close]')?.addEventListener('click', () => dlg.close());
-      dlg.addEventListener('click', (ev) => { if (ev.target === dlg) dlg.close(); });
+    if (qrDlg) {
+      qrDlg.querySelector('[data-dlg-close]')?.addEventListener('click', () => qrDlg.close());
+      qrDlg.addEventListener('click', (ev) => { if (ev.target === qrDlg) qrDlg.close(); });
+      qrDlg.addEventListener('close', stopPolling);
     }
-    qrDlg?.addEventListener('close', stopPolling);
 
-    // Auth mode switcher (OTP vs Password)
-    if (authDlg) {
-      authDlg.querySelectorAll('[data-web-auth-tab]').forEach((btn) => {
+    // Sync when user logs out from navbar dropdown
+    window.addEventListener('devstu:auth-change', () => {
+      const next = loadSession();
+      if (!next && state.session) {
+        state.session = null;
+        state.orders = [];
+        if (qrDlg?.open) qrDlg.close();
+        renderOrders();
+        renderLoginPage();
+      }
+    });
+
+    // Dedicated Login Page form wiring
+    if (loginPage) {
+      loginPage.querySelectorAll('[data-web-auth-tab]').forEach((btn) => {
         btn.addEventListener('click', () => {
           state.authMode = btn.dataset.webAuthTab;
-          authDlg.querySelectorAll('[data-web-auth-tab]').forEach((b) => b.classList.toggle('is-on', b === btn));
-          authDlg.querySelector('[data-otp-box]').hidden = state.authMode !== 'otp';
-          authDlg.querySelector('[data-pass-box]').hidden = state.authMode !== 'password';
-          authDlg.querySelector('[data-send-otp]').hidden = state.authMode !== 'otp';
-          authDlg.querySelector('[data-auth-submit]').textContent = state.authMode === 'otp'
+          loginPage.querySelectorAll('[data-web-auth-tab]').forEach((b) => b.classList.toggle('is-on', b === btn));
+          loginPage.querySelector('[data-otp-box]').hidden = state.authMode !== 'otp';
+          loginPage.querySelector('[data-pass-box]').hidden = state.authMode !== 'password';
+          loginPage.querySelector('[data-send-otp]').hidden = state.authMode !== 'otp';
+          loginPage.querySelector('[data-auth-submit]').textContent = state.authMode === 'otp'
             ? t('Xác nhận OTP', 'Verify OTP')
             : t('Đăng nhập', 'Sign in');
           setAuthFeedback('', '');
         });
       });
 
-      // Google OAuth
-      authDlg.querySelector('[data-web-google]')?.addEventListener('click', async () => {
+      loginPage.querySelector('[data-web-google]')?.addEventListener('click', async () => {
         try {
           setAuthFeedback('', '');
+          saveAuthContext(readAuthContext());
           const { verifier, challenge } = await createPkce();
           sessionStorage.setItem(PKCE_KEY, verifier);
+          localStorage.setItem(PKCE_KEY, verifier);
           const redirectTo = encodeURIComponent(`${location.origin}${location.pathname}`);
           location.href = `${SB_URL}/auth/v1/authorize?provider=google&redirect_to=${redirectTo}&code_challenge=${encodeURIComponent(challenge)}&code_challenge_method=s256`;
         } catch (err) {
@@ -612,9 +715,8 @@
         }
       });
 
-      // Send OTP
-      authDlg.querySelector('[data-send-otp]')?.addEventListener('click', async (ev) => {
-        const email = authDlg.querySelector('[data-auth-email]').value.trim().toLowerCase();
+      loginPage.querySelector('[data-send-otp]')?.addEventListener('click', async (ev) => {
+        const email = loginPage.querySelector('[data-auth-email]').value.trim().toLowerCase();
         if (!email || !email.includes('@')) {
           setAuthFeedback(t('Vui lòng nhập đúng địa chỉ Email.', 'Please enter a valid email address.'), '');
           return;
@@ -623,6 +725,7 @@
         btn.disabled = true;
         setAuthFeedback('', '');
         try {
+          saveAuthContext(readAuthContext());
           await authReq(`/auth/v1/otp?redirect_to=${encodeURIComponent(`${location.origin}${location.pathname}`)}`, {
             method: 'POST',
             body: { email, create_user: true }
@@ -635,32 +738,29 @@
         }
       });
 
-      // Submit OTP / Password
-      authDlg.querySelector('[data-web-auth-form]')?.addEventListener('submit', async (ev) => {
+      loginPage.querySelector('[data-web-auth-form]')?.addEventListener('submit', async (ev) => {
         ev.preventDefault();
-        const email = authDlg.querySelector('[data-auth-email]').value.trim().toLowerCase();
+        const email = loginPage.querySelector('[data-auth-email]').value.trim().toLowerCase();
         if (!email || !email.includes('@')) {
           setAuthFeedback(t('Vui lòng nhập Email hợp lệ.', 'Please enter a valid email.'), '');
           return;
         }
-        const btn = authDlg.querySelector('[data-auth-submit]');
+        const btn = loginPage.querySelector('[data-auth-submit]');
         btn.disabled = true;
         setAuthFeedback('', '');
         try {
           let res;
           if (state.authMode === 'otp') {
-            const code = authDlg.querySelector('[data-auth-otp]').value.replace(/\s+/g, '');
+            const code = loginPage.querySelector('[data-auth-otp]').value.replace(/\s+/g, '');
             if (code.length < 6) throw new Error(t('Vui lòng nhập đủ mã OTP 6 số.', 'Enter the 6-digit OTP code.'));
             res = await authReq('/auth/v1/verify', { method: 'POST', body: { email, token: code, type: 'email' } });
           } else {
-            const password = authDlg.querySelector('[data-auth-pass]').value;
+            const password = loginPage.querySelector('[data-auth-pass]').value;
             if (!password) throw new Error(t('Vui lòng nhập mật khẩu.', 'Please enter your password.'));
             res = await authReq('/auth/v1/token?grant_type=password', { method: 'POST', body: { email, password } });
           }
           saveSession(res);
-          authDlg.close();
-          await loadMyOrders();
-          resumePendingBuyIfAny();
+          redirectAfterLogin();
         } catch (err) {
           setAuthFeedback(err.message || t('Đăng nhập thất bại.', 'Sign in failed.'), '');
         } finally {
@@ -670,25 +770,71 @@
     }
   }
 
-  function resumePendingBuyIfAny() {
-    try {
-      const raw = sessionStorage.getItem(PENDING_BUY_KEY);
-      if (!raw) return;
+  function resumePendingBuyOnPricing() {
+    if (!isPricingPage) return;
+    const url = new URL(location.href);
+    let plan = (url.searchParams.get('plan') || '').trim();
+    let period = (url.searchParams.get('period') || '').trim().toLowerCase();
+    const shouldCheckout = url.searchParams.get('checkout') === '1';
+
+    if (shouldCheckout || plan) {
+      url.searchParams.delete('checkout');
+      url.searchParams.delete('plan');
+      url.searchParams.delete('period');
+      history.replaceState(history.state, '', url.pathname + url.search + url.hash);
+    }
+
+    if (!plan) {
+      try {
+        const raw = sessionStorage.getItem(PENDING_BUY_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          plan = parsed?.plan || '';
+          period = parsed?.period || '';
+        }
+      } catch {}
+    }
+
+    if (plan) {
       sessionStorage.removeItem(PENDING_BUY_KEY);
-      const { plan, period } = JSON.parse(raw);
-      if (plan && period) startCheckout(plan, period);
-    } catch {}
+      const normPeriod = period === 'year' ? 'year' : 'lifetime';
+      const radioY = document.getElementById('hm-per-y');
+      const radioL = document.getElementById('hm-per-l');
+      if (radioY && radioL) {
+        radioY.checked = normPeriod === 'year';
+        radioL.checked = normPeriod !== 'year';
+      }
+      startCheckout(plan, normPeriod);
+    }
   }
 
   async function init() {
     bindEvents();
-    try { await handleOAuthCallback(); } catch {}
+    let oauthJustLoggedIn = false;
+    try {
+      oauthJustLoggedIn = await handleOAuthCallback();
+    } catch (err) {
+      if (loginPage) setAuthFeedback(err.message || t('Đăng nhập Google thất bại.', 'Google sign in failed.'), '');
+    }
+
     await refreshSessionIfNeeded(false);
-    await loadMyOrders();
-    if (state.session?.access_token) resumePendingBuyIfAny();
+
+    if (loginPage) {
+      if (oauthJustLoggedIn && state.session?.access_token) {
+        redirectAfterLogin();
+        return;
+      }
+      renderLoginPage();
+    }
+
+    if (isPricingPage) {
+      await loadMyOrders();
+      if (state.session?.access_token) resumePendingBuyOnPricing();
+    }
+
     if (window.DEVSTU_I18N) {
       window.DEVSTU_I18N.onChange(() => {
-        renderAcctBar();
+        renderLoginPage();
         renderOrders();
         if (qrDlg?.open && state.activeOrder) renderQrModal();
       });

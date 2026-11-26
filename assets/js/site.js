@@ -154,4 +154,151 @@
     dlg.querySelector('[data-ck-st]').textContent = '';
     if (typeof dlg.showModal === 'function') dlg.showModal();
   });
+
+  // Shared Navbar Login / Account Button next to "Tải app"
+  var SB_URL = 'https://kvdmtofhkzwgoiganirl.supabase.co';
+  var SB_KEY = 'sb_publishable_JSEFSdaGLb3Q-NgLZw6GWA_vW0RGE1k';
+  var SESSION_KEY = 'devstu_web_sb_session_v1';
+
+  function escHtml(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function readWebSession() {
+    try {
+      var raw = localStorage.getItem(SESSION_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      return parsed && parsed.access_token ? parsed : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function isOnLoginRoute() {
+    var p = (location.pathname || '/').replace(/\/+$/, '');
+    return p === '/dang-nhap' || p === '/en/login';
+  }
+
+  function buildLoginHref() {
+    var base = isEn() ? '/en/login/' : '/dang-nhap/';
+    if (isOnLoginRoute()) return base;
+    var next = location.pathname + location.search + location.hash;
+    return base + '?next=' + encodeURIComponent(next);
+  }
+
+  function performLogout() {
+    var s = readWebSession();
+    if (s && s.access_token) {
+      fetch(SB_URL + '/auth/v1/logout', {
+        method: 'POST',
+        headers: { apikey: SB_KEY, Authorization: 'Bearer ' + s.access_token }
+      }).catch(function () {});
+    }
+    try { localStorage.removeItem(SESSION_KEY); } catch (_) {}
+    renderNavAuth();
+    try { window.dispatchEvent(new CustomEvent('devstu:auth-change', { detail: { loggedIn: false } })); } catch (_) {}
+  }
+
+  function renderNavAuth() {
+    var navRight = document.querySelector('.site-nav .right');
+    if (!navRight) return;
+    var slot = navRight.querySelector('.nav-auth-slot');
+    if (!slot) {
+      slot = document.createElement('div');
+      slot.className = 'nav-auth-slot';
+      var dlBtn = navRight.querySelector('a.g-btn--primary');
+      if (dlBtn) navRight.insertBefore(slot, dlBtn);
+      else navRight.appendChild(slot);
+    }
+
+    var s = readWebSession();
+    var u = s && s.user ? s.user : null;
+    var pricingHref = isEn() ? '/en/pricing/' : '/bang-gia/';
+    var ordersHref = pricingHref + '#lich-su-don';
+
+    if (!u) {
+      var loginHref = buildLoginHref();
+      slot.innerHTML =
+        '<a class="g-btn g-btn--ghost g-btn--sm nav-auth-btn" href="' + escHtml(loginHref) + '"' +
+        (isOnLoginRoute() ? ' aria-current="page"' : '') + '>' +
+        escHtml(t('Đăng nhập', 'Sign in')) + '</a>';
+    } else {
+      var email = u.email || '';
+      var name = (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || (email ? email.split('@')[0] : 'DEVSTU');
+      var av = (u.user_metadata && (u.user_metadata.avatar_url || u.user_metadata.picture)) || '';
+      var initial = (name[0] || 'U').toUpperCase();
+      slot.innerHTML =
+        '<details class="nav-acct-dd">' +
+          '<summary aria-label="' + escHtml(t('Tài khoản DEVSTU', 'DEVSTU Account')) + '">' +
+            '<span class="nav-acct-dd__av">' + (av ? '<img src="' + escHtml(av) + '" alt="">' : escHtml(initial)) + '</span>' +
+            '<span class="nav-acct-dd__name">' + escHtml(name) + '</span>' +
+            '<svg class="lang-dd__chev" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>' +
+          '</summary>' +
+          '<div class="nav-acct-dd__menu" role="menu">' +
+            '<div class="nav-acct-dd__head"><strong>' + escHtml(name) + '</strong><small>' + escHtml(email) + '</small></div>' +
+            '<a class="nav-acct-dd__item" role="menuitem" href="' + escHtml(ordersHref) + '">' + escHtml(t('Lịch sử đơn & Key', 'Orders & Keys')) + '</a>' +
+            '<a class="nav-acct-dd__item" role="menuitem" href="' + escHtml(pricingHref) + '">' + escHtml(t('Bảng giá & Mua gói', 'Pricing & Plans')) + '</a>' +
+            '<button type="button" class="nav-acct-dd__item nav-acct-dd__item--danger" role="menuitem" data-nav-logout>' + escHtml(t('Đăng xuất', 'Sign out')) + '</button>' +
+          '</div>' +
+        '</details>';
+    }
+
+    // Also mirror in mobile drawer
+    if (menu) {
+      var mmAuth = menu.querySelector('.mm-auth');
+      if (!mmAuth) {
+        mmAuth = document.createElement('div');
+        mmAuth.className = 'mm-auth';
+        var mmLang = menu.querySelector('.mm-lang');
+        if (mmLang) menu.insertBefore(mmAuth, mmLang);
+        else menu.appendChild(mmAuth);
+      }
+      if (!u) {
+        mmAuth.innerHTML =
+          '<a class="mm-auth__btn" href="' + escHtml(buildLoginHref()) + '">' + escHtml(t('Đăng nhập tài khoản', 'Sign in')) + '</a>';
+      } else {
+        mmAuth.innerHTML =
+          '<div class="mm-auth__meta">' + escHtml(u.email || '') + '</div>' +
+          '<a class="mm-auth__btn" href="' + escHtml(ordersHref) + '">' + escHtml(t('Lịch sử đơn & Key', 'Orders & Keys')) + '</a>' +
+          '<button type="button" class="mm-auth__btn" data-nav-logout>' + escHtml(t('Đăng xuất', 'Sign out')) + '</button>';
+      }
+    }
+  }
+
+  document.addEventListener('click', function (ev) {
+    var dd = document.querySelector('.nav-acct-dd');
+    if (dd && dd.open && !dd.contains(ev.target)) dd.open = false;
+    var logoutBtn = ev.target.closest('[data-nav-logout]');
+    if (logoutBtn) {
+      ev.preventDefault();
+      performLogout();
+    }
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape') {
+      var dd = document.querySelector('.nav-acct-dd');
+      if (dd && dd.open) dd.open = false;
+    }
+  });
+
+  window.addEventListener('storage', function (ev) {
+    if (ev.key === SESSION_KEY) renderNavAuth();
+  });
+  window.addEventListener('devstu:auth-change', renderNavAuth);
+  window.DEVSTU_AUTH_UI = { refresh: renderNavAuth };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderNavAuth);
+  } else {
+    renderNavAuth();
+  }
+  if (window.DEVSTU_I18N) {
+    window.DEVSTU_I18N.onChange(renderNavAuth);
+  }
 })();
