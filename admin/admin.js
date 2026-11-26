@@ -632,6 +632,7 @@
     if (st === 'paid') return '<span class="adm-pill adm-pill--green">Đã cấp Key</span>';
     if (st === 'manual_review') return '<span class="adm-pill adm-pill--amber">Cần kiểm tra</span>';
     if (st === 'pending') return '<span class="adm-pill adm-pill--blue">Chờ thanh toán</span>';
+    if (st === 'cancelled') return '<span class="adm-pill">Đã hủy</span>';
     if (st === 'failed') return '<span class="adm-pill adm-pill--red">Lỗi</span>';
     return '<span class="adm-pill">Hết hạn</span>';
   }

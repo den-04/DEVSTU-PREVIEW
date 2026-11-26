@@ -92,6 +92,23 @@
   background: #0077ed;
 }
 
+.dv-sm-btn--danger {
+  border-color: rgba(239, 68, 68, .38);
+  background: rgba(239, 68, 68, .10);
+  color: #fca5a5;
+}
+
+.dv-sm-btn--danger:hover {
+  background: rgba(239, 68, 68, .20);
+  border-color: rgba(239, 68, 68, .55);
+  color: #fecaca;
+}
+
+.dv-sm-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
 /* ---- Order & Key History Section ---- */
 .dv-orders-sec {
   padding: 56px 0;

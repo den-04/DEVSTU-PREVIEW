@@ -361,6 +361,7 @@
     if (st === 'paid') return { cls: 'paid', label: t('Đã thanh toán · Đã cấp Key', 'Paid · Key Issued') };
     if (st === 'pending') return { cls: 'pending', label: t('Đang chờ thanh toán', 'Awaiting Payment') };
     if (st === 'manual_review') return { cls: 'review', label: t('Cần kiểm tra (chuyển thiếu / lỗi)', 'Needs Review') };
+    if (st === 'cancelled') return { cls: 'expired', label: t('Đã hủy', 'Cancelled') };
     if (st === 'failed') return { cls: 'failed', label: t('Lỗi thanh toán', 'Failed') };
     return { cls: 'expired', label: t('Hết hạn QR', 'Expired') };
   }
@@ -403,7 +404,8 @@
       const supportHref = `mailto:ducdoan04.work@gmail.com?subject=${encodeURIComponent(`[DEVSTU] Hỗ trợ đơn #${o.order_code}`)}&body=${encodeURIComponent(`Email tài khoản: ${email}\nMã đơn hàng: ${o.order_code}\nGói: ${o.plan} (${periodLabel})\nSố tiền: ${fmtVnd(o.amount)}\nMô tả vấn đề: `)}`;
 
       const reopenBtn = o.status === 'pending'
-        ? `<button type="button" class="dv-sm-btn dv-sm-btn--pri" data-reopen-order="${esc(o.order_code)}">${esc(t('Mở lại mã QR', 'Open QR'))}</button>`
+        ? `<button type="button" class="dv-sm-btn dv-sm-btn--pri" data-reopen-order="${esc(o.order_code)}">${esc(t('Mở lại mã QR', 'Open QR'))}</button>
+           <button type="button" class="dv-sm-btn dv-sm-btn--danger" data-cancel-order="${esc(o.order_code)}">${esc(t('Hủy đơn', 'Cancel'))}</button>`
         : '';
 
       const noteHtml = o.admin_note
@@ -525,12 +527,15 @@
         </dl>
       </div>
       <div class="dv-qr-status">
-        <span data-qr-poll-msg>${esc(t('Đang chờ thanh toán… tự động kiểm tra mỗi 3 giây', 'Waiting for transfer… auto-checking every 3s'))}</span>
+        <span data-qr-poll-msg>${esc(t('Đang chờ thanh toán… tự động kiểm tra mỗi 5 giây', 'Waiting for transfer… auto-checking every 5s'))}</span>
         <strong data-qr-timer>20:00</strong>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center">
         <button type="button" class="dv-sm-btn dv-sm-btn--pri" data-qr-check-now>${esc(t('Tôi đã chuyển khoản, kiểm tra ngay', 'I transferred — check now'))}</button>
-        <a class="dv-sm-btn" href="mailto:ducdoan04.work@gmail.com?subject=${encodeURIComponent(`[DEVSTU] Hỗ trợ đơn #${o.order_code}`)}">${esc(t('Cần hỗ trợ / Chuyển sai nội dung', 'Need help'))}</a>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <a class="dv-sm-btn" href="mailto:ducdoan04.work@gmail.com?subject=${encodeURIComponent(`[DEVSTU] Hỗ trợ đơn #${o.order_code}`)}">${esc(t('Cần hỗ trợ', 'Need help'))}</a>
+          <button type="button" class="dv-sm-btn dv-sm-btn--danger" data-cancel-order="${esc(o.order_code)}">${esc(t('Hủy đơn', 'Cancel'))}</button>
+        </div>
       </div>
       <p class="dv-qr-notice">${esc(t(
         'Thanh toán xong hệ thống sẽ tự động cấp 1 mã Key riêng và lưu vào mục Lịch sử đơn hàng của bạn (không tự kích hoạt vào tài khoản). Nếu có lỗi mạng hoặc lỡ đóng cửa sổ, bạn chỉ cần mở lại trang Bảng giá để lấy Key.',
@@ -555,7 +560,7 @@
     };
     updateClock();
     state.countdownTimer = setInterval(updateClock, 1000);
-    state.pollTimer = setInterval(() => checkActiveOrder(false), 3200);
+    state.pollTimer = setInterval(() => checkActiveOrder(false), 5000);
   }
 
   async function checkActiveOrder(manual = false) {
@@ -625,6 +630,38 @@
     }
   }
 
+  async function cancelOrder(code, btn) {
+    if (!code) return;
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = t('Đang hủy…', 'Cancelling…');
+    }
+    stopPolling();
+    try {
+      await apiReq('/api/orders/cancel', { method: 'POST', body: { code } });
+    } catch (err) {
+      // Fallback: call Supabase RPC directly when running local static server
+      if (err?.status === 404 || err?.status === 405) {
+        try {
+          const s = await refreshSessionIfNeeded(false);
+          if (s?.access_token) {
+            await fetch(`${SB_URL}/rest/v1/rpc/user_cancel_payment_order`, {
+              method: 'POST',
+              headers: { apikey: SB_KEY, Authorization: `Bearer ${s.access_token}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ p_order_code: code })
+            });
+          }
+        } catch {}
+      }
+    } finally {
+      if (state.activeOrder && state.activeOrder.order_code === code) {
+        state.activeOrder = null;
+        if (qrDlg?.open) qrDlg.close();
+      }
+      await loadMyOrders();
+    }
+  }
+
   function bindEvents() {
     document.addEventListener('click', (e) => {
       const buyBtn = e.target.closest('[data-buy-plan]');
@@ -656,6 +693,11 @@
       const reopenBtn = e.target.closest('[data-reopen-order]');
       if (reopenBtn) {
         reopenPendingOrder(reopenBtn.dataset.reopenOrder);
+        return;
+      }
+      const cancelBtn = e.target.closest('[data-cancel-order]');
+      if (cancelBtn) {
+        cancelOrder(cancelBtn.dataset.cancelOrder, cancelBtn);
         return;
       }
       if (e.target.closest('[data-qr-check-now]')) {
