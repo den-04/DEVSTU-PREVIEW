@@ -849,6 +849,7 @@
     renderReportModalTexts();
     setReportFeedback('', '');
 
+    dlg.querySelector('[data-rep-cat]').value = state.reportingOrder.status === 'paid' ? 'key_issue' : 'paid_no_key';
     dlg.querySelector('[data-rep-tx]').value = '';
     dlg.querySelector('[data-rep-amt]').value = state.reportingOrder.amount ? String(state.reportingOrder.amount) : '';
     dlg.querySelector('[data-rep-msg]').value = '';
@@ -988,6 +989,7 @@
       }
       const reportBtn = e.target.closest('[data-report-order]');
       if (reportBtn) {
+        e.preventDefault();
         openReportModal(reportBtn.dataset.reportOrder);
         return;
       }
@@ -1020,6 +1022,7 @@
         state.session = null;
         state.orders = [];
         if (qrDlg?.open) qrDlg.close();
+        if (reportDlg?.open) reportDlg.close();
         renderOrders();
         renderLoginPage();
       }
