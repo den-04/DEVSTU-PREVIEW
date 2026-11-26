@@ -1,4 +1,10 @@
 /* DEVSTU Billing — Web Login, VietQR Checkout & Order/Key History */
+.dv-orders-page [hidden],
+.dv-auth-page [hidden],
+.dv-dlg [hidden] {
+  display: none !important;
+}
+
 .dv-acct-bar {
   margin: 26px auto 0;
   max-width: 820px;

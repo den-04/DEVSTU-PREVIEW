@@ -82,6 +82,10 @@ img {
   box-sizing: border-box;
 }
 
+.g-root [hidden] {
+  display: none !important;
+}
+
 .lp {
   font-family: var(--font-text);
   color: var(--ink);
