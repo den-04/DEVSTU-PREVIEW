@@ -31,8 +31,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #0071e3;
-  color: #ffffff;
+  background: #e59e2d;
+  color: #140f05;
   font-weight: 600;
   font-size: 14px;
   display: grid;
@@ -107,19 +107,19 @@ a.dv-sm-btn:hover,
 a.dv-sm-btn--pri,
 .hm a.dv-sm-btn--pri,
 .dv-dlg a.dv-sm-btn--pri {
-  background: #0071e3;
-  border-color: #0071e3;
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(0, 113, 227, .32);
+  background: linear-gradient(180deg, #f8c96b 0%, #e59e2d 100%);
+  border-color: #e59e2d;
+  color: #140f05;
+  box-shadow: 0 4px 14px rgba(245, 184, 81, .28);
 }
 
 .dv-sm-btn--pri:hover,
 a.dv-sm-btn--pri:hover,
 .hm a.dv-sm-btn--pri:hover,
 .dv-dlg a.dv-sm-btn--pri:hover {
-  background: #0a84ff;
-  border-color: #0a84ff;
-  color: #ffffff;
+  background: linear-gradient(180deg, #ffd685 0%, #f0aa3c 100%);
+  border-color: #f5b851;
+  color: #140f05;
 }
 
 .dv-sm-btn--danger,
@@ -189,7 +189,7 @@ a.dv-sm-btn--danger:hover,
 .dv-order-card {
   padding: 20px 22px;
   border-radius: 18px;
-  background: #1a1a1e;
+  background: #121217;
   border: 1px solid rgba(255, 255, 255, .09);
   display: grid;
   gap: 14px;
@@ -298,7 +298,7 @@ a.dv-sm-btn--danger:hover,
 .dv-orders-empty {
   padding: 28px 22px;
   border-radius: 18px;
-  background: #1a1a1e;
+  background: #121217;
   border: 1px dashed rgba(255, 255, 255, .14);
   text-align: center;
   color: #9e9ea7;
@@ -311,7 +311,7 @@ a.dv-sm-btn--danger:hover,
   padding: 0;
   border: 1px solid rgba(255, 255, 255, .14);
   border-radius: 24px;
-  background: radial-gradient(560px 240px at 50% -12%, rgba(0, 113, 227, .16), transparent 70%), #18181c;
+  background: radial-gradient(560px 240px at 50% -12%, rgba(245, 184, 81, .14), transparent 70%), #16161d;
   color: #ffffff;
   width: min(510px, calc(100vw - 24px));
   max-height: calc(100dvh - 28px);
@@ -522,7 +522,7 @@ a.dv-sm-btn--danger:hover,
 .dv-field input:focus,
 .dv-field select:focus,
 .dv-field textarea:focus {
-  outline: 2px solid #2997ff;
+  outline: 2px solid #f5b851;
   border-color: transparent;
 }
 
@@ -835,7 +835,7 @@ a.dv-sm-btn--danger:hover,
   padding: 56px 20px 76px;
   display: grid;
   place-items: center;
-  background: radial-gradient(760px 420px at 50% 0%, rgba(0, 113, 227, .14), transparent 70%), #141416;
+  background: radial-gradient(760px 420px at 50% 0%, rgba(245, 184, 81, .11), transparent 70%), radial-gradient(640px 360px at 85% 20%, rgba(56, 189, 248, .08), transparent 70%), #09090b;
   color: #ffffff;
 }
 
@@ -843,9 +843,9 @@ a.dv-sm-btn--danger:hover,
   width: min(468px, 100%);
   padding: 28px 28px 24px;
   border-radius: 22px;
-  background: #1b1b20;
-  border: 1px solid rgba(255, 255, 255, .11);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, .55);
+  background: #121217;
+  border: 1px solid rgba(255, 255, 255, .10);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .62);
   display: grid;
   gap: 18px;
 }
@@ -933,7 +933,7 @@ a.dv-sm-btn--danger:hover,
 }
 
 .dv-auth-back {
-  color: #2997ff;
+  color: #f5b851;
   text-decoration: none;
   font-size: 13.5px;
   font-weight: 600;
@@ -994,7 +994,7 @@ a.dv-sm-btn--danger:hover,
 .dv-orders-page {
   min-height: calc(100dvh - 52px - 260px);
   padding: 56px 0 88px;
-  background: #141416;
+  background: radial-gradient(760px 360px at 50% 0%, rgba(245, 184, 81, .08), transparent 70%), #09090b;
   color: #ffffff;
 }
 
@@ -1033,15 +1033,15 @@ a.dv-sm-btn--danger:hover,
 }
 
 .dv-ord-filters button.is-on {
-  background: #0071e3;
-  border-color: #0071e3;
-  color: #ffffff;
+  background: #e59e2d;
+  border-color: #e59e2d;
+  color: #140f05;
 }
 
 .dv-orders-guest {
   padding: 40px 26px;
   border-radius: 22px;
-  background: #1a1a1e;
+  background: #121217;
   border: 1px solid rgba(255, 255, 255, .10);
   text-align: center;
   display: grid;

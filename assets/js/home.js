@@ -83,8 +83,8 @@
     };
 
     const heroSrc = (name) => ({
-      src: `${IMG}${name}-700.webp`,
-      srcset: `${IMG}${name}-700.webp 700w, ${IMG}${name}.webp 1400w`
+      src: `${IMG}${name}.webp`,
+      srcset: `${IMG}${name}.webp 900w`
     });
     const swap = (img, s) => {
       if (img.getAttribute('src') === s.src) return;
@@ -100,13 +100,14 @@
       if (trEl) trEl.style.setProperty('--v', val[1]);
     };
     const paint = () => {
+      const STUDIO = '/assets/img/studio/';
       if (st.photo === 1) {
-        swap(A, heroSrc('hero-goc'));
-        swap(B, heroSrc(!st.auto ? 'hero-goc' : st.look ? `hero-bm${st.look}-sau` : 'hero-sau'));
+        swap(A, { src: `${STUDIO}hero-raw.webp` });
+        swap(B, { src: !st.auto ? `${STUDIO}hero-raw.webp` : st.look ? `${STUDIO}hero-look-${st.look}.webp` : `${STUDIO}hero-auto.webp` });
       } else {
         const n = st.photo;
-        swap(A, { src: `${IMG}strip-${n}-goc.webp` });
-        swap(B, { src: `${IMG}strip-${n}-${st.done.has(n) ? 'sau' : 'goc'}.webp` });
+        swap(A, { src: `${STUDIO}shoot-${n}-raw.webp` });
+        swap(B, { src: `${STUDIO}shoot-${n}-${st.done.has(n) ? 'edit' : 'raw'}.webp` });
       }
       autoBtn.setAttribute('aria-pressed', String(st.auto));
       autoBtn.querySelector('span').textContent = st.auto
@@ -222,32 +223,32 @@
     const cap = aiBox.querySelector('[data-tool-cap]');
     const TOOLS = {
       erase: {
-        a: '/icons/cong-cu/erase-truoc.webp',
-        b: '/icons/cong-cu/erase-sau.webp',
+        a: '/assets/img/studio/ai-denoise-raw.webp',
+        b: '/assets/img/studio/ai-denoise-after.webp',
         cap: [
-          'LaMa Inpainting 512×512: Tô lên vật thừa, AI tái tạo nền cát và sóng biển liền mạch ngay trên máy.',
-          'LaMa Inpainting 512×512: Paint over unwanted objects and AI seamlessly reconstructs sand and ocean waves on-device.'
+          'SCUNet Khử nhiễu AI: Tẩy sạch nhiễu hạt ISO cao trong vùng tối mà vẫn giữ trọn chi tiết tóc và da.',
+          'SCUNet AI Denoise: Eliminates high-ISO chroma & luma shadow grain while keeping crisp facial texture.'
         ]
       },
       bokeh: {
-        a: '/icons/cong-cu/bokeh-truoc.webp',
-        b: '/icons/cong-cu/bokeh-sau.webp',
+        a: '/assets/img/studio/ai-bokeh-raw.webp',
+        b: '/assets/img/studio/ai-bokeh-after.webp',
         cap: [
           'Depth Anything v2 + BiRefNet: Tạo bản đồ độ sâu trường ảnh, xóa phông quang học giữ nét từng sợi tóc.',
           'Depth Anything v2 + BiRefNet: Generates a depth map for optical lens bokeh while keeping fine hair strands razor-sharp.'
         ]
       },
       sky: {
-        a: '/icons/cong-cu/sky-truoc.webp',
-        b: '/icons/cong-cu/sky-sau.webp',
+        a: '/assets/img/studio/ai-sky-raw.webp',
+        b: '/assets/img/studio/ai-sky-after.webp',
         cap: [
-          'LK Magic Pro Sky Segmentation: Tự tách đường chân trời và ghép bầu trời mây xanh đồng bộ ánh sáng.',
-          'LK Magic Pro Sky Segmentation: Automatically masks the horizon and blends a new sky with matched ambient lighting.'
+          'LK Magic Pro Sky Segmentation: Tự tách đường chân trời và phục hồi bầu trời hoàng hôn rực rỡ.',
+          'LK Magic Pro Sky Segmentation: Automatically masks the horizon and restores rich golden sunset clouds.'
         ]
       },
       water: {
-        a: '/icons/cong-cu/water-truoc.webp',
-        b: '/icons/cong-cu/water-sau.webp',
+        a: '/assets/img/studio/ai-water-raw.webp',
+        b: '/assets/img/studio/ai-water-after.webp',
         cap: [
           'Mặt nạ vùng nước AI: Tách riêng mặt biển để đẩy sắc xanh ngọc trong trẻo mà không ám lên bãi cát.',
           'AI Water Mask: Isolates the sea surface to enhance crystal-clear turquoise tones without tinting the sand.'

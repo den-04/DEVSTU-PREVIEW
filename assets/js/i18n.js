@@ -129,6 +129,7 @@
     'Ảnh đăng Facebook bị lệch màu: nguyên nhân và cách sửa | DEVSTU': 'Why Photos Look Different on Facebook: Causes & Fix | DEVSTU',
     'Đăng nhập tài khoản · DEVSTU': 'Sign In · DEVSTU',
     'Lịch sử đơn hàng & Kho Key · DEVSTU': 'Order History & Key Vault · DEVSTU',
+    'DEVSTU · Phòng tối AI hậu kỳ ảnh cưới & chân dung trên Windows': 'DEVSTU · Offline AI Darkroom for Wedding & Portrait Post-Production',
     '404 · Không tìm thấy trang | DEVSTU': '404 · Page Not Found | DEVSTU'
   };
 
@@ -159,6 +160,8 @@
       'Why do photos edited in Photoshop or Camera Raw look dull and gray on Facebook? Correct sRGB export settings plus a free on-device color profile checker.',
     'Đăng nhập tài khoản DEVSTU để thanh toán VietQR tự động, lưu lịch sử đơn hàng và nhận mã Key kích hoạt phần mềm.':
       'Sign in to DEVSTU for automatic VietQR checkout, saved order history, and standalone activation Keys.',
+    'DEVSTU Desktop Studio: mở RAW 16-bit bằng LibRaw, làm đẹp da 6 mô hình U-Net AI, xoá vật thể LaMa, tách phông Depth v2 và đồng bộ màu cả buổi chụp — chạy 100% offline trên máy bạn.':
+      'DEVSTU Desktop Studio: native 16-bit LibRaw decoding, 6 U-Net AI skin models, LaMa object erase, Depth v2 bokeh, and full-shoot color sync — running 100% offline on your PC.',
     'Xem lại toàn bộ lịch sử đơn hàng VietQR và mã Key kích hoạt DEVSTU đã mua theo tài khoản của bạn.':
       'Review your VietQR order history and retrieve purchased DEVSTU activation Keys saved to your account.'
   };
@@ -340,6 +343,10 @@
       'If a proper 2048 px sRGB file still looks slightly different on another device, the cause is usually the <strong>viewer’s screen</strong>: uncalibrated displays, active <strong>Night Shift / True Tone / eye-comfort modes</strong>, or brightness differences. No file can override a viewer’s display settings — exporting clean <strong>sRGB</strong> gives the most consistent result everywhere.',
     'Với máy tính làm việc của bạn, nên cân màu màn hình bằng thiết bị đo màu để màu sắc lúc retouch luôn chính xác.':
       'On your own editing workstation, <strong>calibrate your monitor with a hardware colorimeter</strong> so what you see while retouching is trustworthy.',
+    'Mỗi bộ màu trong DEVSTU đều có thể nén thành một link ngắn devstu.vercel.app/?m=... để gửi cho đồng nghiệp hoặc đọc trực tiếp thông số ngay trên trang web này.':
+      'Every DEVSTU color look can be compressed into a compact <code>devstu.vercel.app/?m=...</code> link to share with colleagues or inspect parameters directly on this page.',
+    'Tải file .cube tiêu chuẩn dùng cho DEVSTU, Lightroom, Photoshop & DaVinci Resolve.':
+      'Download standard <code>.cube</code> files compatible with DEVSTU, Lightroom, Photoshop &amp; DaVinci Resolve.',
     'Kéo hoặc chọn ảnh JPEG/PNG đã xuất vào khung dưới đây để kiểm tra trực tiếp ICC Profile, phát hiện ảnh đang ở Adobe RGB / Display P3 / CMYK hoặc vượt cỡ 2048 px, và xuất nhanh bản chuẩn sRGB. Ảnh xử lý 100% trên trình duyệt của bạn, không tải lên bất kỳ máy chủ nào.':
       'Drop or choose your exported JPEG/PNG below to inspect its <strong>ICC Profile</strong> directly, detect Adobe RGB / Display P3 / CMYK or oversized dimensions above 2048 px, and export a clean <strong>sRGB</strong> copy. <strong>100% processed locally in your browser — zero server uploads.</strong>'
   };
@@ -1061,6 +1068,179 @@
     'Đã hủy / Hết hạn': 'Cancelled / Expired',
     'Tự động 24/7': '24/7 Instant',
 
+    // Studio Pro Bento Homepage (index.html)
+    'Rust SIMD + WebGPU · 100% Offline trên máy': 'Rust SIMD + WebGPU · 100% Offline on your PC',
+    'Hậu kỳ ảnh cưới & chân dung': 'Wedding & portrait post-production',
+    'chuẩn Studio.': 'the Studio way.',
+    'Mở trực tiếp file RAW 16-bit bằng LibRaw, làm đẹp da với 6 mô hình U-Net AI, xoá vật thể LaMa và đồng bộ màu cả buổi chụp — tất cả chạy cục bộ trên máy bạn, không credit, không tải ảnh lên mây.':
+      'Open native 16-bit RAW files via LibRaw, retouch skin with 6 U-Net AI models, erase objects with LaMa, and batch-sync entire shoots — all locally on your hardware with zero credits and zero cloud uploads.',
+    'Tải app cho Windows': 'Download for Windows',
+    'Xem bảng giá · từ 0đ': 'View Pricing · from 0đ',
+    '100% Xử lý Offline': '100% Offline Processing',
+    'Không giới hạn xuất & không credit': 'Unlimited exports · Zero credits',
+    '6 mô hình U-Net Skin AI': '6 U-Net Skin AI Models',
+    '111+ Bộ màu & nhập .XMP / .CUBE': '111+ Looks & .XMP / .CUBE import',
+    'DEVSTU Studio Darkroom · RAW 16-bit': 'DEVSTU Studio Darkroom · 16-bit RAW',
+    'WebGPU Active · Oklab 32-bit · Offline': 'WebGPU Active · Oklab 32-bit · Offline',
+    'Chỉnh màu': 'Color Grade',
+    'Da AI': 'Skin AI',
+    'Đồng bộ': 'Batch Sync',
+    'Buổi chụp · 6 ảnh': 'Session · 6 shots',
+    'Đã chỉnh': 'Edited',
+    'Ảnh RAW': 'RAW',
+    'Trước · RAW': 'Before · RAW',
+    'Sau · DEVSTU AI': 'After · DEVSTU AI',
+    'Ảnh 1 / 6': 'Shot 1 / 6',
+    'Thanh so sánh: Bật': 'Split Compare: On',
+    'AI Auto-Retouch: Bật': 'AI Auto-Retouch: On',
+    'Bộ màu Studio (.CUBE)': 'Studio Looks (.CUBE)',
+    'Cưới nhẹ': 'Soft Wedding',
+    'Trả về AI Tự động': 'Reset to AI Auto',
+    'Thông số Oklab theo thời gian thực': 'Live Oklab Telemetry',
+    'Phơi sáng': 'Exposure',
+    'Nhiệt màu': 'Color Temp',
+    'U-Net Skin AI': 'U-Net Skin AI',
+    'AI 75%': 'AI 75%',
+    'Đồng bộ cả 6 ảnh': 'Sync all 6 shots',
+    '6 ảnh · đã chỉnh 1': '6 shots · 1 edited',
+    'Tối ưu từng mili-giây': 'Engineered to the millisecond',
+    'Kiến trúc phòng tối riêng cho studio Việt.': 'A dedicated darkroom architecture built for studios.',
+    'Không đẩy ảnh lên máy chủ bên thứ ba. DEVSTU kết hợp Rust SIMD, không gian màu Oklab 32-bit và ONNX WebGPU để giải quyết gọn cả buổi chụp hàng nghìn file RAW.':
+      'No third-party servers. DEVSTU pairs Rust SIMD, 32-bit Oklab color, and ONNX WebGPU to process thousands of heavy RAW photos right on your desktop.',
+    'Engine xử lý lõi': 'Core Processing Engine',
+    'Rust SIMD + WebGPU từ file RAW tới xuất hàng loạt': 'Rust SIMD + WebGPU from 16-bit RAW to batch export',
+    'Mở thẳng Canon .CR3, Sony .ARW, Fujifilm .RAF, Nikon .NEF ở độ sâu 16-bit, sau đó chạy bộ lọc màu Oklab và mạng AI ngay trên GPU của bạn — mượt ngay cả trên laptop văn phòng lẫn máy trạm studio.':
+      'Decode Canon .CR3, Sony .ARW, Fujifilm .RAF, and Nikon .NEF at 16-bit depth, then run Oklab color transforms and local GPU inference — fast on both laptops and studio workstations.',
+    '1. Giải mã RAW': '1. RAW Decode',
+    '2. Hệ màu': '2. Color Space',
+    '3. Suy luận AI': '3. AI Inference',
+    '4. Xuất file': '4. Export',
+    'Lọc ảnh AI (Culling)': 'Smart AI Culling',
+    'Tách ảnh nét và ảnh nhoè mắt trong vài giây': 'Separate crisp shots from blur & blinks in seconds',
+    'Chấm điểm độ nét chủ thể và phát hiện nhắm mắt tự động. Bấm lọc thử bên dưới:':
+      'Automatically scores subject sharpness and closed eyes. Try filtering below:',
+    'Tất cả (6)': 'All (6)',
+    'Giữ lại (5)': 'Keep (5)',
+    'Ảnh nhoè (1)': 'Blurred (1)',
+    'Nét · 98': 'Sharp · 98',
+    'Nét · 96': 'Sharp · 96',
+    'Nét · 95': 'Sharp · 95',
+    'Nét · 94': 'Sharp · 94',
+    'Nhoè · 41': 'Blur · 41',
+    'Nét · 97': 'Sharp · 97',
+    '10 thể loại một chạm': '10 One-Tap Genres',
+    'Tự hiểu Cưới, Kỷ yếu, Studio & Ngoại cảnh': 'Tuned for Wedding, Yearbook, Studio & Outdoor',
+    'Chỉ cần chọn bối cảnh buổi chụp — AI tự cân bằng vùng sáng váy cưới trắng, giữ chiều sâu khối nam giới và chống bệt màu xanh lá khi chụp ngoài trời.':
+      'Pick your shoot context — AI protects white bridal dress highlights, preserves masculine contrast, and prevents green skin casts outdoors.',
+    'Kiểm màu sRGB & In ấn': 'sRGB & Print Calibration',
+    'Đăng Facebook, Zalo không bị nhợt & xỉn da': 'Prevent washed-out uploads on Facebook & Zalo',
+    'Tích hợp hồ sơ ICC v2 sRGB và cảnh báo lệch dải màu (Gamut Warning) ngay lúc xuất ảnh hàng loạt sang JPEG, PNG hoặc TIFF 16-bit.':
+      'Built-in sRGB ICC v2 embedding and Gamut Warning alerts when batch exporting to JPEG, PNG, or 16-bit TIFF.',
+    'Chế độ STU Ultra': 'STU Ultra Mode',
+    'Ghép phông ảnh thẻ & 13 màu tóc salon': 'Studio backdrop replacement & 13 hair tones',
+    'Phân tách chủ thể Nam, Nữ, Trẻ em, Người lớn tuổi trong một lượt chạy; tích hợp LK Magic Pro model_29 + BGFusion thay phông studio sạch từng sợi tóc.':
+      'Detects Female, Male, Child, and Elder subjects in one pass; combines LK Magic Pro model_29 + BGFusion for hair-accurate backdrop swaps.',
+    '6 Mô hình U-Net Skin AI chuyên biệt': '6 Specialized U-Net Skin AI Models',
+    'Mịn da chuẩn Studio,': 'Clean studio skin,',
+    'giữ nguyên vân da thật.': 'real pore texture preserved.',
+    'Tách riêng hai tần số cao/thấp để xử lý mụn, vết thâm và vùng dầu mà không làm bệt lỗ chân lông hay nhoè lông mi như app làm mịn thông thường.':
+      'Separates high and low spatial frequencies to remove blemishes and shine without plastic airbrushing or blurred eyelashes.',
+    'Khuôn mặt': 'Face Model',
+    'Rãnh cười & Quầng mắt': 'Smile Lines & Under-Eye',
+    'Khối 3D Studio': 'Studio 3D Contour',
+    'Da cơ thể': 'Body Skin',
+    'Là phẳng nếp áo': 'Wrinkle-Free Clothing',
+    'Tóc & 13 màu salon': 'Hair & 13 Salon Tones',
+    'Mô hình Khuôn mặt (da_retouch_v1): làm sạch khuyết điểm nhỏ, cân bằng độ sáng gò má mà vẫn giữ nguyên cấu trúc lỗ chân lông.':
+      'Face Model (da_retouch_v1): removes small blemishes and evens highlights while keeping natural pore texture intact.',
+    'Cường độ Skin AI (Frequency Separation)': 'Skin AI Intensity (Frequency Separation)',
+    'Trước · Mộc': 'Before · Unretouched',
+    'Sau · U-Net AI': 'After · U-Net AI',
+    '4 Mô hình AI tích hợp sẵn': '4 Built-In AI Vision Models',
+    'Xử lý hậu kỳ phức tạp ngay trên một cửa sổ.': 'Complex retouching unified inside a single window.',
+    'Không cần qua lại nhiều phần mềm rời rạc. Chuyển đổi trực tiếp giữa xóa phông quang học Depth v2, tách trời hoàng hôn, khử nhiễu SCUNet và cân chỉnh mặt biển.':
+      'No app hopping required. Switch seamlessly between optical Depth v2 bokeh, sunset sky replacement, SCUNet denoise, and ocean water grading.',
+    'Depth v2 Xoá phông': 'Depth v2 Bokeh',
+    'Tách & Thay Trời AI': 'AI Sky Replacement',
+    'SCUNet Khử nhiễu': 'SCUNet Denoise',
+    'Mặt Nước Trong Xanh': 'Turquoise Water AI',
+    'Trước · Gốc': 'Before · Original',
+    'Sau · AI DEVSTU': 'After · DEVSTU AI',
+    'Depth Anything v2 + BiRefNet: Tạo bản đồ độ sâu trường ảnh, xóa phông quang học giữ nét từng sợi tóc.':
+      'Depth Anything v2 + BiRefNet: Generates an optical lens depth map for creamy bokeh while keeping hair razor-sharp.',
+    'Hệ màu Oklab + 3D LUT .CUBE': 'Oklab Color + 3D .CUBE LUTs',
+    'Chia sẻ công thức màu qua link. Tải 8 LUT miễn phí.': 'Share color formulas by link. Download 8 free .CUBE LUTs.',
+    'Giải mã link bộ màu': 'Decode a Look Link',
+    'Giải mã bộ màu': 'Decode Look',
+    'Kho 8 LUT miễn phí (.CUBE 17×17×17 & Link ?m=)': 'Free 8-LUT Vault (.CUBE 17×17×17 & ?m= Link)',
+    'Khử ám vàng trên da người châu Á, lên sắc da trắng hồng tươi tắn khi chụp studio.':
+      'Neutralizes yellow cast on Asian skin for bright, rosy studio skin tones.',
+    'Giữ trắng tinh khôi cho váy cưới, giảm gắt vùng sáng và êm dịu cho da cặp đôi.':
+      'Keeps wedding dresses pure white while taming highlights and softening skin tones.',
+    'Chất màu Kodak Portra giàu chiều sâu vùng tối, hạt phim tự nhiên giàu cảm xúc.':
+      'Warm Kodak Portra film palette with rich shadow depth and organic grain.',
+    'Độ sâu màu sạch sẽ, tăng độ trong trẻo cho ảnh kỷ yếu, dã ngoại và gia đình.':
+      'Clean tonal separation for bright yearbook, picnic, and family sessions.',
+    'Đẩy sắc xanh ngọc của bầu trời và mặt biển mà không làm bệch sắc da chủ thể.':
+      'Lifts ocean blues and turquoise skies cleanly without tinting human skin.',
+    'Thang xám mịn với vùng tối nâng nhẹ phong cách phóng sự cưới Leica Monochrome.':
+      'Smooth tonal grays with gently lifted blacks inspired by Leica Monochrome.',
+    'Minh bạch & Riêng tư tuyệt đối': 'Transparent & Strictly Private',
+    '100% xử lý ngoại tuyến. Không thu credit theo tấm.': '100% offline processing. Zero per-photo credits.',
+    'Ảnh khách hàng của studio là tài sản riêng tư. DEVSTU xử lý toàn bộ trên CPU/GPU tại máy tính của bạn — hoạt động bình thường ngay cả khi rút dây mạng.':
+      'Client photos remain your private property. DEVSTU processes every pixel locally on your PC hardware — even with the internet disconnected.',
+    'Tiêu chí vận hành': 'Operational Criteria',
+    'DEVSTU Desktop': 'DEVSTU Desktop',
+    'App retouch tính credit / tháng': 'Cloud / Credit Subscription Apps',
+    'Nơi xử lý ảnh gốc & RAW': 'Where RAW & original photos are processed',
+    '100% tại máy của bạn (Offline)': '100% Local on your PC (Offline)',
+    'Tải ảnh lên máy chủ đám mây': 'Uploaded to remote cloud servers',
+    'Chi phí xuất 1.000 ảnh': 'Cost to export 1,000 photos',
+    '0đ phát sinh · Không đếm tấm': '0đ extra · Unlimited exports',
+    'Trừ credit trên mỗi tấm xuất': 'Credits deducted per exported image',
+    'Thời hạn & Tự động trừ tiền': 'Billing & Auto-Renewal',
+    'Từ 0đ (Standard) hoặc Vĩnh viễn 39.000đ': 'From 0đ (Standard) or 39,000đ Lifetime',
+    'Thuê bao theo tháng, tự gia hạn': 'Monthly subscription with auto-charge',
+    'Độ sâu màu & Dải động': 'Bit Depth & Dynamic Range',
+    'LibRaw 16-bit + Oklab 32-bit': 'LibRaw 16-bit + Oklab 32-bit',
+    'Nén JPEG trung gian trước khi tải lên': 'Pre-compressed JPEG upload pipeline',
+    'Khởi đầu miễn phí': 'Start for Free',
+    '0đ': '0đ',
+    'dùng mãi trên máy': 'free forever locally',
+    '111+ bộ màu Studio & nhập preset Lightroom .xmp': '111+ Studio looks & Lightroom .xmp import',
+    'Làm mịn da, xoá mụn cơ bản & thêm LUT .cube': 'Basic skin smooth, blemish cleanup & .cube LUT import',
+    'Tải bản Standard 0đ': 'Download Standard (Free)',
+    'Khuyên dùng · Mở khoá trọn bộ AI': 'Recommended · Full AI Suite Unlocked',
+    'Pro · STU Ultra': 'Pro · STU Ultra',
+    '39.000đ': '39,000đ',
+    'trả 1 lần dùng vĩnh viễn · hoặc 19.000đ/năm': 'one-time lifetime · or 19,000đ/year',
+    'Trọn bộ 6 mô hình U-Net Skin AI chuyên sâu': 'All 6 specialized U-Net Skin AI models',
+    'STU Ultra Max (LK Magic Pro + BGFusion) thay phông': 'STU Ultra Max (LK Magic Pro + BGFusion) backdrops',
+    'Mua gói VietQR & nhận Key': 'Buy via VietQR & Get Key',
+    'Mọi điều cần biết trước khi tải app.': 'Everything you need to know before downloading.',
+    'Ảnh của tôi có bị gửi lên internet hay máy chủ nào không?': 'Are my photos ever sent over the internet or uploaded to any server?',
+    'Không bao giờ. Toàn bộ quá trình đọc file RAW, chạy AI Skin Retouch, xoá vật thể LaMa và xuất file đều chạy 100% cục bộ bằng Rust SIMD và WebGPU ngay trên máy tính Windows của bạn.':
+      'Never. Every stage — RAW decoding, AI Skin Retouch, LaMa object erase, and batch export — executes 100% locally via Rust SIMD and WebGPU on your Windows PC.',
+    'Máy không có card đồ hoạ rời RTX có chạy được DEVSTU không?': 'Can DEVSTU run on a PC without a dedicated RTX graphics card?',
+    'Có. DEVSTU tự động thích ứng giữa GPU rời (WebGPU) và vi xử lý CPU với tập lệnh SIMD. Bạn có thể kiểm tra ngay hiệu năng phần cứng của máy tại trang Tải xuống bằng bài đo WebGPU trực tiếp trên trình duyệt.':
+      'Yes. DEVSTU automatically adapts between discrete WebGPU GPUs and SIMD-accelerated CPUs. You can test your own hardware speed on the Download page using our browser WebGPU benchmark.',
+    'Sau khi chuyển khoản VietQR mua gói Pro, mã Key hoạt động thế nào?': 'How does my license Key work after VietQR payment?',
+    'Ngay sau khi giao dịch VietQR hoàn tất, hệ thống cấp ngay 1 mã Key riêng và lưu lại an toàn trong mục “Lịch sử đơn hàng & Kho Key” trên tài khoản của bạn. Key không tự kích hoạt trước, bạn chủ động copy dán vào ứng dụng DEVSTU Desktop bất kỳ lúc nào.':
+      'Once your VietQR transfer settles, the system immediately issues a standalone Key stored in your account’s “Order History & Key Vault”. Keys do not auto-activate; copy and paste yours into DEVSTU Desktop whenever ready.',
+    'Có nhập được Preset Lightroom (.xmp) và file màu .cube sẵn có không?': 'Can I import existing Lightroom Presets (.xmp) and .cube LUTs?',
+    'Có. Cả phiên bản Standard (0đ) lẫn Pro đều hỗ trợ nhập trực tiếp file .xmp, .lrtemplate từ Lightroom Classic và LUT 3D .cube từ Photoshop hoặc DaVinci Resolve.':
+      'Yes. Both the free Standard edition and Pro directly import Lightroom Classic .xmp/.lrtemplate presets and 3D .cube LUTs from Photoshop or DaVinci Resolve.',
+    'DEVSTU Desktop v1.0 · Windows 10 / 11': 'DEVSTU Desktop v1.0 · Windows 10 / 11',
+    'Tải DEVSTU Desktop cho Windows để trải nghiệm miễn phí trọn đời bản Standard hoặc kích hoạt STU Ultra AI ngay trên máy của bạn.':
+      'Download DEVSTU Desktop for Windows to enjoy the free lifetime Standard edition or unlock STU Ultra AI directly on your PC.',
+    'Tải app DEVSTU (Windows)': 'Download DEVSTU (Windows)',
+    'Xem bảng giá & Kho Key': 'View Pricing & Key Vault',
+    'Phòng tối tương tác': 'Interactive Darkroom',
+    'LaMa & AI Vision 4-in-1': 'LaMa & 4-in-1 AI Vision',
+    'DEVSTU — AI Photo Retouching Suite · Đà Nẵng, Việt Nam ·': 'DEVSTU — AI Photo Retouching Suite · Da Nang, Vietnam ·',
+    '© 2026 DEVSTU. Ảnh của bạn luôn được xử lý cục bộ trên thiết bị của bạn. Lightroom là thương hiệu của Adobe; DEVSTU hoạt động độc lập và không liên kết với bên thứ ba nào.':
+      '© 2026 DEVSTU. Your photos are always processed locally on your device. Lightroom is a trademark of Adobe; DEVSTU operates independently with no third-party affiliation.',
+
     // 404 Page
     'Không tìm thấy trang': 'Page not found',
     'Đường dẫn bạn vừa mở không tồn tại hoặc đã được chuyển đi.': 'The page you requested does not exist or has been moved.',
@@ -1083,7 +1263,46 @@
     'Nhập 6 số sau khi bấm Gửi mã': 'Enter the 6-digit code sent to your email',
     'Nhập mật khẩu': 'Enter your password',
     'Chuyển mục Bảng giá và Đơn hàng': 'Switch between Pricing and Orders',
-    'Lọc trạng thái đơn hàng': 'Filter order status'
+    'Lọc trạng thái đơn hàng': 'Filter order status',
+    'Chế độ mô phỏng phòng tối': 'Studio darkroom simulation mode',
+    'Hàng đợi buổi chụp': 'Shoot session queue',
+    'Ảnh 1 Studio Cô dâu': 'Shot 1 Bridal Studio',
+    'Ảnh 2 Chân dung': 'Shot 2 Portrait',
+    'Ảnh 3 Áo dài Hội An': 'Shot 3 Hoi An Ao Dai',
+    'Ảnh 4 Pre-wedding Biển': 'Shot 4 Coastal Pre-wedding',
+    'Ảnh 5 Studio Nam': 'Shot 5 Menswear Studio',
+    'Ảnh 6 Ngoại cảnh Kỷ yếu': 'Shot 6 Outdoor Portrait',
+    'Ảnh RAW gốc chưa chỉnh sửa': 'Original unedited RAW photo',
+    'Ảnh sau khi AI DEVSTU chỉnh sáng và sắc da': 'Photo after DEVSTU AI lighting & skin retouch',
+    'Kéo thanh chia để so sánh trước và sau': 'Drag split bar to compare before and after',
+    'Bảng thông số chỉnh ảnh': 'Color & AI inspector panel',
+    'Cưới nhẹ': 'Soft Wedding',
+    'Chuỗi xử lý cục bộ DEVSTU': 'DEVSTU local processing pipeline',
+    'Bộ lọc chấm điểm ảnh AI': 'AI culling sharpness filter',
+    'Ảnh cô dâu đạt chuẩn nét': 'Sharp bridal studio portrait',
+    'Ảnh beauty đạt chuẩn nét': 'Sharp beauty portrait',
+    'Ảnh áo dài đạt chuẩn nét': 'Sharp Ao Dai portrait',
+    'Ảnh cưới hoàng hôn đạt chuẩn': 'Sharp sunset wedding photo',
+    'Ảnh mất nét nhẹ bị AI gắn nhãn': 'Soft/blurred photo flagged by AI',
+    'Ảnh ngoại cảnh đạt chuẩn nét': 'Sharp outdoor portrait',
+    'Chọn mô hình U-Net Skin AI': 'Select U-Net Skin AI model',
+    'Điều chỉnh cường độ làm đẹp da AI': 'Adjust AI skin retouch strength',
+    'Ảnh chân dung cận mặt trước khi chạy U-Net Skin AI': 'Close-up portrait before U-Net Skin AI',
+    'Ảnh chân dung sau khi làm mịn da 6 mô hình U-Net AI': 'Close-up portrait after 6-model U-Net Skin AI',
+    'Chọn mô hình AI Vision': 'Select AI Vision model',
+    'Ảnh trước khi xử lý AI Vision': 'Photo before AI Vision processing',
+    'Ảnh sau khi xử lý AI Vision DEVSTU': 'Photo after DEVSTU AI Vision processing',
+    'Kéo để so sánh mô hình AI Vision': 'Drag to compare AI Vision result',
+    'Dán link devstu.vercel.app/?m=... vào đây': 'Paste devstu.vercel.app/?m=... link here',
+    'Lọc danh mục LUT': 'Filter LUT category',
+    'LUT Chiều ấm nắng': 'Warm Sunset LUT',
+    'LUT Hàn Quốc sáng': 'Bright Korean Studio LUT',
+    'LUT Da trắng hồng': 'Fair Rosy Skin LUT',
+    'LUT Cưới nhẹ nhàng': 'Soft Wedding LUT',
+    'LUT Film cổ điển': 'Classic Film LUT',
+    'LUT Trong trẻo': 'Crystal Clear LUT',
+    'LUT Biển xanh': 'Azure Coast LUT',
+    'LUT Đen trắng mềm': 'Soft Monochrome LUT'
   };
 
   function collectDom() {

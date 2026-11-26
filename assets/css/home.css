@@ -1,19 +1,19 @@
 /* DEVSTU Showcase — Studio Dark Design System (inspired by ducdoan-04) */
 .home-app {
-  --hm-bg: #141416;
-  --hm-bg2: #1a1a1e;
-  --hm-card: #26262a;
-  --hm-card2: #34343a;
-  --hm-black: #0b0b0c;
-  --hm-tx: #ffffff;
-  --hm-tx2: #e3e3e8;
-  --hm-tx3: #a8a8b0;
-  --hm-line: rgba(255, 255, 255, .10);
-  --hm-accent: #2997ff;
+  --hm-bg: #09090b;
+  --hm-bg2: #0e0e13;
+  --hm-card: #14141b;
+  --hm-card2: #1d1d27;
+  --hm-black: #050507;
+  --hm-tx: #f4f4f6;
+  --hm-tx2: #d8d8e0;
+  --hm-tx3: #a1a1aa;
+  --hm-line: rgba(255, 255, 255, .09);
+  --hm-accent: #f5b851;
   --hm-cyan: #38bdf8;
-  --hm-fill: #0071e3;
-  --hm-cta: #8fcbff;
-  --hm-cta-tx: #10314f;
+  --hm-fill: #e59e2d;
+  --hm-cta: #f5b851;
+  --hm-cta-tx: #140f05;
   --hm-green: #5fe3b4;
   --hm-amber: #ffc24d;
   --hm-look: #364572;
