@@ -18,7 +18,7 @@ create table if not exists public.payment_orders (
   is_lifetime boolean not null default false,
   amount integer not null check (amount > 0),
   status text not null default 'pending'
-    check (status in ('pending', 'paid', 'manual_review', 'expired', 'failed')),
+    check (status in ('pending', 'paid', 'manual_review', 'expired', 'failed', 'cancelled')),
   issued_key_id uuid references public.premium_keys(id) on delete set null,
   issued_key_code text,
   payment_gateway text not null default 'sepay',
@@ -387,7 +387,7 @@ begin
       'user',
       v_order.user_id,
       v_order.user_email,
-      'https://devstu.vercel.app/bang-gia/#lich-su-don',
+      'https://devstu.vercel.app/don-hang/',
       'Xem kho Key',
       true
     );
@@ -550,7 +550,7 @@ begin
       'user',
       v_order.user_id,
       v_order.user_email,
-      'https://devstu.vercel.app/bang-gia/#lich-su-don',
+      'https://devstu.vercel.app/don-hang/',
       'Xem kho Key',
       true
     );
@@ -582,7 +582,7 @@ begin
   if not public.is_admin() then
     raise exception 'forbidden_admin_only';
   end if;
-  if p_status not in ('pending', 'manual_review', 'expired', 'failed') then
+  if p_status not in ('pending', 'manual_review', 'expired', 'failed', 'cancelled') then
     raise exception 'invalid_status';
   end if;
 
@@ -602,5 +602,125 @@ $$;
 
 revoke all on function public.admin_update_order_status(uuid, text, text) from public;
 grant execute on function public.admin_update_order_status(uuid, text, text) to authenticated;
+
+-- 7. Nâng cấp constraint status (idempotent) + User tự hủy đơn đang pending của chính mình
+alter table public.payment_orders drop constraint if exists payment_orders_status_check;
+alter table public.payment_orders
+  add constraint payment_orders_status_check
+  check (status in ('pending', 'paid', 'manual_review', 'expired', 'failed', 'cancelled'));
+
+create or replace function public.user_cancel_payment_order(p_order_code text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, auth
+as $$
+declare
+  v_uid uuid := auth.uid();
+  v_code text := upper(trim(coalesce(p_order_code, '')));
+  v_row public.payment_orders%rowtype;
+begin
+  if v_uid is null then
+    raise exception 'not_authenticated';
+  end if;
+  if v_code = '' then
+    raise exception 'order_code_required';
+  end if;
+
+  update public.payment_orders
+  set status = 'cancelled',
+      admin_note = coalesce(nullif(admin_note, ''), 'Người dùng đã hủy đơn'),
+      updated_at = now()
+  where user_id = v_uid
+    and upper(order_code) = v_code
+    and status = 'pending'
+  returning * into v_row;
+
+  if not found then
+    select * into v_row
+    from public.payment_orders
+    where user_id = v_uid and upper(order_code) = v_code;
+    if not found then
+      raise exception 'order_not_found';
+    end if;
+    return to_jsonb(v_row);
+  end if;
+
+  return to_jsonb(v_row);
+end;
+$$;
+
+revoke all on function public.user_cancel_payment_order(text) from public;
+grant execute on function public.user_cancel_payment_order(text) to authenticated;
+
+-- 8. User báo lỗi đơn hàng (lưu ghi chú & chuyển trạng thái sang manual_review nếu chưa paid)
+create or replace function public.user_report_payment_order(
+  p_order_code text,
+  p_note text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, auth
+as $$
+declare
+  v_uid uuid := auth.uid();
+  v_code text := upper(trim(coalesce(p_order_code, '')));
+  v_note text := left(trim(coalesce(p_note, '')), 500);
+  v_row public.payment_orders%rowtype;
+begin
+  if v_uid is null then
+    raise exception 'not_authenticated';
+  end if;
+  if v_code = '' or length(v_note) < 5 then
+    raise exception 'invalid_report';
+  end if;
+
+  update public.payment_orders
+  set status = case when status = 'paid' then 'paid' else 'manual_review' end,
+      admin_note = v_note,
+      updated_at = now()
+  where user_id = v_uid
+    and upper(order_code) = v_code
+  returning * into v_row;
+
+  if not found then
+    raise exception 'order_not_found';
+  end if;
+
+  return to_jsonb(v_row);
+end;
+$$;
+
+revoke all on function public.user_report_payment_order(text, text) from public;
+grant execute on function public.user_report_payment_order(text, text) to authenticated;
+
+-- 9. Bảng tuỳ chọn lưu Băng rôn khuyến mãi dưới Header (api/promo.js tự fallback sang Storage JSON nếu chưa chạy SQL)
+create table if not exists public.promo_banners (
+  id integer primary key default 1 check (id = 1),
+  enabled boolean not null default false,
+  theme text not null default 'gold',
+  effect text not null default 'shimmer',
+  pages text not null default 'all',
+  badge_vi text not null default '',
+  badge_en text not null default '',
+  message_vi text not null default '',
+  message_en text not null default '',
+  coupon_code text not null default '',
+  cta_label_vi text not null default '',
+  cta_label_en text not null default '',
+  cta_url text not null default '/bang-gia/',
+  ends_at timestamptz,
+  dismissible boolean not null default true,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.promo_banners enable row level security;
+drop policy if exists "Public can read active promo banner" on public.promo_banners;
+create policy "Public can read active promo banner"
+  on public.promo_banners for select
+  to anon, authenticated
+  using (true);
+grant select on table public.promo_banners to anon, authenticated;
 
 notify pgrst, 'reload schema';

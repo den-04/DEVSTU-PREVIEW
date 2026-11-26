@@ -567,9 +567,9 @@
     'Nhớ bộ ảnh làm việc gần đây ngay trên ổ cứng Desktop': 'Remembers recent local desktop sessions automatically',
 
     // Homepage — Section 7 (Pro Toolkit & 4-in-1 AI Tools)
-    'Đủ công cụ như Lightroom & STU Ultra Max.': 'Complete pro toolkit — Lightroom-grade & STU Ultra Max.',
-    'Từ chế độ Đơn giản cho người mới tới Pro, God Mode và STU Ultra Max chạy nhân Rust SIMD & LK Magic Pro cho studio ảnh chuyên nghiệp.':
-      'Scale smoothly from Simple mode for beginners to Pro, God Mode, and STU Ultra Max powered by Rust SIMD & LK Magic Pro for commercial studios.',
+    'Đủ công cụ như Lightroom & Evoto.': 'Complete pro toolkit — Lightroom-grade & Evoto.',
+    'Từ chế độ Đơn giản cho người mới tới Pro, God Mode và STU Ultra Max chạy nhân Rust SIMD & Evoto cho studio ảnh chuyên nghiệp.':
+      'Scale smoothly from Simple mode for beginners to Pro, God Mode, and STU Ultra Max powered by Rust SIMD & Evoto for commercial studios.',
     'Sáng tối & Cân trắng': 'Light & White Balance',
     'Phơi sáng (Exposure)': 'Exposure',
     'Vùng sáng (Highlights)': 'Highlights',

@@ -1,4 +1,7 @@
-// POST /api/orders/report — Report an issue on a user's VietQR order (marks manual_review & logs bug_reports ticket)
+// POST /api/orders/report — Report an issue on a user's own VietQR payment order
+// Flags unpaid orders as 'manual_review' (never downgrades 'paid' orders, never auto-activates profiles.is_premium)
+// and creates a structured support ticket in public.bug_reports for Admin Console (/admin/#orders & /admin/#bugs).
+
 const SB_URL = process.env.SUPABASE_URL || 'https://kvdmtofhkzwgoiganirl.supabase.co';
 const SB_ANON = process.env.SUPABASE_ANON_KEY || 'sb_publishable_JSEFSdaGLb3Q-NgLZw6GWA_vW0RGE1k';
 
@@ -17,7 +20,7 @@ export default async function handler(req, res) {
 
   const authHeader = req.headers.authorization || '';
   if (!authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ ok: false, error: 'Vui lòng đăng nhập trước.' });
+    return res.status(401).json({ ok: false, error: 'Vui lòng đăng nhập trước khi gửi báo lỗi.' });
   }
 
   let body = req.body;
@@ -30,8 +33,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: 'Mã đơn hàng không hợp lệ.' });
   }
 
-  const rawCategory = String(body?.category || 'other').trim();
-  const category = Object.prototype.hasOwnProperty.call(CATEGORY_LABELS, rawCategory) ? rawCategory : 'other';
+  const rawCat = String(body?.category || 'other').trim();
+  const category = Object.prototype.hasOwnProperty.call(CATEGORY_LABELS, rawCat) ? rawCat : 'other';
   const categoryLabel = CATEGORY_LABELS[category];
 
   const txRef = String(body?.txRef || '').trim().slice(0, 80);
@@ -41,33 +44,38 @@ export default async function handler(req, res) {
   const lang = body?.lang === 'en' ? 'en' : 'vi';
 
   if (message.length < 5) {
-    return res.status(400).json({ ok: false, error: 'Vui lòng mô tả chi tiết vấn đề (tối thiểu 5 ký tự).' });
+    return res.status(400).json({ ok: false, error: 'Vui lòng nhập mô tả chi tiết (ít nhất 5 ký tự).' });
   }
 
+  const serviceRoleKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
+
   try {
-    // 1. Verify logged-in user
+    // 1. Verify authenticated user via Supabase Auth
     const userRes = await fetch(`${SB_URL}/auth/v1/user`, {
-      headers: { apikey: SB_ANON, Authorization: authHeader },
-      cache: 'no-store'
+      method: 'GET',
+      headers: {
+        apikey: SB_ANON,
+        Authorization: authHeader
+      }
     });
     if (!userRes.ok) {
-      return res.status(401).json({ ok: false, error: 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.' });
+      return res.status(401).json({ ok: false, error: 'Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.' });
     }
     const user = await userRes.json();
-    if (!user?.id || !user?.email) {
+    if (!user?.id) {
       return res.status(401).json({ ok: false, error: 'Không xác thực được tài khoản.' });
     }
 
-    const serviceKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
-
-    // 2. Fetch user's own order
+    // 2. Verify order belongs strictly to this user
     let order = null;
-    if (serviceKey) {
+    if (serviceRoleKey) {
       const ordRes = await fetch(
-        `${SB_URL}/rest/v1/payment_orders?order_code=eq.${encodeURIComponent(code)}&user_id=eq.${encodeURIComponent(user.id)}&select=*`,
+        `${SB_URL}/rest/v1/payment_orders?order_code=eq.${encodeURIComponent(code)}&user_id=eq.${encodeURIComponent(user.id)}&select=*&limit=1`,
         {
-          headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
-          cache: 'no-store'
+          headers: {
+            apikey: serviceRoleKey,
+            Authorization: `Bearer ${serviceRoleKey}`
+          }
         }
       );
       if (ordRes.ok) {
@@ -75,63 +83,64 @@ export default async function handler(req, res) {
         order = Array.isArray(rows) ? rows[0] || null : null;
       }
     } else {
-      const rpcOrdRes = await fetch(`${SB_URL}/rest/v1/rpc/user_list_my_orders`, {
+      const listRes = await fetch(`${SB_URL}/rest/v1/rpc/user_list_my_orders`, {
         method: 'POST',
-        headers: { apikey: SB_ANON, Authorization: authHeader, 'Content-Type': 'application/json' },
+        headers: {
+          apikey: SB_ANON,
+          Authorization: authHeader,
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ p_limit: 50 })
       });
-      if (rpcOrdRes.ok) {
-        const list = await rpcOrdRes.json();
-        order = Array.isArray(list) ? list.find((o) => String(o.order_code || '').toUpperCase() === code) || null : null;
+      if (listRes.ok) {
+        const rows = await listRes.json();
+        if (Array.isArray(rows)) {
+          order = rows.find((r) => String(r.order_code || '').toUpperCase() === code) || null;
+        }
       }
     }
 
     if (!order) {
-      return res.status(404).json({ ok: false, error: 'Không tìm thấy đơn hàng thuộc tài khoản của bạn.' });
+      return res.status(404).json({ ok: false, error: 'Không tìm thấy đơn hàng này trong tài khoản của bạn.' });
     }
 
-    // 3. Build structured admin note
+    // 3. Build structured customer report note
     const parts = [`[KH báo lỗi · ${categoryLabel}] ${message}`];
     if (txRef) parts.push(`Mã GD: ${txRef}`);
     if (transferredAmount) parts.push(`Đã CK: ${transferredAmount.toLocaleString('vi-VN')} đ`);
     const noteStr = parts.join(' | ').slice(0, 500);
+
     const nextStatus = order.status === 'paid' ? 'paid' : 'manual_review';
 
-    // 4. Update payment_orders (NEVER downgrade paid, NEVER activate profiles.is_premium)
-    let updatedOrder = false;
-    if (serviceKey) {
-      const patchBody = {
+    // 4. Update payment_orders via service_role (never downgrades 'paid', never touches profiles.is_premium)
+    if (serviceRoleKey && order.id) {
+      const patchPayload = {
         admin_note: noteStr,
         updated_at: new Date().toISOString()
       };
       if (order.status !== 'paid') {
-        patchBody.status = 'manual_review';
+        patchPayload.status = 'manual_review';
       }
-      const patchRes = await fetch(
-        `${SB_URL}/rest/v1/payment_orders?id=eq.${encodeURIComponent(order.id)}`,
-        {
-          method: 'PATCH',
-          headers: {
-            apikey: serviceKey,
-            Authorization: `Bearer ${serviceKey}`,
-            'Content-Type': 'application/json',
-            Prefer: 'return=representation'
-          },
-          body: JSON.stringify(patchBody)
-        }
-      );
-      if (patchRes.ok) {
-        updatedOrder = true;
-      } else {
-        console.error('[orders/report] PATCH payment_orders failed:', patchRes.status, await patchRes.text());
+      const patchRes = await fetch(`${SB_URL}/rest/v1/payment_orders?id=eq.${encodeURIComponent(order.id)}`, {
+        method: 'PATCH',
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation'
+        },
+        body: JSON.stringify(patchPayload)
+      });
+      if (!patchRes.ok) {
+        const errTxt = await patchRes.text();
+        console.error('[orders/report] PATCH payment_orders failed:', patchRes.status, errTxt);
       }
     }
 
-    // 5. Log ticket in public.bug_reports so Admin also sees it in /admin/#bugs
-    let ticketLogged = false;
+    // 5. Also create a ticket in public.bug_reports so Admin sees it in /admin/#bugs too
     try {
-      const periodLabel = order.is_lifetime ? 'Vĩnh viễn' : `${order.days || 365} ngày`;
-      const bugRes = await fetch(`${SB_URL}/rest/v1/rpc/submit_bug_report`, {
+      const periodTxt = order.is_lifetime ? 'Vĩnh viễn' : `${order.days || 365} ngày`;
+      await fetch(`${SB_URL}/rest/v1/rpc/submit_bug_report`, {
         method: 'POST',
         headers: {
           apikey: SB_ANON,
@@ -139,13 +148,13 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          p_email: user.email,
+          p_email: user.email || order.user_email || 'unknown@devstu.app',
           p_message: `[Đơn #${order.order_code}] ${categoryLabel}: ${message}`,
           p_lang: lang,
           p_device_info: {
             'Loại': 'Báo lỗi đơn VietQR',
             'Mã đơn': order.order_code,
-            'Gói': `${order.plan} (${periodLabel})`,
+            'Gói': `${order.plan} (${periodTxt})`,
             'Số tiền đơn': `${Number(order.amount || 0).toLocaleString('vi-VN')} đ`,
             'Khách báo đã CK': transferredAmount ? `${transferredAmount.toLocaleString('vi-VN')} đ` : '—',
             'Mã GD NH': txRef || '—',
@@ -155,13 +164,8 @@ export default async function handler(req, res) {
           p_error_log: ''
         })
       });
-      ticketLogged = bugRes.ok;
     } catch (bugErr) {
-      console.error('[orders/report] bug_reports RPC warning:', bugErr);
-    }
-
-    if (!updatedOrder && !ticketLogged) {
-      return res.status(500).json({ ok: false, error: 'Không thể gửi báo lỗi đơn lúc này, vui lòng thử lại.' });
+      console.warn('[orders/report] submit_bug_report non-fatal warning:', bugErr);
     }
 
     return res.status(200).json({
@@ -171,6 +175,6 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error('[orders/report]', err);
-    return res.status(500).json({ ok: false, error: 'Lỗi hệ thống khi gửi báo lỗi đơn.' });
+    return res.status(500).json({ ok: false, error: 'Không thể gửi báo lỗi lúc này, vui lòng thử lại.' });
   }
 }
