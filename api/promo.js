@@ -6,10 +6,12 @@ const OBJECT_PATH = 'promo-banner.json';
 
 const VALID_THEMES = new Set(['gold', 'blue', 'emerald', 'rose', 'violet']);
 const VALID_PAGES = new Set(['all', 'home_pricing']);
+const VALID_EFFECTS = new Set(['shimmer', 'aurora', 'marquee', 'pulse', 'none']);
 
 const DEFAULT_PROMO = {
   enabled: false,
   theme: 'gold',
+  effect: 'shimmer',
   pages: 'all',
   badge_vi: 'ƯU ĐÃI',
   badge_en: 'PROMO',
@@ -42,9 +44,11 @@ function sanitizePromo(raw) {
   const r = raw && typeof raw === 'object' ? raw : {};
   const theme = VALID_THEMES.has(r.theme) ? r.theme : 'gold';
   const pages = VALID_PAGES.has(r.pages) ? r.pages : 'all';
+  const effect = VALID_EFFECTS.has(r.effect) ? r.effect : 'shimmer';
   return {
     enabled: Boolean(r.enabled),
     theme,
+    effect,
     pages,
     badge_vi: String(r.badge_vi ?? '').trim().slice(0, 32),
     badge_en: String(r.badge_en ?? '').trim().slice(0, 32),

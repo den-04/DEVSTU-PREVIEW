@@ -365,16 +365,24 @@ img {
 .site-promo {
   position: relative;
   z-index: 35;
+  overflow: hidden;
   padding: 9px 44px 9px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, .12);
   font-family: var(--font-text);
   font-size: 13.5px;
   line-height: 1.45;
   color: #ffffff;
+  animation: promoSlideDown .36s cubic-bezier(.22, 1, .36, 1);
 }
 
 .site-promo--no-x {
   padding-right: 18px;
+}
+
+.site-promo__in,
+.site-promo__viewport {
+  position: relative;
+  z-index: 2;
 }
 
 .site-promo__in {
@@ -468,11 +476,14 @@ img {
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color .14s ease;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .06), 0 2px 10px rgba(0, 0, 0, .22);
+  transition: transform .15s ease, background-color .15s ease, border-color .15s ease;
 }
 
 .site-promo__code:hover {
-  background: rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .14);
+  border-color: rgba(255, 255, 255, .65);
+  transform: translateY(-1px);
 }
 
 .site-promo__timer {
@@ -500,12 +511,15 @@ img {
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color .14s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .24);
+  transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease;
 }
 
 .site-promo__cta:hover {
   background: rgba(255, 255, 255, .22);
   color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .35);
 }
 
 .site-promo__x {
@@ -513,6 +527,7 @@ img {
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 4;
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -528,6 +543,179 @@ img {
 .site-promo__x:hover {
   background: rgba(255, 255, 255, .12);
   color: #ffffff;
+}
+
+/* Effect 1: Shimmer Sweep + Bottom Traveling Beam + Badge Sheen */
+.site-promo--fx-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, .03) 35%, rgba(255, 255, 255, .17) 50%, rgba(255, 255, 255, .03) 65%, transparent 100%);
+  transform: translateX(-160%) skewX(-18deg);
+  animation: promoShimmerSweep 4.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.site-promo--fx-shimmer::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 36%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .82), transparent);
+  transform: translateX(-120%);
+  animation: promoBorderBeam 4.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.site-promo--fx-shimmer .site-promo__badge {
+  animation: promoBadgePulse 2.6s ease-in-out infinite;
+}
+
+/* Effect 2: Flowing Multi-Stop Aurora Gradient */
+.site-promo--fx-aurora {
+  background-size: 260% 260%;
+  animation: promoSlideDown .36s cubic-bezier(.22, 1, .36, 1), promoAuroraFlow 6.5s ease infinite;
+}
+
+.site-promo--gold.site-promo--fx-aurora {
+  background-image: linear-gradient(115deg, #221708 0%, #4a310c 28%, #613d0b 50%, #2e1d08 75%, #221708 100%);
+}
+
+.site-promo--blue.site-promo--fx-aurora {
+  background-image: linear-gradient(115deg, #09182b 0%, #0e3b6e 30%, #155289 50%, #0d2747 75%, #09182b 100%);
+}
+
+.site-promo--emerald.site-promo--fx-aurora {
+  background-image: linear-gradient(115deg, #071f17 0%, #0f4d38 30%, #156248 50%, #0b3024 75%, #071f17 100%);
+}
+
+.site-promo--rose.site-promo--fx-aurora {
+  background-image: linear-gradient(115deg, #240b14 0%, #5c1830 30%, #751d3d 50%, #38101f 75%, #240b14 100%);
+}
+
+.site-promo--violet.site-promo--fx-aurora {
+  background-image: linear-gradient(115deg, #170d2b 0%, #3d1f73 30%, #522796 50%, #251445 75%, #170d2b 100%);
+}
+
+.site-promo--fx-aurora .site-promo__cta {
+  border-color: rgba(255, 255, 255, .36);
+}
+
+/* Effect 3: Seamless Horizontal Marquee Ticker */
+.site-promo__viewport {
+  overflow: hidden;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 36px, #000 calc(100% - 36px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 36px, #000 calc(100% - 36px), transparent 100%);
+}
+
+.site-promo__marquee {
+  display: flex;
+  width: max-content;
+  animation: promoMarquee 24s linear infinite;
+  will-change: transform;
+}
+
+.site-promo--fx-marquee:hover .site-promo__marquee {
+  animation-play-state: paused;
+}
+
+.site-promo__track {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.site-promo__unit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.site-promo__sep {
+  opacity: .45;
+  font-size: 11px;
+  padding: 0 14px;
+  user-select: none;
+}
+
+/* Effect 4: Flash Sale Breathing Glow & CTA Pulse */
+.site-promo--fx-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(480px 80px at 50% 50%, rgba(255, 255, 255, .11), transparent 75%);
+  animation: promoGlowBreath 2.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.site-promo--fx-pulse .site-promo__badge {
+  animation: promoBadgePop 1.9s ease-in-out infinite;
+}
+
+.site-promo--fx-pulse .site-promo__cta {
+  animation: promoCtaRing 1.9s ease-in-out infinite;
+}
+
+/* Effect 5: Static (No animation) */
+.site-promo--fx-none {
+  animation: none;
+}
+
+@keyframes promoSlideDown {
+  from { opacity: 0; transform: translateY(-100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes promoShimmerSweep {
+  0% { transform: translateX(-160%) skewX(-18deg); }
+  45%, 100% { transform: translateX(360%) skewX(-18deg); }
+}
+
+@keyframes promoBorderBeam {
+  0% { transform: translateX(-120%); opacity: 0; }
+  12% { opacity: 1; }
+  45%, 100% { transform: translateX(320%); opacity: 0; }
+}
+
+@keyframes promoBadgePulse {
+  0%, 100% { filter: brightness(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  50% { filter: brightness(1.1); box-shadow: 0 0 12px 1px rgba(255, 255, 255, .24); }
+}
+
+@keyframes promoAuroraFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes promoMarquee {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes promoGlowBreath {
+  0%, 100% { opacity: .45; }
+  50% { opacity: 1; }
+}
+
+@keyframes promoBadgePop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes promoCtaRing {
+  0%, 100% { box-shadow: 0 2px 12px rgba(0, 0, 0, .24), 0 0 0 0 rgba(255, 255, 255, .30); }
+  60% { box-shadow: 0 2px 12px rgba(0, 0, 0, .24), 0 0 0 6px rgba(255, 255, 255, 0); }
 }
 
 @media (max-width: 600px) {

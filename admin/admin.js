@@ -706,6 +706,7 @@
     const c = cfg || {};
     if ($('#prm-enabled')) $('#prm-enabled').checked = Boolean(c.enabled);
     if ($('#prm-theme')) $('#prm-theme').value = c.theme || 'gold';
+    if ($('#prm-effect')) $('#prm-effect').value = c.effect || 'shimmer';
     if ($('#prm-pages')) $('#prm-pages').value = c.pages || 'all';
     if ($('#prm-badge-vi')) $('#prm-badge-vi').value = c.badge_vi ?? 'ƯU ĐÃI';
     if ($('#prm-code')) $('#prm-code').value = c.coupon_code || '';
@@ -725,6 +726,7 @@
     return {
       enabled: Boolean($('#prm-enabled')?.checked),
       theme: $('#prm-theme')?.value || 'gold',
+      effect: $('#prm-effect')?.value || 'shimmer',
       pages: $('#prm-pages')?.value || 'all',
       badge_vi: ($('#prm-badge-vi')?.value || '').trim(),
       badge_en: ($('#prm-badge-en')?.value || '').trim(),
@@ -753,6 +755,7 @@
       return;
     }
     const theme = /^(gold|blue|emerald|rose|violet)$/.test(c.theme) ? c.theme : 'gold';
+    const fx = /^(shimmer|aurora|marquee|pulse|none)$/.test(c.effect) ? c.effect : 'shimmer';
     const msg = c.message_vi || 'Nhập nội dung khuyến mãi để xem trước tại đây…';
     let timerHtml = '';
     if (c.ends_at) {
@@ -768,15 +771,23 @@
         timerHtml = '<span class="site-promo__timer">Đã hết hạn</span>';
       }
     }
+    const unitInner = `
+      ${c.badge_vi ? `<span class="site-promo__badge">${esc(c.badge_vi)}</span>` : ''}
+      <span class="site-promo__msg">${esc(msg)}</span>
+      ${c.coupon_code ? `<span class="site-promo__code">${esc(c.coupon_code)}</span>` : ''}
+      ${timerHtml}
+      ${c.cta_label_vi && c.cta_url ? `<span class="site-promo__cta">${esc(c.cta_label_vi)}</span>` : ''}`;
+
+    const contentHtml = fx === 'marquee'
+      ? `<div class="site-promo__viewport"><div class="site-promo__marquee">
+           <div class="site-promo__track"><span class="site-promo__unit">${unitInner}</span><span class="site-promo__sep" aria-hidden="true">✦</span><span class="site-promo__unit">${unitInner}</span><span class="site-promo__sep" aria-hidden="true">✦</span></div>
+           <div class="site-promo__track" aria-hidden="true"><span class="site-promo__unit">${unitInner}</span><span class="site-promo__sep" aria-hidden="true">✦</span><span class="site-promo__unit">${unitInner}</span><span class="site-promo__sep" aria-hidden="true">✦</span></div>
+         </div></div>`
+      : `<div class="site-promo__in">${unitInner}</div>`;
+
     box.innerHTML = `
-      <div class="site-promo site-promo--${theme}${c.dismissible ? '' : ' site-promo--no-x'}">
-        <div class="site-promo__in">
-          ${c.badge_vi ? `<span class="site-promo__badge">${esc(c.badge_vi)}</span>` : ''}
-          <span class="site-promo__msg">${esc(msg)}</span>
-          ${c.coupon_code ? `<span class="site-promo__code">${esc(c.coupon_code)}</span>` : ''}
-          ${timerHtml}
-          ${c.cta_label_vi && c.cta_url ? `<span class="site-promo__cta">${esc(c.cta_label_vi)}</span>` : ''}
-        </div>
+      <div class="site-promo site-promo--${theme} site-promo--fx-${fx}${c.dismissible ? '' : ' site-promo--no-x'}">
+        ${contentHtml}
         ${c.dismissible ? '<span class="site-promo__x" aria-hidden="true">✕</span>' : ''}
       </div>`;
   }
@@ -798,7 +809,7 @@
         if (stRes.ok) cfg = await stRes.json();
       }
     } catch {}
-    state.promo = cfg || { enabled: false, theme: 'gold', pages: 'all', badge_vi: 'ƯU ĐÃI', badge_en: 'PROMO', cta_label_vi: 'Mua ngay →', cta_label_en: 'Buy now →', cta_url: '/bang-gia/', dismissible: true };
+    state.promo = cfg || { enabled: false, theme: 'gold', effect: 'shimmer', pages: 'all', badge_vi: 'ƯU ĐÃI', badge_en: 'PROMO', cta_label_vi: 'Mua ngay →', cta_label_en: 'Buy now →', cta_url: '/bang-gia/', dismissible: true };
     fillPromoForm(state.promo);
   }
 
@@ -1455,7 +1466,7 @@
     });
 
     // Promo Banner Editor & Quick Templates
-    ['#prm-enabled', '#prm-theme', '#prm-pages', '#prm-badge-vi', '#prm-code', '#prm-msg-vi', '#prm-cta-vi', '#prm-cta-url', '#prm-ends-at', '#prm-dismissible'].forEach((sel) => {
+    ['#prm-enabled', '#prm-theme', '#prm-effect', '#prm-pages', '#prm-badge-vi', '#prm-code', '#prm-msg-vi', '#prm-cta-vi', '#prm-cta-url', '#prm-ends-at', '#prm-dismissible'].forEach((sel) => {
       $(sel)?.addEventListener('input', updatePromoPreview);
       $(sel)?.addEventListener('change', updatePromoPreview);
     });
@@ -1470,6 +1481,7 @@
       lifetime39: {
         enabled: true,
         theme: 'gold',
+        effect: 'shimmer',
         pages: 'all',
         badge_vi: 'ƯU ĐÃI',
         badge_en: 'PROMO',
@@ -1485,6 +1497,7 @@
       year19: {
         enabled: true,
         theme: 'blue',
+        effect: 'aurora',
         pages: 'all',
         badge_vi: 'TIẾT KIỆM',
         badge_en: 'DEAL',
@@ -1500,6 +1513,7 @@
       flash: {
         enabled: true,
         theme: 'rose',
+        effect: 'marquee',
         pages: 'all',
         badge_vi: 'FLASH SALE',
         badge_en: 'FLASH SALE',

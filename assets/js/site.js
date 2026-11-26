@@ -343,7 +343,7 @@
 
   function promoSignature(p) {
     if (!p) return '';
-    return String(p.updated_at || '') + '|' + String(p.message_vi || '') + '|' + String(p.coupon_code || '');
+    return String(p.updated_at || '') + '|' + String(p.message_vi || '') + '|' + String(p.coupon_code || '') + '|' + String(p.effect || 'shimmer');
   }
 
   function stopPromoCountdown() {
@@ -403,6 +403,7 @@
     var ctaLabel = isEn() && promo.cta_label_en ? promo.cta_label_en : promo.cta_label_vi;
     var ctaUrl = localizePromoHref(promo.cta_url || '');
     var theme = /^(gold|blue|emerald|rose|violet)$/.test(promo.theme || '') ? promo.theme : 'gold';
+    var fx = /^(shimmer|aurora|marquee|pulse|none)$/.test(promo.effect || '') ? promo.effect : 'shimmer';
     var hasClose = promo.dismissible !== false;
 
     var bar = document.querySelector('.site-promo');
@@ -412,24 +413,39 @@
       anchor.insertAdjacentElement('afterend', bar);
     }
 
-    bar.className = 'site-promo site-promo--' + theme + (hasClose ? '' : ' site-promo--no-x');
+    bar.className = 'site-promo site-promo--' + theme + ' site-promo--fx-' + fx + (hasClose ? '' : ' site-promo--no-x');
     bar.setAttribute('role', 'region');
     bar.setAttribute('aria-label', t('Thông báo khuyến mãi', 'Promotional announcement'));
 
-    var html = '<div class="site-promo__in">';
-    if (badge) html += '<span class="site-promo__badge">' + escHtml(badge) + '</span>';
-    html += '<span class="site-promo__msg">' + escHtml(msg) + '</span>';
-    if (promo.coupon_code) {
-      html += '<button type="button" class="site-promo__code" data-promo-copy="' + escHtml(promo.coupon_code) + '" title="' + escHtml(t('Bấm để copy mã', 'Click to copy code')) + '">' + escHtml(promo.coupon_code) + '</button>';
+    var buildUnitHtml = function (noTab) {
+      var tabAttr = noTab ? ' tabindex="-1"' : '';
+      var out = '';
+      if (badge) out += '<span class="site-promo__badge">' + escHtml(badge) + '</span>';
+      out += '<span class="site-promo__msg">' + escHtml(msg) + '</span>';
+      if (promo.coupon_code) {
+        out += '<button type="button" class="site-promo__code" data-promo-copy="' + escHtml(promo.coupon_code) + '"' + tabAttr + ' title="' + escHtml(t('Bấm để copy mã', 'Click to copy code')) + '">' + escHtml(promo.coupon_code) + '</button>';
+      }
+      if (promo.ends_at) {
+        out += '<span class="site-promo__timer" data-promo-timer></span>';
+      }
+      if (ctaLabel && ctaUrl) {
+        var ext = /^https?:\/\//i.test(ctaUrl) ? ' target="_blank" rel="noopener noreferrer"' : '';
+        out += '<a class="site-promo__cta" href="' + escHtml(ctaUrl) + '"' + ext + tabAttr + '>' + escHtml(ctaLabel) + '</a>';
+      }
+      return out;
+    };
+
+    var html = '';
+    if (fx === 'marquee') {
+      var unitMain = '<span class="site-promo__unit">' + buildUnitHtml(false) + '</span><span class="site-promo__sep" aria-hidden="true">✦</span>';
+      var unitClone = '<span class="site-promo__unit">' + buildUnitHtml(true) + '</span><span class="site-promo__sep" aria-hidden="true">✦</span>';
+      html = '<div class="site-promo__viewport"><div class="site-promo__marquee">' +
+        '<div class="site-promo__track">' + unitMain + unitClone + '</div>' +
+        '<div class="site-promo__track" aria-hidden="true">' + unitClone + unitClone + '</div>' +
+        '</div></div>';
+    } else {
+      html = '<div class="site-promo__in">' + buildUnitHtml(false) + '</div>';
     }
-    if (promo.ends_at) {
-      html += '<span class="site-promo__timer" data-promo-timer></span>';
-    }
-    if (ctaLabel && ctaUrl) {
-      var ext = /^https?:\/\//i.test(ctaUrl) ? ' target="_blank" rel="noopener noreferrer"' : '';
-      html += '<a class="site-promo__cta" href="' + escHtml(ctaUrl) + '"' + ext + '>' + escHtml(ctaLabel) + '</a>';
-    }
-    html += '</div>';
     if (hasClose) {
       html += '<button type="button" class="site-promo__x" data-promo-close aria-label="' + escHtml(t('Đóng băng rôn', 'Dismiss banner')) + '">✕</button>';
     }
@@ -439,14 +455,15 @@
     if (promo.ends_at) {
       var targetMs = new Date(promo.ends_at).getTime();
       var tick = function () {
-        var timerEl = bar.querySelector('[data-promo-timer]');
-        if (!timerEl) return;
+        var timerEls = bar.querySelectorAll('[data-promo-timer]');
+        if (!timerEls.length) return;
         var diff = targetMs - Date.now();
         if (diff <= 0) {
           removePromoBanner();
           return;
         }
-        timerEl.textContent = formatPromoLeft(diff);
+        var txt = formatPromoLeft(diff);
+        timerEls.forEach(function (el) { el.textContent = txt; });
       };
       tick();
       promoTimerId = setInterval(tick, 1000);
@@ -460,7 +477,7 @@
       var rawCache = sessionStorage.getItem(PROMO_CACHE_KEY);
       if (rawCache) {
         var cached = JSON.parse(rawCache);
-        if (cached && cached.ts && Date.now() - cached.ts < 20000) {
+        if (cached && cached.ts && Date.now() - cached.ts < 8000) {
           renderPromoBanner(cached.promo || null);
           return;
         }
