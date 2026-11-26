@@ -1072,7 +1072,7 @@
     'Rust SIMD + WebGPU · 100% Offline trên máy': 'Rust SIMD + WebGPU · 100% Offline on your PC',
     'Hậu kỳ ảnh cưới & chân dung': 'Wedding & portrait post-production',
     'chuẩn Studio.': 'the Studio way.',
-    'Mở trực tiếp file RAW 16-bit bằng LibRaw, làm đẹp da với 6 mô hình U-Net AI, xoá vật thể LaMa và đồng bộ màu cả buổi chụp — tất cả chạy cục bộ trên máy bạn, không credit, không tải ảnh lên mây.':
+    'Mở trực tiếp file RAW 16-bit bằng LibRaw, làm đẹp da với 6 mô hình U-Net AI, xoá vật thể LaMa và đồng bộ màu cả buổi chụp — tất cả chạy cục bộ trên máy bạn, không credit, không tải ảnh lên cloud.':
       'Open native 16-bit RAW files via LibRaw, retouch skin with 6 U-Net AI models, erase objects with LaMa, and batch-sync entire shoots — all locally on your hardware with zero credits and zero cloud uploads.',
     'Tải app cho Windows': 'Download for Windows',
     'Xem bảng giá · từ 0đ': 'View Pricing · from 0đ',

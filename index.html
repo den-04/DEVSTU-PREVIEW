@@ -1,13 +1,16 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DEVSTU · Phòng tối AI hậu kỳ ảnh cưới &amp; chân dung trên Windows</title>
-  <meta name="description" content="DEVSTU Desktop Studio: mở RAW 16-bit bằng LibRaw, làm đẹp da 6 mô hình U-Net AI, xoá vật thể LaMa, tách phông Depth v2 và đồng bộ màu cả buổi chụp — chạy 100% offline trên máy bạn.">
+  <meta name="description"
+    content="DEVSTU Desktop Studio: mở RAW 16-bit bằng LibRaw, làm đẹp da 6 mô hình U-Net AI, xoá vật thể LaMa, tách phông Depth v2 và đồng bộ màu cả buổi chụp — chạy 100% offline trên máy bạn.">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="DEVSTU · Phòng tối AI hậu kỳ ảnh cưới &amp; chân dung">
-  <meta property="og:description" content="Hậu kỳ ảnh cưới, kỷ yếu &amp; chân dung chạy 100% offline bằng Rust SIMD + WebGPU. Không giới hạn xuất, không tính credit.">
+  <meta property="og:description"
+    content="Hậu kỳ ảnh cưới, kỷ yếu &amp; chân dung chạy 100% offline bằng Rust SIMD + WebGPU. Không giới hạn xuất, không tính credit.">
   <meta property="og:image" content="/assets/img/home/devstu-workflow.webp">
   <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png">
@@ -20,11 +23,13 @@
   <script src="/assets/js/site.js?v=20261126g" defer></script>
   <script src="/assets/js/studio-home.js?v=20261126g" defer></script>
 </head>
+
 <body>
   <a class="skip" href="#noi-dung">Bỏ qua, tới nội dung chính</a>
   <div class="g-root">
     <nav class="g-nav site-nav" aria-label="Điều hướng chính">
-      <a class="brand" href="/"><img src="/icons/logo-64.png" alt="DEVSTU" width="28" height="28"><span>DEVSTU</span></a>
+      <a class="brand" href="/"><img src="/icons/logo-64.png" alt="DEVSTU" width="28"
+          height="28"><span>DEVSTU</span></a>
       <div class="nav-links g-nav__links">
         <a href="/#tinh-nang">Tính năng</a>
         <a href="/#lam-dep-da-ai">AI Retouch</a>
@@ -37,17 +42,29 @@
       <div class="right">
         <details class="lang-dd">
           <summary aria-label="Chọn ngôn ngữ">
-            <svg class="lang-dd__globe" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a13.5 13.5 0 0 1 0 18M12 3a13.5 13.5 0 0 0 0 18"></path></svg>
+            <svg class="lang-dd__globe" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18M12 3a13.5 13.5 0 0 1 0 18M12 3a13.5 13.5 0 0 0 0 18"></path>
+            </svg>
             <span data-lang-code>VI</span>
-            <svg class="lang-dd__chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            <svg class="lang-dd__chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
           </summary>
           <div class="lang-dd__menu" role="menu" aria-label="Ngôn ngữ">
-            <button type="button" role="menuitemradio" data-set-lang="vi" aria-current="true"><span>Tiếng Việt</span><small>Vietnamese</small></button>
-            <button type="button" role="menuitemradio" data-set-lang="en" aria-current="false"><span>English</span><small>English</small></button>
+            <button type="button" role="menuitemradio" data-set-lang="vi" aria-current="true"><span>Tiếng
+                Việt</span><small>Vietnamese</small></button>
+            <button type="button" role="menuitemradio" data-set-lang="en"
+              aria-current="false"><span>English</span><small>English</small></button>
           </div>
         </details>
         <a class="g-btn g-btn--primary g-btn--sm" href="/tai-xuong/">Tải app</a>
-        <button type="button" class="menu-btn" aria-controls="mobile-menu" aria-expanded="false" aria-label="Mở menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+        <button type="button" class="menu-btn" aria-controls="mobile-menu" aria-expanded="false"
+          aria-label="Mở menu"><svg viewBox="0 0 24 24">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg></button>
       </div>
     </nav>
     <div class="mobile-menu" id="mobile-menu" hidden>
@@ -74,9 +91,13 @@
 
           <div class="ds-wrap">
             <header class="ds-hero__head">
-              <span class="ds-eyebrow"><span class="ds-dot" aria-hidden="true"></span>Rust SIMD + WebGPU · 100% Offline trên máy</span>
-              <h1 class="ds-h1" id="ds-hero-h1">Hậu kỳ ảnh cưới &amp; chân dung <span class="ds-grad">chuẩn Studio.</span></h1>
-              <p class="ds-sub">Mở trực tiếp file RAW 16-bit bằng LibRaw, làm đẹp da với 6 mô hình U-Net AI, xoá vật thể LaMa và đồng bộ màu cả buổi chụp — tất cả chạy cục bộ trên máy bạn, không credit, không tải ảnh lên mây.</p>
+              <span class="ds-eyebrow"><span class="ds-dot" aria-hidden="true"></span>Rust SIMD + WebGPU · 100% Offline
+                trên máy</span>
+              <h1 class="ds-h1" id="ds-hero-h1">Hậu kỳ ảnh cưới &amp; chân dung <span class="ds-grad">chuẩn
+                  Studio.</span></h1>
+              <p class="ds-sub">Mở trực tiếp file RAW 16-bit bằng LibRaw, làm đẹp da với 6 mô hình U-Net AI, xoá vật thể
+                LaMa và đồng bộ màu cả buổi chụp — tất cả chạy cục bộ trên máy bạn, không credit, không tải ảnh lên
+                cloud.</p>
               <div class="ds-hero__acts">
                 <a class="ds-btn" href="/tai-xuong/">Tải app cho Windows</a>
                 <a class="ds-btn ds-btn--ghost" href="/bang-gia/">Xem bảng giá · từ 0đ</a>
@@ -95,9 +116,11 @@
                   <img src="/icons/logo-64.png" alt="DEVSTU" width="22" height="22">
                   <span>DEVSTU Studio Darkroom · RAW 16-bit</span>
                 </div>
-                <span class="ds-wk__tele"><span class="ds-dot" aria-hidden="true"></span>WebGPU Active · Oklab 32-bit · Offline</span>
+                <span class="ds-wk__tele"><span class="ds-dot" aria-hidden="true"></span>WebGPU Active · Oklab 32-bit ·
+                  Offline</span>
                 <div class="ds-wk__modes" role="tablist" aria-label="Chế độ mô phỏng phòng tối">
-                  <button type="button" class="on" data-ds-mode="color" role="tab" aria-selected="true">Chỉnh màu</button>
+                  <button type="button" class="on" data-ds-mode="color" role="tab" aria-selected="true">Chỉnh
+                    màu</button>
                   <button type="button" data-ds-mode="skin" role="tab" aria-selected="false">Da AI</button>
                   <button type="button" data-ds-mode="sync" role="tab" aria-selected="false">Đồng bộ</button>
                 </div>
@@ -124,7 +147,8 @@
                       <span class="ds-shot__meta"><b>IMG_403.RAF</b><span data-ds-shot-st>Ảnh RAW</span></span>
                     </button>
                     <button type="button" class="ds-shot" data-ds-shot="4" aria-pressed="false">
-                      <img src="/assets/img/studio/shoot-4-raw.webp" alt="Ảnh 4 Pre-wedding Biển" width="44" height="58">
+                      <img src="/assets/img/studio/shoot-4-raw.webp" alt="Ảnh 4 Pre-wedding Biển" width="44"
+                        height="58">
                       <span class="ds-shot__meta"><b>IMG_404.CR3</b><span data-ds-shot-st>Ảnh RAW</span></span>
                     </button>
                     <button type="button" class="ds-shot" data-ds-shot="5" aria-pressed="false">
@@ -132,7 +156,8 @@
                       <span class="ds-shot__meta"><b>IMG_405.NEF</b><span data-ds-shot-st>Ảnh RAW</span></span>
                     </button>
                     <button type="button" class="ds-shot" data-ds-shot="6" aria-pressed="false">
-                      <img src="/assets/img/studio/shoot-6-raw.webp" alt="Ảnh 6 Ngoại cảnh Kỷ yếu" width="44" height="58">
+                      <img src="/assets/img/studio/shoot-6-raw.webp" alt="Ảnh 6 Ngoại cảnh Kỷ yếu" width="44"
+                        height="58">
                       <span class="ds-shot__meta"><b>IMG_406.ARW</b><span data-ds-shot-st>Ảnh RAW</span></span>
                     </button>
                   </div>
@@ -141,19 +166,25 @@
                 <!-- Center Stage: Draggable Before/After Viewport -->
                 <div class="ds-stage">
                   <div class="ds-cmp ds-cmp--portrait" data-ds-cmp>
-                    <img src="/assets/img/studio/hero-raw.webp" alt="Ảnh RAW gốc chưa chỉnh sửa" data-ds-raw fetchpriority="high">
-                    <img class="ds-cmp__after" src="/assets/img/studio/hero-auto.webp" alt="Ảnh sau khi AI DEVSTU chỉnh sáng và sắc da" data-ds-after fetchpriority="high">
+                    <img src="/assets/img/studio/hero-raw.webp" alt="Ảnh RAW gốc chưa chỉnh sửa" data-ds-raw
+                      fetchpriority="high">
+                    <img class="ds-cmp__after" src="/assets/img/studio/hero-auto.webp"
+                      alt="Ảnh sau khi AI DEVSTU chỉnh sáng và sắc da" data-ds-after fetchpriority="high">
                     <div class="ds-cmp__line" aria-hidden="true"></div>
                     <div class="ds-cmp__knob" aria-hidden="true">
-                      <svg viewBox="0 0 24 24"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"></path></svg>
+                      <svg viewBox="0 0 24 24">
+                        <path d="m9 18-6-6 6-6M15 6l6 6-6 6"></path>
+                      </svg>
                     </div>
                     <span class="ds-cmp__tag ds-cmp__tag--l">Trước · RAW</span>
                     <span class="ds-cmp__tag ds-cmp__tag--r">Sau · DEVSTU AI</span>
-                    <input type="range" min="0" max="100" value="50" aria-label="Kéo thanh chia để so sánh trước và sau">
+                    <input type="range" min="0" max="100" value="50"
+                      aria-label="Kéo thanh chia để so sánh trước và sau">
                   </div>
                   <div class="ds-stage__bar">
                     <span data-ds-badge>Ảnh 1 / 6</span>
-                    <button type="button" class="ds-stage__pill" data-ds-compare aria-pressed="true">Thanh so sánh: Bật</button>
+                    <button type="button" class="ds-stage__pill" data-ds-compare aria-pressed="true">Thanh so sánh:
+                      Bật</button>
                   </div>
                 </div>
 
@@ -187,7 +218,8 @@
                         <span>Film cổ điển</span>
                       </button>
                     </div>
-                    <button type="button" class="ds-look-reset" data-ds-look-reset aria-pressed="true">Trả về AI Tự động</button>
+                    <button type="button" class="ds-look-reset" data-ds-look-reset aria-pressed="true">Trả về AI Tự
+                      động</button>
                   </div>
 
                   <div class="ds-cardlet">
@@ -227,16 +259,19 @@
         <section class="ds-sec ds-sec--alt" id="tinh-nang" aria-labelledby="ds-feat-h2">
           <div class="ds-wrap">
             <header class="ds-sec-head" data-ds-rv>
-              <span class="ds-eyebrow ds-eyebrow--cyan"><span class="ds-dot" aria-hidden="true"></span>Tối ưu từng mili-giây</span>
+              <span class="ds-eyebrow ds-eyebrow--cyan"><span class="ds-dot" aria-hidden="true"></span>Tối ưu từng
+                mili-giây</span>
               <h2 id="ds-feat-h2">Kiến trúc phòng tối riêng cho studio Việt.</h2>
-              <p class="ds-lead">Không đẩy ảnh lên máy chủ bên thứ ba. DEVSTU kết hợp Rust SIMD, không gian màu Oklab 32-bit và ONNX WebGPU để giải quyết gọn cả buổi chụp hàng nghìn file RAW.</p>
+              <p class="ds-lead">Không đẩy ảnh lên máy chủ bên thứ ba. DEVSTU kết hợp Rust SIMD, không gian màu Oklab
+                32-bit và ONNX WebGPU để giải quyết gọn cả buổi chụp hàng nghìn file RAW.</p>
             </header>
 
             <div class="ds-bento">
               <article class="ds-card ds-card--7" data-ds-rv>
                 <span class="ds-card__k">Engine xử lý lõi</span>
                 <h3>Rust SIMD + WebGPU từ file RAW tới xuất hàng loạt</h3>
-                <p>Mở thẳng Canon .CR3, Sony .ARW, Fujifilm .RAF, Nikon .NEF ở độ sâu 16-bit, sau đó chạy bộ lọc màu Oklab và mạng AI ngay trên GPU của bạn — mượt ngay cả trên laptop văn phòng lẫn máy trạm studio.</p>
+                <p>Mở thẳng Canon .CR3, Sony .ARW, Fujifilm .RAF, Nikon .NEF ở độ sâu 16-bit, sau đó chạy bộ lọc màu
+                  Oklab và mạng AI ngay trên GPU của bạn — mượt ngay cả trên laptop văn phòng lẫn máy trạm studio.</p>
                 <div class="ds-pipe" aria-label="Chuỗi xử lý cục bộ DEVSTU">
                   <div class="ds-pipe__node"><b>1. Giải mã RAW</b><span>LibRaw 16-bit</span></div>
                   <div class="ds-pipe__node"><b>2. Hệ màu</b><span>Oklab 32-bit</span></div>
@@ -285,19 +320,22 @@
               <article class="ds-card" data-ds-rv>
                 <span class="ds-card__k">10 thể loại một chạm</span>
                 <h3>Tự hiểu Cưới, Kỷ yếu, Studio &amp; Ngoại cảnh</h3>
-                <p>Chỉ cần chọn bối cảnh buổi chụp — AI tự cân bằng vùng sáng váy cưới trắng, giữ chiều sâu khối nam giới và chống bệt màu xanh lá khi chụp ngoài trời.</p>
+                <p>Chỉ cần chọn bối cảnh buổi chụp — AI tự cân bằng vùng sáng váy cưới trắng, giữ chiều sâu khối nam
+                  giới và chống bệt màu xanh lá khi chụp ngoài trời.</p>
               </article>
 
               <article class="ds-card" data-ds-rv>
                 <span class="ds-card__k">Kiểm màu sRGB &amp; In ấn</span>
                 <h3>Đăng Facebook, Zalo không bị nhợt &amp; xỉn da</h3>
-                <p>Tích hợp hồ sơ ICC v2 sRGB và cảnh báo lệch dải màu (Gamut Warning) ngay lúc xuất ảnh hàng loạt sang JPEG, PNG hoặc TIFF 16-bit.</p>
+                <p>Tích hợp hồ sơ ICC v2 sRGB và cảnh báo lệch dải màu (Gamut Warning) ngay lúc xuất ảnh hàng loạt sang
+                  JPEG, PNG hoặc TIFF 16-bit.</p>
               </article>
 
               <article class="ds-card" data-ds-rv>
                 <span class="ds-card__k">Chế độ STU Ultra</span>
                 <h3>Ghép phông ảnh thẻ &amp; 13 màu tóc salon</h3>
-                <p>Phân tách chủ thể Nam, Nữ, Trẻ em, Người lớn tuổi trong một lượt chạy; tích hợp LK Magic Pro model_29 + BGFusion thay phông studio sạch từng sợi tóc.</p>
+                <p>Phân tách chủ thể Nam, Nữ, Trẻ em, Người lớn tuổi trong một lượt chạy; tích hợp LK Magic Pro model_29
+                  + BGFusion thay phông studio sạch từng sợi tóc.</p>
               </article>
             </div>
           </div>
@@ -308,34 +346,60 @@
           <div class="ds-wrap">
             <div class="ds-skin-grid" data-ds-skin>
               <div data-ds-rv>
-                <span class="ds-eyebrow"><span class="ds-dot" aria-hidden="true"></span>6 Mô hình U-Net Skin AI chuyên biệt</span>
-                <h2 class="ds-h1" id="ds-skin-h2" style="font-size:clamp(28px,3.6vw,44px);margin-top:14px">Mịn da chuẩn Studio, <span class="ds-grad">giữ nguyên vân da thật.</span></h2>
-                <p class="ds-lead" style="margin-top:12px">Tách riêng hai tần số cao/thấp để xử lý mụn, vết thâm và vùng dầu mà không làm bệt lỗ chân lông hay nhoè lông mi như app làm mịn thông thường.</p>
+                <span class="ds-eyebrow"><span class="ds-dot" aria-hidden="true"></span>6 Mô hình U-Net Skin AI chuyên
+                  biệt</span>
+                <h2 class="ds-h1" id="ds-skin-h2" style="font-size:clamp(28px,3.6vw,44px);margin-top:14px">Mịn da chuẩn
+                  Studio, <span class="ds-grad">giữ nguyên vân da thật.</span></h2>
+                <p class="ds-lead" style="margin-top:12px">Tách riêng hai tần số cao/thấp để xử lý mụn, vết thâm và vùng
+                  dầu mà không làm bệt lỗ chân lông hay nhoè lông mi như app làm mịn thông thường.</p>
 
                 <div class="ds-skin-chips" role="group" aria-label="Chọn mô hình U-Net Skin AI">
-                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="face" data-ds-skin-val="85" data-ds-skin-msg="Mô hình Khuôn mặt (da_retouch_v1): làm sạch khuyết điểm nhỏ, cân bằng độ sáng gò má mà vẫn giữ nguyên cấu trúc lỗ chân lông." data-ds-skin-msg-en="Face Model (da_retouch_v1): removes small blemishes and evens highlights while keeping natural pore texture intact." aria-pressed="true">Khuôn mặt</button>
-                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="smile" data-ds-skin-val="90" data-ds-skin-msg="Mô hình Rãnh cười &amp; Bọng mắt: giảm hằn sâu vùng rãnh mũi má và quầng thâm mắt một cách tự nhiên khi chụp cận cảnh." data-ds-skin-msg-en="Smile Lines &amp; Under-eye: softly lifts nasolabial folds and dark circles without making portraits look artificial.">Rãnh cười &amp; Quầng mắt</button>
-                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="3d" data-ds-skin-val="78" data-ds-skin-msg="Mô hình Khối 3D Studio: đánh sáng vùng chữ T, tạo chiều sâu sống mũi và đường viền hàm giống đèn softbox." data-ds-skin-msg-en="Studio 3D Contour: sculpts T-zone highlights and jawline depth like a softbox key light.">Khối 3D Studio</button>
-                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="body" data-ds-skin-val="82" data-ds-skin-msg="Mô hình Da Cơ thể: đồng bộ tông màu giữa mặt, cổ, vai và cánh tay cô dâu khi mặc váy hở vai." data-ds-skin-msg-en="Body Skin Unifier: matches skin tone smoothly across face, neck, shoulders, and arms.">Da cơ thể</button>
-                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="cloth" data-ds-skin-val="88" data-ds-skin-msg="Mô hình Là phẳng quần áo: làm phẳng nếp nhăn vải trên áo sơ mi, vest và tà áo dài mà vẫn giữ họa tiết vải." data-ds-skin-msg-en="Wrinkle-Free Clothing: smooths fabric creases on shirts, suits, and dresses while keeping weave texture.">Là phẳng nếp áo</button>
-                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="hair" data-ds-skin-val="92" data-ds-skin-msg="Mô hình Tóc &amp; 13 màu Salon: thu gọn tóc con bay lơ thơ, làm bóng nếp tóc và hỗ trợ nhuộm thử 13 tông màu salon." data-ds-skin-msg-en="Hair Strands &amp; 13 Salon Tones: tames flyaways cleanly and supports 13 realistic hair color tones.">Tóc &amp; 13 màu salon</button>
+                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="face" data-ds-skin-val="85"
+                    data-ds-skin-msg="Mô hình Khuôn mặt (da_retouch_v1): làm sạch khuyết điểm nhỏ, cân bằng độ sáng gò má mà vẫn giữ nguyên cấu trúc lỗ chân lông."
+                    data-ds-skin-msg-en="Face Model (da_retouch_v1): removes small blemishes and evens highlights while keeping natural pore texture intact."
+                    aria-pressed="true">Khuôn mặt</button>
+                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="smile" data-ds-skin-val="90"
+                    data-ds-skin-msg="Mô hình Rãnh cười &amp; Bọng mắt: giảm hằn sâu vùng rãnh mũi má và quầng thâm mắt một cách tự nhiên khi chụp cận cảnh."
+                    data-ds-skin-msg-en="Smile Lines &amp; Under-eye: softly lifts nasolabial folds and dark circles without making portraits look artificial.">Rãnh
+                    cười &amp; Quầng mắt</button>
+                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="3d" data-ds-skin-val="78"
+                    data-ds-skin-msg="Mô hình Khối 3D Studio: đánh sáng vùng chữ T, tạo chiều sâu sống mũi và đường viền hàm giống đèn softbox."
+                    data-ds-skin-msg-en="Studio 3D Contour: sculpts T-zone highlights and jawline depth like a softbox key light.">Khối
+                    3D Studio</button>
+                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="body" data-ds-skin-val="82"
+                    data-ds-skin-msg="Mô hình Da Cơ thể: đồng bộ tông màu giữa mặt, cổ, vai và cánh tay cô dâu khi mặc váy hở vai."
+                    data-ds-skin-msg-en="Body Skin Unifier: matches skin tone smoothly across face, neck, shoulders, and arms.">Da
+                    cơ thể</button>
+                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="cloth" data-ds-skin-val="88"
+                    data-ds-skin-msg="Mô hình Là phẳng quần áo: làm phẳng nếp nhăn vải trên áo sơ mi, vest và tà áo dài mà vẫn giữ họa tiết vải."
+                    data-ds-skin-msg-en="Wrinkle-Free Clothing: smooths fabric creases on shirts, suits, and dresses while keeping weave texture.">Là
+                    phẳng nếp áo</button>
+                  <button type="button" class="ds-skin-chip" data-ds-skin-preset="hair" data-ds-skin-val="92"
+                    data-ds-skin-msg="Mô hình Tóc &amp; 13 màu Salon: thu gọn tóc con bay lơ thơ, làm bóng nếp tóc và hỗ trợ nhuộm thử 13 tông màu salon."
+                    data-ds-skin-msg-en="Hair Strands &amp; 13 Salon Tones: tames flyaways cleanly and supports 13 realistic hair color tones.">Tóc
+                    &amp; 13 màu salon</button>
                 </div>
 
-                <p class="ds-lead" data-ds-skin-note style="font-size:14.5px;margin-top:14px;min-height:46px">Mô hình Khuôn mặt (da_retouch_v1): làm sạch khuyết điểm nhỏ, cân bằng độ sáng gò má mà vẫn giữ nguyên cấu trúc lỗ chân lông.</p>
+                <p class="ds-lead" data-ds-skin-note style="font-size:14.5px;margin-top:14px;min-height:46px">Mô hình
+                  Khuôn mặt (da_retouch_v1): làm sạch khuyết điểm nhỏ, cân bằng độ sáng gò má mà vẫn giữ nguyên cấu trúc
+                  lỗ chân lông.</p>
 
                 <div class="ds-skin-ctrl">
                   <div class="ds-skin-ctrl__top">
                     <span>Cường độ Skin AI (Frequency Separation)</span>
                     <output data-ds-skin-out>85%</output>
                   </div>
-                  <input type="range" min="0" max="100" value="85" data-ds-skin-range aria-label="Điều chỉnh cường độ làm đẹp da AI">
+                  <input type="range" min="0" max="100" value="85" data-ds-skin-range
+                    aria-label="Điều chỉnh cường độ làm đẹp da AI">
                 </div>
               </div>
 
               <div id="chan-dung" style="scroll-margin-top:84px" data-ds-rv>
                 <div class="ds-skin-stage" data-ds-skin-stage style="--skin-v:0.85">
-                  <img src="/assets/img/studio/skin-raw.webp" alt="Ảnh chân dung cận mặt trước khi chạy U-Net Skin AI" loading="lazy">
-                  <img class="ds-skin-stage__after" src="/assets/img/studio/skin-after.webp" alt="Ảnh chân dung sau khi làm mịn da 6 mô hình U-Net AI" loading="lazy">
+                  <img src="/assets/img/studio/skin-raw.webp" alt="Ảnh chân dung cận mặt trước khi chạy U-Net Skin AI"
+                    loading="lazy">
+                  <img class="ds-skin-stage__after" src="/assets/img/studio/skin-after.webp"
+                    alt="Ảnh chân dung sau khi làm mịn da 6 mô hình U-Net AI" loading="lazy">
                   <span class="ds-cmp__tag ds-cmp__tag--l">Trước · Mộc</span>
                   <span class="ds-cmp__tag ds-cmp__tag--r">Sau · U-Net AI</span>
                 </div>
@@ -348,32 +412,40 @@
         <section class="ds-sec ds-sec--alt" id="xoa-vat-the" aria-labelledby="ds-vision-h2">
           <div class="ds-wrap">
             <header class="ds-sec-head ds-sec-head--center" data-ds-rv>
-              <span class="ds-eyebrow ds-eyebrow--cyan"><span class="ds-dot" aria-hidden="true"></span>4 Mô hình AI tích hợp sẵn</span>
+              <span class="ds-eyebrow ds-eyebrow--cyan"><span class="ds-dot" aria-hidden="true"></span>4 Mô hình AI tích
+                hợp sẵn</span>
               <h2 id="ds-vision-h2">Xử lý hậu kỳ phức tạp ngay trên một cửa sổ.</h2>
-              <p class="ds-lead">Không cần qua lại nhiều phần mềm rời rạc. Chuyển đổi trực tiếp giữa xóa phông quang học Depth v2, tách trời hoàng hôn, khử nhiễu SCUNet và cân chỉnh mặt biển.</p>
+              <p class="ds-lead">Không cần qua lại nhiều phần mềm rời rạc. Chuyển đổi trực tiếp giữa xóa phông quang học
+                Depth v2, tách trời hoàng hôn, khử nhiễu SCUNet và cân chỉnh mặt biển.</p>
             </header>
 
             <div data-ds-vision data-ds-rv>
               <div class="ds-vision-tabs" role="tablist" aria-label="Chọn mô hình AI Vision">
                 <button type="button" data-ds-vtab="bokeh" role="tab" aria-pressed="true">Depth v2 Xoá phông</button>
-                <button type="button" data-ds-vtab="sky" role="tab" aria-pressed="false">Tách &amp; Thay Trời AI</button>
+                <button type="button" data-ds-vtab="sky" role="tab" aria-pressed="false">Tách &amp; Thay Trời
+                  AI</button>
                 <button type="button" data-ds-vtab="denoise" role="tab" aria-pressed="false">SCUNet Khử nhiễu</button>
                 <button type="button" data-ds-vtab="water" role="tab" aria-pressed="false">Mặt Nước Trong Xanh</button>
               </div>
 
               <div class="ds-vision-box">
                 <div class="ds-cmp ds-cmp--wide" data-ds-cmp>
-                  <img src="/assets/img/studio/ai-bokeh-raw.webp" alt="Ảnh trước khi xử lý AI Vision" data-ds-vraw loading="lazy">
-                  <img class="ds-cmp__after" src="/assets/img/studio/ai-bokeh-after.webp" alt="Ảnh sau khi xử lý AI Vision DEVSTU" data-ds-vafter loading="lazy">
+                  <img src="/assets/img/studio/ai-bokeh-raw.webp" alt="Ảnh trước khi xử lý AI Vision" data-ds-vraw
+                    loading="lazy">
+                  <img class="ds-cmp__after" src="/assets/img/studio/ai-bokeh-after.webp"
+                    alt="Ảnh sau khi xử lý AI Vision DEVSTU" data-ds-vafter loading="lazy">
                   <div class="ds-cmp__line" aria-hidden="true"></div>
                   <div class="ds-cmp__knob" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"></path></svg>
+                    <svg viewBox="0 0 24 24">
+                      <path d="m9 18-6-6 6-6M15 6l6 6-6 6"></path>
+                    </svg>
                   </div>
                   <span class="ds-cmp__tag ds-cmp__tag--l">Trước · Gốc</span>
                   <span class="ds-cmp__tag ds-cmp__tag--r">Sau · AI DEVSTU</span>
                   <input type="range" min="0" max="100" value="50" aria-label="Kéo để so sánh mô hình AI Vision">
                 </div>
-                <p class="ds-vision-cap" data-ds-vcap>Depth Anything v2 + BiRefNet: Tạo bản đồ độ sâu trường ảnh, xóa phông quang học giữ nét từng sợi tóc.</p>
+                <p class="ds-vision-cap" data-ds-vcap>Depth Anything v2 + BiRefNet: Tạo bản đồ độ sâu trường ảnh, xóa
+                  phông quang học giữ nét từng sợi tóc.</p>
               </div>
             </div>
           </div>
@@ -385,7 +457,9 @@
             <header class="ds-sec-head" data-ds-rv>
               <span class="ds-eyebrow"><span class="ds-dot" aria-hidden="true"></span>Hệ màu Oklab + 3D LUT .CUBE</span>
               <h2 id="ds-lut-h2">Chia sẻ công thức màu qua link. Tải 8 LUT miễn phí.</h2>
-              <p class="ds-lead">Mỗi bộ màu trong DEVSTU đều có thể nén thành một link ngắn <code>devstu.vercel.app/?m=...</code> để gửi cho đồng nghiệp hoặc đọc trực tiếp thông số ngay trên trang web này.</p>
+              <p class="ds-lead">Mỗi bộ màu trong DEVSTU đều có thể nén thành một link ngắn
+                <code>devstu.vercel.app/?m=...</code> để gửi cho đồng nghiệp hoặc đọc trực tiếp thông số ngay trên trang
+                web này.</p>
             </header>
 
             <div class="dv-m-box" id="nhap-bo-mau" data-m-box data-ds-rv>
@@ -394,7 +468,8 @@
                 <span>devstu.vercel.app/?m=...</span>
               </div>
               <form class="dv-m-form" data-m-form>
-                <input type="text" data-m-input placeholder="Dán link devstu.vercel.app/?m=... vào đây" aria-label="Nhập link bộ màu (devstu.vercel.app/?m=...)">
+                <input type="text" data-m-input placeholder="Dán link devstu.vercel.app/?m=... vào đây"
+                  aria-label="Nhập link bộ màu (devstu.vercel.app/?m=...)">
                 <button type="submit" class="ds-btn ds-btn--sm">Giải mã bộ màu</button>
               </form>
               <div class="dv-m-samples">
@@ -411,7 +486,8 @@
               <div class="dv-lut-head">
                 <div>
                   <h3>Kho 8 LUT miễn phí (.CUBE 17×17×17 &amp; Link ?m=)</h3>
-                  <p>Tải file <code>.cube</code> tiêu chuẩn dùng cho DEVSTU, Lightroom, Photoshop &amp; DaVinci Resolve.</p>
+                  <p>Tải file <code>.cube</code> tiêu chuẩn dùng cho DEVSTU, Lightroom, Photoshop &amp; DaVinci Resolve.
+                  </p>
                 </div>
                 <div class="dv-lut-tabs" role="group" aria-label="Lọc danh mục LUT">
                   <button type="button" data-lut-cat="all" aria-pressed="true">Tất cả (8)</button>
@@ -424,7 +500,8 @@
               <div class="dv-luts">
                 <article class="dv-lut" data-lut-tags="outdoor portrait">
                   <div class="dv-lut__pic">
-                    <img src="/assets/img/luts/chieu-muon.webp" width="360" height="450" alt="LUT Chiều ấm nắng" loading="lazy">
+                    <img src="/assets/img/luts/chieu-muon.webp" width="360" height="450" alt="LUT Chiều ấm nắng"
+                      loading="lazy">
                     <span class="dv-lut__tag">.CUBE</span>
                   </div>
                   <div class="dv-lut__body">
@@ -439,7 +516,8 @@
 
                 <article class="dv-lut" data-lut-tags="portrait">
                   <div class="dv-lut__pic">
-                    <img src="/assets/img/luts/han-quoc.webp" width="360" height="450" alt="LUT Hàn Quốc sáng" loading="lazy">
+                    <img src="/assets/img/luts/han-quoc.webp" width="360" height="450" alt="LUT Hàn Quốc sáng"
+                      loading="lazy">
                     <span class="dv-lut__tag">.CUBE</span>
                   </div>
                   <div class="dv-lut__body">
@@ -454,14 +532,16 @@
 
                 <article class="dv-lut" data-lut-tags="portrait">
                   <div class="dv-lut__pic">
-                    <img src="/assets/img/luts/da-trang-hong.webp" width="360" height="450" alt="LUT Da trắng hồng" loading="lazy">
+                    <img src="/assets/img/luts/da-trang-hong.webp" width="360" height="450" alt="LUT Da trắng hồng"
+                      loading="lazy">
                     <span class="dv-lut__tag">.CUBE</span>
                   </div>
                   <div class="dv-lut__body">
                     <h4>Da trắng hồng</h4>
                     <p>Khử ám vàng trên da người châu Á, lên sắc da trắng hồng tươi tắn khi chụp studio.</p>
                     <div class="dv-lut__acts">
-                      <a class="dv-lut__dl" href="/luts/da-trang-hong.cube" download="DEVSTU-da-trang-hong.cube">Tải .CUBE</a>
+                      <a class="dv-lut__dl" href="/luts/da-trang-hong.cube" download="DEVSTU-da-trang-hong.cube">Tải
+                        .CUBE</a>
                       <button type="button" class="dv-lut__m" data-m-sample="da-trang-hong">Link ?m=</button>
                     </div>
                   </div>
@@ -469,14 +549,16 @@
 
                 <article class="dv-lut" data-lut-tags="outdoor portrait">
                   <div class="dv-lut__pic">
-                    <img src="/assets/img/luts/cuoi-nhe-nhang.webp" width="360" height="450" alt="LUT Cưới nhẹ nhàng" loading="lazy">
+                    <img src="/assets/img/luts/cuoi-nhe-nhang.webp" width="360" height="450" alt="LUT Cưới nhẹ nhàng"
+                      loading="lazy">
                     <span class="dv-lut__tag">.CUBE</span>
                   </div>
                   <div class="dv-lut__body">
                     <h4>Cưới nhẹ nhàng</h4>
                     <p>Giữ trắng tinh khôi cho váy cưới, giảm gắt vùng sáng và êm dịu cho da cặp đôi.</p>
                     <div class="dv-lut__acts">
-                      <a class="dv-lut__dl" href="/luts/cuoi-nhe-nhang.cube" download="DEVSTU-cuoi-nhe-nhang.cube">Tải .CUBE</a>
+                      <a class="dv-lut__dl" href="/luts/cuoi-nhe-nhang.cube" download="DEVSTU-cuoi-nhe-nhang.cube">Tải
+                        .CUBE</a>
                       <button type="button" class="dv-lut__m" data-m-sample="cuoi-nhe-nhang">Link ?m=</button>
                     </div>
                   </div>
@@ -484,7 +566,8 @@
 
                 <article class="dv-lut" data-lut-tags="film">
                   <div class="dv-lut__pic">
-                    <img src="/assets/img/luts/co-dien.webp" width="360" height="450" alt="LUT Film cổ điển" loading="lazy">
+                    <img src="/assets/img/luts/co-dien.webp" width="360" height="450" alt="LUT Film cổ điển"
+                      loading="lazy">
                     <span class="dv-lut__tag">.CUBE</span>
                   </div>
                   <div class="dv-lut__body">
@@ -499,7 +582,8 @@
 
                 <article class="dv-lut" data-lut-tags="portrait outdoor">
                   <div class="dv-lut__pic">
-                    <img src="/assets/img/luts/trong-treo.webp" width="360" height="450" alt="LUT Trong trẻo" loading="lazy">
+                    <img src="/assets/img/luts/trong-treo.webp" width="360" height="450" alt="LUT Trong trẻo"
+                      loading="lazy">
                     <span class="dv-lut__tag">.CUBE</span>
                   </div>
                   <div class="dv-lut__body">
@@ -514,7 +598,8 @@
 
                 <article class="dv-lut" data-lut-tags="outdoor">
                   <div class="dv-lut__pic">
-                    <img src="/assets/img/luts/bien-xanh.webp" width="360" height="450" alt="LUT Biển xanh" loading="lazy">
+                    <img src="/assets/img/luts/bien-xanh.webp" width="360" height="450" alt="LUT Biển xanh"
+                      loading="lazy">
                     <span class="dv-lut__tag">.CUBE</span>
                   </div>
                   <div class="dv-lut__body">
@@ -529,14 +614,16 @@
 
                 <article class="dv-lut" data-lut-tags="film portrait">
                   <div class="dv-lut__pic">
-                    <img src="/assets/img/luts/den-trang-mem.webp" width="360" height="450" alt="LUT Đen trắng mềm" loading="lazy">
+                    <img src="/assets/img/luts/den-trang-mem.webp" width="360" height="450" alt="LUT Đen trắng mềm"
+                      loading="lazy">
                     <span class="dv-lut__tag">.CUBE</span>
                   </div>
                   <div class="dv-lut__body">
                     <h4>Đen trắng mềm</h4>
                     <p>Thang xám mịn với vùng tối nâng nhẹ phong cách phóng sự cưới Leica Monochrome.</p>
                     <div class="dv-lut__acts">
-                      <a class="dv-lut__dl" href="/luts/den-trang-mem.cube" download="DEVSTU-den-trang-mem.cube">Tải .CUBE</a>
+                      <a class="dv-lut__dl" href="/luts/den-trang-mem.cube" download="DEVSTU-den-trang-mem.cube">Tải
+                        .CUBE</a>
                       <button type="button" class="dv-lut__m" data-m-sample="den-trang-mem">Link ?m=</button>
                     </div>
                   </div>
@@ -550,9 +637,11 @@
         <section class="ds-sec ds-sec--alt" id="rieng-tu" aria-labelledby="ds-priv-h2">
           <div class="ds-wrap">
             <header class="ds-sec-head ds-sec-head--center" data-ds-rv>
-              <span class="ds-eyebrow ds-eyebrow--cyan"><span class="ds-dot" aria-hidden="true"></span>Minh bạch &amp; Riêng tư tuyệt đối</span>
+              <span class="ds-eyebrow ds-eyebrow--cyan"><span class="ds-dot" aria-hidden="true"></span>Minh bạch &amp;
+                Riêng tư tuyệt đối</span>
               <h2 id="ds-priv-h2">100% xử lý ngoại tuyến. Không thu credit theo tấm.</h2>
-              <p class="ds-lead">Ảnh khách hàng của studio là tài sản riêng tư. DEVSTU xử lý toàn bộ trên CPU/GPU tại máy tính của bạn — hoạt động bình thường ngay cả khi rút dây mạng.</p>
+              <p class="ds-lead">Ảnh khách hàng của studio là tài sản riêng tư. DEVSTU xử lý toàn bộ trên CPU/GPU tại
+                máy tính của bạn — hoạt động bình thường ngay cả khi rút dây mạng.</p>
             </header>
 
             <div class="ds-table-wrap" data-ds-rv>
@@ -636,26 +725,34 @@
             <div class="ds-faq" data-ds-rv>
               <details>
                 <summary>Ảnh của tôi có bị gửi lên internet hay máy chủ nào không?</summary>
-                <p>Không bao giờ. Toàn bộ quá trình đọc file RAW, chạy AI Skin Retouch, xoá vật thể LaMa và xuất file đều chạy 100% cục bộ bằng Rust SIMD và WebGPU ngay trên máy tính Windows của bạn.</p>
+                <p>Không bao giờ. Toàn bộ quá trình đọc file RAW, chạy AI Skin Retouch, xoá vật thể LaMa và xuất file
+                  đều chạy 100% cục bộ bằng Rust SIMD và WebGPU ngay trên máy tính Windows của bạn.</p>
               </details>
               <details>
                 <summary>Máy không có card đồ hoạ rời RTX có chạy được DEVSTU không?</summary>
-                <p>Có. DEVSTU tự động thích ứng giữa GPU rời (WebGPU) và vi xử lý CPU với tập lệnh SIMD. Bạn có thể kiểm tra ngay hiệu năng phần cứng của máy tại trang Tải xuống bằng bài đo WebGPU trực tiếp trên trình duyệt.</p>
+                <p>Có. DEVSTU tự động thích ứng giữa GPU rời (WebGPU) và vi xử lý CPU với tập lệnh SIMD. Bạn có thể kiểm
+                  tra ngay hiệu năng phần cứng của máy tại trang Tải xuống bằng bài đo WebGPU trực tiếp trên trình
+                  duyệt.</p>
               </details>
               <details>
                 <summary>Sau khi chuyển khoản VietQR mua gói Pro, mã Key hoạt động thế nào?</summary>
-                <p>Ngay sau khi giao dịch VietQR hoàn tất, hệ thống cấp ngay 1 mã Key riêng và lưu lại an toàn trong mục “Lịch sử đơn hàng &amp; Kho Key” trên tài khoản của bạn. Key không tự kích hoạt trước, bạn chủ động copy dán vào ứng dụng DEVSTU Desktop bất kỳ lúc nào.</p>
+                <p>Ngay sau khi giao dịch VietQR hoàn tất, hệ thống cấp ngay 1 mã Key riêng và lưu lại an toàn trong mục
+                  “Lịch sử đơn hàng &amp; Kho Key” trên tài khoản của bạn. Key không tự kích hoạt trước, bạn chủ động
+                  copy dán vào ứng dụng DEVSTU Desktop bất kỳ lúc nào.</p>
               </details>
               <details>
                 <summary>Có nhập được Preset Lightroom (.xmp) và file màu .cube sẵn có không?</summary>
-                <p>Có. Cả phiên bản Standard (0đ) lẫn Pro đều hỗ trợ nhập trực tiếp file .xmp, .lrtemplate từ Lightroom Classic và LUT 3D .cube từ Photoshop hoặc DaVinci Resolve.</p>
+                <p>Có. Cả phiên bản Standard (0đ) lẫn Pro đều hỗ trợ nhập trực tiếp file .xmp, .lrtemplate từ Lightroom
+                  Classic và LUT 3D .cube từ Photoshop hoặc DaVinci Resolve.</p>
               </details>
             </div>
 
             <div class="ds-final-box" style="margin-top:52px" data-ds-rv>
-              <span class="ds-eyebrow"><span class="ds-dot" aria-hidden="true"></span>DEVSTU Desktop v1.0 · Windows 10 / 11</span>
+              <span class="ds-eyebrow"><span class="ds-dot" aria-hidden="true"></span>DEVSTU Desktop v1.0 · Windows 10 /
+                11</span>
               <h2 class="ds-h1" style="font-size:clamp(28px,3.8vw,46px)">Sẵn sàng nâng tốc quy trình hậu kỳ.</h2>
-              <p class="ds-sub">Tải DEVSTU Desktop cho Windows để trải nghiệm miễn phí trọn đời bản Standard hoặc kích hoạt STU Ultra AI ngay trên máy của bạn.</p>
+              <p class="ds-sub">Tải DEVSTU Desktop cho Windows để trải nghiệm miễn phí trọn đời bản Standard hoặc kích
+                hoạt STU Ultra AI ngay trên máy của bạn.</p>
               <div class="ds-hero__acts">
                 <a class="ds-btn" href="/tai-xuong/">Tải app DEVSTU (Windows)</a>
                 <a class="ds-btn ds-btn--ghost" href="/bang-gia/">Xem bảng giá &amp; Kho Key</a>
@@ -727,10 +824,13 @@
             </ul>
           </div>
         </div>
-        <p class="contact">DEVSTU — AI Photo Retouching Suite · Đà Nẵng, Việt Nam · <a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a></p>
-        <p class="g-footer__legal">© 2026 DEVSTU. Ảnh của bạn luôn được xử lý cục bộ trên thiết bị của bạn. Lightroom là thương hiệu của Adobe; DEVSTU hoạt động độc lập và không liên kết với bên thứ ba nào.</p>
+        <p class="contact">DEVSTU — AI Photo Retouching Suite · Đà Nẵng, Việt Nam · <a
+            href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a></p>
+        <p class="g-footer__legal">© 2026 DEVSTU. Ảnh của bạn luôn được xử lý cục bộ trên thiết bị của bạn. Lightroom là
+          thương hiệu của Adobe; DEVSTU hoạt động độc lập và không liên kết với bên thứ ba nào.</p>
       </div>
     </footer>
   </div>
 </body>
+
 </html>

@@ -1,4 +1,6 @@
 .env
 .env.local
 .env.*.local
+
 supabase_orders_schema.sql
+*supabase_orders_schema.sql
