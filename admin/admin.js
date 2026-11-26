@@ -661,7 +661,7 @@
         ? `<div><small class="adm-code">${esc(o.tx_id)}</small></div>
            <div><small class="adm-muted">${o.tx_amount ? Number(o.tx_amount).toLocaleString('vi-VN') + ' đ' : ''}</small></div>
            ${o.admin_note ? `<div><small style="color:#fbbf24">${esc(o.admin_note)}</small></div>` : ''}`
-        : `<span class="adm-muted">${esc(o.admin_note || '—')}</span>`;
+        : (o.admin_note ? `<span style="color:#fbbf24">${esc(o.admin_note)}</span>` : '<span class="adm-muted">—</span>');
       const issueBtn = o.status !== 'paid'
         ? `<button type="button" class="adm-btn adm-btn--primary adm-btn--sm" data-ord-act="issue">Duyệt &amp; Cấp Key</button>`
         : '';

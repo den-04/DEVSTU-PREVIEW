@@ -47,7 +47,9 @@
     activeOrder: null,
     activeBank: null,
     pollTimer: null,
-    countdownTimer: null
+    countdownTimer: null,
+    reportingOrder: null,
+    reportCloseTimer: null
   };
 
   function notifyAuthChange(loggedIn) {
@@ -426,15 +428,13 @@
           </div>`
         : '';
 
-      const supportHref = `mailto:ducdoan04.work@gmail.com?subject=${encodeURIComponent(`[DEVSTU] Hỗ trợ đơn #${o.order_code}`)}&body=${encodeURIComponent(`Email tài khoản: ${email}\nMã đơn hàng: ${o.order_code}\nGói: ${o.plan} (${periodLabel})\nSố tiền: ${fmtVnd(o.amount)}\nMô tả vấn đề: `)}`;
-
       const reopenBtn = o.status === 'pending'
         ? `<button type="button" class="dv-sm-btn dv-sm-btn--pri" data-reopen-order="${esc(o.order_code)}">${esc(t('Mở lại mã QR', 'Open QR'))}</button>
            <button type="button" class="dv-sm-btn dv-sm-btn--danger" data-cancel-order="${esc(o.order_code)}">${esc(t('Hủy đơn', 'Cancel'))}</button>`
         : '';
 
       const noteHtml = o.admin_note
-        ? `<div class="dv-order-card__meta" style="color:#fbbf24">${esc(o.admin_note)}</div>`
+        ? `<div class="dv-order-note">${esc(o.admin_note)}</div>`
         : '';
 
       return `<article class="dv-order-card">
@@ -456,7 +456,7 @@
           <small style="color:#8e8e98">${esc(t('Lưu mã đơn này nếu bạn cần hỗ trợ đối soát.', 'Keep this order code if you ever need support.'))}</small>
           <div class="dv-acct-bar__acts">
             ${reopenBtn}
-            <a class="dv-sm-btn" href="${supportHref}">${esc(t('Báo lỗi đơn này', 'Report issue'))}</a>
+            <button type="button" class="dv-sm-btn" data-report-order="${esc(o.order_code)}">${esc(t('Báo lỗi đơn này', 'Report issue'))}</button>
           </div>
         </div>
       </article>`;
@@ -526,45 +526,54 @@
       : `<div class="dv-qr-placeholder"><strong>${esc(t('Chưa cấu hình tài khoản ngân hàng SePay trên Vercel', 'SePay bank env vars not configured on Vercel yet'))}</strong><br><br><code>SEPAY_BANK_CODE</code><br><code>SEPAY_BANK_ACCOUNT</code><br><code>SEPAY_ACCOUNT_NAME</code></div>`;
 
     const reviewBanner = o.status === 'manual_review'
-      ? `<p class="dv-err">${esc(o.admin_note || t('Đơn hàng đang cần Admin kiểm tra (chuyển thiếu hoặc sai nội dung). Hãy liên hệ ducdoan04.work@gmail.com kèm mã đơn.', 'Order requires manual review. Please contact ducdoan04.work@gmail.com with your order code.'))}</p>`
+      ? `<div class="dv-order-note">${esc(o.admin_note || t('Đơn hàng đang chờ Admin đối soát & cấp Key thủ công vào Kho Key của bạn.', 'Order is queued for manual verification and Key issuance.'))}</div>`
       : '';
 
     body.innerHTML = `
       ${reviewBanner}
       <div class="dv-qr-grid">
-        <div class="dv-qr-box">${qrVisual}</div>
+        <div class="dv-qr-panel">
+          <div class="dv-qr-box">${qrVisual}</div>
+          <div class="dv-qr-cap">
+            <strong>${esc(t('Quét mã VietQR để thanh toán', 'Scan VietQR to pay'))}</strong>
+            <span>${esc(t('Hỗ trợ mọi App Ngân hàng & Ví điện tử 24/7', 'Works with banking & e-wallet apps 24/7'))}</span>
+          </div>
+        </div>
         <dl class="dv-bank-dl">
           <div class="dv-bank-row">
             <div><dt>${esc(t('Gói dịch vụ', 'Plan'))}</dt><dd>${esc(o.plan)} · ${esc(periodLabel)}</dd></div>
           </div>
           <div class="dv-bank-row">
             <div><dt>${esc(t('Ngân hàng / Tài khoản', 'Bank / Account'))}</dt><dd>${esc(bank.bankCode || '—')} · ${esc(bank.accountNumber || '—')}<br><small style="color:#a8a8b2;font-weight:400">${esc(bank.accountName || 'DEVSTU')}</small></dd></div>
-            ${bank.accountNumber ? `<button type="button" class="dv-sm-btn" data-copy-val="${esc(bank.accountNumber)}">${esc(t('Copy STK', 'Copy'))}</button>` : ''}
+            ${bank.accountNumber ? `<button type="button" class="dv-sm-btn dv-copy-btn" data-copy-val="${esc(bank.accountNumber)}">${esc(t('Copy STK', 'Copy'))}</button>` : ''}
           </div>
-          <div class="dv-bank-row">
+          <div class="dv-bank-row dv-bank-row--amount">
             <div><dt>${esc(t('Số tiền chính xác', 'Exact Amount'))}</dt><dd>${esc(fmtVnd(o.amount))}</dd></div>
-            <button type="button" class="dv-sm-btn" data-copy-val="${esc(String(o.amount))}">${esc(t('Copy', 'Copy'))}</button>
+            <button type="button" class="dv-sm-btn dv-copy-btn" data-copy-val="${esc(String(o.amount))}">${esc(t('Copy', 'Copy'))}</button>
           </div>
           <div class="dv-bank-row dv-bank-row--code">
             <div><dt>${esc(t('Nội dung chuyển khoản (bắt buộc)', 'Transfer Memo (required)'))}</dt><dd>${esc(o.order_code)}</dd></div>
-            <button type="button" class="dv-sm-btn dv-sm-btn--pri" data-copy-val="${esc(o.order_code)}">${esc(t('Copy mã', 'Copy'))}</button>
+            <button type="button" class="dv-sm-btn dv-sm-btn--pri dv-copy-btn" data-copy-val="${esc(o.order_code)}">${esc(t('Copy mã', 'Copy'))}</button>
           </div>
         </dl>
       </div>
       <div class="dv-qr-status">
-        <span data-qr-poll-msg>${esc(t('Đang chờ thanh toán… tự động kiểm tra mỗi 5 giây', 'Waiting for transfer… auto-checking every 5s'))}</span>
-        <strong data-qr-timer>20:00</strong>
+        <span class="dv-qr-status__left">
+          <span class="dv-pulse-dot" aria-hidden="true"></span>
+          <span data-qr-poll-msg>${esc(t('Đang chờ thanh toán… tự động kiểm tra mỗi 5 giây', 'Waiting for transfer… auto-checking every 5s'))}</span>
+        </span>
+        <strong class="dv-qr-timer-pill" data-qr-timer>20:00</strong>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center">
+      <div class="dv-qr-actions">
         <button type="button" class="dv-sm-btn dv-sm-btn--pri" data-qr-check-now>${esc(t('Tôi đã chuyển khoản, kiểm tra ngay', 'I transferred — check now'))}</button>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-          <a class="dv-sm-btn" href="mailto:ducdoan04.work@gmail.com?subject=${encodeURIComponent(`[DEVSTU] Hỗ trợ đơn #${o.order_code}`)}">${esc(t('Cần hỗ trợ', 'Need help'))}</a>
+        <div class="dv-qr-actions__sub">
+          <button type="button" class="dv-sm-btn" data-report-order="${esc(o.order_code)}">${esc(t('Báo lỗi đơn', 'Report issue'))}</button>
           <button type="button" class="dv-sm-btn dv-sm-btn--danger" data-cancel-order="${esc(o.order_code)}">${esc(t('Hủy đơn', 'Cancel'))}</button>
         </div>
       </div>
       <p class="dv-qr-notice">${esc(t(
-        'Thanh toán xong hệ thống sẽ tự động cấp 1 mã Key riêng và lưu vào mục Lịch sử đơn hàng của bạn (không tự kích hoạt vào tài khoản). Nếu có lỗi mạng hoặc lỡ đóng cửa sổ, bạn chỉ cần mở lại trang Bảng giá để lấy Key.',
-        'Once paid, a standalone Key will be issued and saved in your Order History (never auto-activated). Even if you close this tab, sign back in here to retrieve your Key.'
+        'Thanh toán xong hệ thống sẽ tự động cấp 1 mã Key riêng và lưu vào tab Lịch sử đơn & Kho Key của bạn (không tự kích hoạt vào tài khoản). Nếu có lỗi mạng hoặc lỡ đóng cửa sổ, bạn chỉ cần mở lại mục Lịch sử đơn để lấy Key.',
+        'Once paid, a standalone Key is automatically issued and saved in your Orders & Key Vault tab (never auto-activated). Even if you close this window, sign in to retrieve your Key anytime.'
       ))}</p>`;
 
     startTimers();
@@ -687,6 +696,258 @@
     }
   }
 
+  /* ---- Order Issue Reporting Modal ---- */
+  let reportDlg = null;
+
+  function ensureReportDialog() {
+    if (reportDlg) return reportDlg;
+    reportDlg = document.createElement('dialog');
+    reportDlg.className = 'dv-dlg dv-dlg--report';
+    reportDlg.id = 'dv-report-dlg';
+    reportDlg.setAttribute('aria-labelledby', 'dv-rep-h');
+    reportDlg.innerHTML = `
+      <form class="dv-dlg__in" data-rep-form novalidate>
+        <div class="dv-dlg__head">
+          <h2 id="dv-rep-h" data-rep-title></h2>
+          <button type="button" class="dv-dlg__x" data-rep-close aria-label="Close">✕</button>
+        </div>
+        <p class="dv-dlg__sub" data-rep-sub></p>
+        <div class="dv-rep-summary" data-rep-summary></div>
+
+        <div class="dv-form">
+          <label class="dv-field">
+            <span data-rep-cat-lbl></span>
+            <select data-rep-cat></select>
+          </label>
+          <div class="dv-form-row-2">
+            <label class="dv-field">
+              <span data-rep-tx-lbl></span>
+              <input type="text" data-rep-tx maxlength="80">
+            </label>
+            <label class="dv-field">
+              <span data-rep-amt-lbl></span>
+              <input type="number" data-rep-amt min="1000" step="1000">
+            </label>
+          </div>
+          <label class="dv-field">
+            <span data-rep-msg-lbl></span>
+            <textarea data-rep-msg rows="3" maxlength="1500" required></textarea>
+          </label>
+        </div>
+
+        <p class="dv-err" data-rep-err role="alert" hidden></p>
+        <p class="dv-ok" data-rep-ok role="status" hidden></p>
+
+        <div class="dv-rep-foot">
+          <span class="dv-rep-mailto" data-rep-mailto-wrap></span>
+          <div class="dv-acct-bar__acts">
+            <button type="button" class="dv-sm-btn" data-rep-cancel></button>
+            <button type="submit" class="dv-sm-btn dv-sm-btn--pri" data-rep-submit></button>
+          </div>
+        </div>
+      </form>`;
+    document.body.appendChild(reportDlg);
+
+    const closeRep = () => {
+      if (state.reportCloseTimer) {
+        clearTimeout(state.reportCloseTimer);
+        state.reportCloseTimer = null;
+      }
+      if (reportDlg?.open) reportDlg.close();
+    };
+    reportDlg.querySelector('[data-rep-close]')?.addEventListener('click', closeRep);
+    reportDlg.querySelector('[data-rep-cancel]')?.addEventListener('click', closeRep);
+    reportDlg.addEventListener('click', (ev) => { if (ev.target === reportDlg) closeRep(); });
+    reportDlg.addEventListener('close', () => {
+      if (state.reportCloseTimer) {
+        clearTimeout(state.reportCloseTimer);
+        state.reportCloseTimer = null;
+      }
+    });
+
+    reportDlg.querySelector('[data-rep-form]')?.addEventListener('submit', submitOrderReport);
+    return reportDlg;
+  }
+
+  function setReportFeedback(err, ok) {
+    if (!reportDlg) return;
+    const eEl = reportDlg.querySelector('[data-rep-err]');
+    const oEl = reportDlg.querySelector('[data-rep-ok]');
+    if (eEl) { eEl.textContent = err || ''; eEl.hidden = !err; }
+    if (oEl) { oEl.textContent = ok || ''; oEl.hidden = !ok; }
+  }
+
+  function renderReportModalTexts() {
+    if (!reportDlg) return;
+    const o = state.reportingOrder;
+    const catSel = reportDlg.querySelector('[data-rep-cat]');
+    const prevCat = catSel?.value || 'paid_no_key';
+
+    reportDlg.querySelector('[data-rep-title]').textContent = t('Báo lỗi đơn hàng', 'Report Order Issue');
+    reportDlg.querySelector('[data-rep-close]').setAttribute('aria-label', t('Đóng', 'Close'));
+    reportDlg.querySelector('[data-rep-sub]').textContent = t(
+      'Gửi thông tin đối soát trực tiếp tới Admin. Nếu bạn đã chuyển khoản thành công, Admin sẽ kiểm tra sao kê và cấp mã Key thẳng vào Kho Key của bạn.',
+      'Send verification details directly to Admin. If your transfer succeeded, Admin will inspect and issue your Key straight into your Key Vault.'
+    );
+
+    if (o) {
+      const periodLabel = o.is_lifetime ? t('Vĩnh viễn', 'Lifetime') : t(`${o.days || 365} ngày`, `${o.days || 365} days`);
+      reportDlg.querySelector('[data-rep-summary]').innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <code>${esc(o.order_code)}</code>
+          <strong>${esc(o.plan)} · ${esc(periodLabel)}</strong>
+        </div>
+        <strong>${esc(fmtVnd(o.amount))}</strong>`;
+      const email = state.session?.user?.email || '';
+      const mailHref = `mailto:ducdoan04.work@gmail.com?subject=${encodeURIComponent(`[DEVSTU] Hỗ trợ đơn #${o.order_code}`)}&body=${encodeURIComponent(`Email: ${email}\nMã đơn: ${o.order_code}\nSố tiền: ${fmtVnd(o.amount)}\nChi tiết: `)}`;
+      reportDlg.querySelector('[data-rep-mailto-wrap]').innerHTML = `${esc(t('Hoặc email:', 'Or email:'))} <a href="${mailHref}">ducdoan04.work@gmail.com</a>`;
+    }
+
+    reportDlg.querySelector('[data-rep-cat-lbl]').textContent = t('Loại sự cố', 'Issue type');
+    catSel.innerHTML = [
+      ['paid_no_key', t('Đã chuyển khoản đúng nhưng chưa nhận được Key', 'Transferred correctly but no Key received')],
+      ['wrong_memo', t('Chuyển nhầm hoặc quên ghi mã nội dung DEVSTU…', 'Wrong or missing DEVSTU transfer memo')],
+      ['wrong_amount', t('Chuyển nhầm số tiền (thiếu / dư)', 'Transferred wrong amount')],
+      ['key_issue', t('Mã Key báo lỗi khi nhập vào app DEVSTU', 'Key error when activating in DEVSTU app')],
+      ['other', t('Vấn đề khác', 'Other issue')]
+    ].map(([val, lbl]) => `<option value="${esc(val)}"${val === prevCat ? ' selected' : ''}>${esc(lbl)}</option>`).join('');
+
+    reportDlg.querySelector('[data-rep-tx-lbl]').textContent = t('Mã giao dịch NH (tuỳ chọn)', 'Bank Ref ID (optional)');
+    reportDlg.querySelector('[data-rep-tx]').placeholder = t('VD: FT26330...', 'e.g. FT26330...');
+    reportDlg.querySelector('[data-rep-amt-lbl]').textContent = t('Số tiền đã CK (tuỳ chọn)', 'Amount sent (optional)');
+    reportDlg.querySelector('[data-rep-amt]').placeholder = t('VD: 39000', 'e.g. 39000');
+    reportDlg.querySelector('[data-rep-msg-lbl]').textContent = t('Mô tả chi tiết *', 'Details *');
+    reportDlg.querySelector('[data-rep-msg]').placeholder = t(
+      'VD: Tôi đã chuyển lúc 19:05 từ ngân hàng VCB, nội dung bị thiếu chữ...',
+      'e.g. Sent at 19:05 from VCB bank, transfer memo was cut off...'
+    );
+    reportDlg.querySelector('[data-rep-cancel]').textContent = t('Đóng', 'Cancel');
+    reportDlg.querySelector('[data-rep-submit]').textContent = t('Gửi báo lỗi', 'Submit Report');
+  }
+
+  async function openReportModal(code) {
+    if (!code) return;
+    const s = await refreshSessionIfNeeded(false);
+    if (!s?.access_token) {
+      location.href = `${loginPath()}?next=${encodeURIComponent(ordersPath())}`;
+      return;
+    }
+
+    let order = (state.activeOrder?.order_code === code ? state.activeOrder : null)
+      || state.orders.find((x) => x.order_code === code)
+      || null;
+
+    if (!order) {
+      try {
+        const res = await apiReq(`/api/orders/status?code=${encodeURIComponent(code)}`);
+        order = res.order || null;
+      } catch {}
+    }
+
+    state.reportingOrder = order || { order_code: code, plan: 'Pro STU Ultra', period: 'lifetime', is_lifetime: true, amount: 0, status: 'pending' };
+    const dlg = ensureReportDialog();
+    renderReportModalTexts();
+    setReportFeedback('', '');
+
+    dlg.querySelector('[data-rep-tx]').value = '';
+    dlg.querySelector('[data-rep-amt]').value = state.reportingOrder.amount ? String(state.reportingOrder.amount) : '';
+    dlg.querySelector('[data-rep-msg]').value = '';
+    const subBtn = dlg.querySelector('[data-rep-submit]');
+    subBtn.disabled = false;
+    subBtn.textContent = t('Gửi báo lỗi', 'Submit Report');
+    dlg.showModal();
+  }
+
+  async function submitOrderReport(ev) {
+    ev.preventDefault();
+    const o = state.reportingOrder;
+    if (!o || !reportDlg) return;
+
+    const category = reportDlg.querySelector('[data-rep-cat]').value;
+    const txRef = reportDlg.querySelector('[data-rep-tx]').value.trim();
+    const rawAmt = Number(reportDlg.querySelector('[data-rep-amt]').value || 0);
+    const transferredAmount = Number.isFinite(rawAmt) && rawAmt > 0 ? Math.round(rawAmt) : null;
+    const message = reportDlg.querySelector('[data-rep-msg]').value.trim();
+
+    if (message.length < 5) {
+      setReportFeedback(t('Vui lòng nhập mô tả chi tiết (tối thiểu 5 ký tự).', 'Please describe the issue (at least 5 characters).'), '');
+      return;
+    }
+
+    const subBtn = reportDlg.querySelector('[data-rep-submit]');
+    subBtn.disabled = true;
+    subBtn.textContent = t('Đang gửi…', 'Sending…');
+    setReportFeedback('', '');
+
+    try {
+      let result;
+      try {
+        result = await apiReq('/api/orders/report', {
+          method: 'POST',
+          body: {
+            code: o.order_code,
+            category,
+            txRef,
+            transferredAmount,
+            message,
+            lang: isEn() ? 'en' : 'vi'
+          }
+        });
+      } catch (apiErr) {
+        // Fallback when running static dev-server locally without Vercel functions
+        if (apiErr?.status === 404 || apiErr?.status === 405) {
+          const s = await refreshSessionIfNeeded(false);
+          if (!s?.access_token) throw apiErr;
+          const noteStr = `[KH báo lỗi · ${category}] ${message}${txRef ? ` | Mã GD: ${txRef}` : ''}${transferredAmount ? ` | Đã CK: ${transferredAmount.toLocaleString('vi-VN')} đ` : ''}`.slice(0, 500);
+
+          const bugRes = await fetch(`${SB_URL}/rest/v1/rpc/submit_bug_report`, {
+            method: 'POST',
+            headers: { apikey: SB_KEY, Authorization: `Bearer ${s.access_token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              p_email: s.user?.email || '',
+              p_message: `[Đơn #${o.order_code}] ${category}: ${message}`,
+              p_lang: isEn() ? 'en' : 'vi',
+              p_device_info: { 'Loại': 'Báo lỗi đơn VietQR', 'Mã đơn': o.order_code, 'Mã GD NH': txRef || '—', 'Đã CK': transferredAmount || '—' },
+              p_error_log: ''
+            })
+          });
+          if (!bugRes.ok) throw apiErr;
+
+          await fetch(`${SB_URL}/rest/v1/rpc/user_report_payment_order`, {
+            method: 'POST',
+            headers: { apikey: SB_KEY, Authorization: `Bearer ${s.access_token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ p_order_code: o.order_code, p_note: noteStr })
+          }).catch(() => {});
+
+          result = { ok: true, status: o.status === 'paid' ? 'paid' : 'manual_review', admin_note: noteStr };
+        } else {
+          throw apiErr;
+        }
+      }
+
+      if (state.activeOrder && state.activeOrder.order_code === o.order_code) {
+        state.activeOrder.admin_note = result.admin_note || state.activeOrder.admin_note;
+        if (result.status) state.activeOrder.status = result.status;
+        if (qrDlg?.open) renderQrModal();
+      }
+
+      setReportFeedback('', t(
+        `Đã gửi báo lỗi đơn #${o.order_code}! Admin sẽ kiểm tra và cấp Key trực tiếp vào Kho Key của bạn.`,
+        `Report submitted for order #${o.order_code}! Admin will verify and issue your Key to your Key Vault.`
+      ));
+      await loadMyOrders();
+
+      state.reportCloseTimer = setTimeout(() => {
+        if (reportDlg?.open) reportDlg.close();
+      }, 1500);
+    } catch (err) {
+      setReportFeedback(err.message || t('Không thể gửi báo lỗi, vui lòng thử lại.', 'Failed to submit report.'), '');
+    } finally {
+      subBtn.disabled = false;
+      subBtn.textContent = t('Gửi báo lỗi', 'Submit Report');
+    }
+  }
+
   function bindEvents() {
     document.addEventListener('click', (e) => {
       const buyBtn = e.target.closest('[data-buy-plan]');
@@ -723,6 +984,11 @@
       const cancelBtn = e.target.closest('[data-cancel-order]');
       if (cancelBtn) {
         cancelOrder(cancelBtn.dataset.cancelOrder, cancelBtn);
+        return;
+      }
+      const reportBtn = e.target.closest('[data-report-order]');
+      if (reportBtn) {
+        openReportModal(reportBtn.dataset.reportOrder);
         return;
       }
       if (e.target.closest('[data-qr-check-now]')) {
@@ -918,6 +1184,7 @@
         renderLoginPage();
         renderOrders();
         if (qrDlg?.open && state.activeOrder) renderQrModal();
+        if (reportDlg) renderReportModalTexts();
       });
     }
   }

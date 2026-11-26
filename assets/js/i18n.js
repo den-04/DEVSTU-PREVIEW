@@ -1059,6 +1059,7 @@
     'Đã cấp Key': 'Key Issued',
     'Đang chờ thanh toán': 'Awaiting Payment',
     'Đã hủy / Hết hạn': 'Cancelled / Expired',
+    'Tự động 24/7': '24/7 Instant',
 
     // 404 Page
     'Không tìm thấy trang': 'Page not found',
