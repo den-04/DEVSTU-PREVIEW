@@ -1,0 +1,532 @@
+/* DEVSTU Billing — Web Login, VietQR Checkout & Order/Key History */
+.dv-acct-bar {
+  margin: 26px auto 0;
+  max-width: 820px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .10);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  text-align: left;
+}
+
+.dv-acct-bar__info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.dv-acct-bar__av {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0071e3;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.dv-acct-bar__av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dv-acct-bar__txt strong {
+  display: block;
+  font-size: 14.5px;
+  color: #ffffff;
+}
+
+.dv-acct-bar__txt small {
+  display: block;
+  font-size: 13px;
+  color: #9e9ea7;
+}
+
+.dv-acct-bar__acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.dv-sm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(255, 255, 255, .06);
+  color: #ffffff;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .14s ease, border-color .14s ease;
+}
+
+.dv-sm-btn:hover {
+  background: rgba(255, 255, 255, .13);
+}
+
+.dv-sm-btn--pri {
+  background: #0071e3;
+  border-color: #0071e3;
+}
+
+.dv-sm-btn--pri:hover {
+  background: #0077ed;
+}
+
+/* ---- Order & Key History Section ---- */
+.dv-orders-sec {
+  padding: 56px 0;
+  border-top: 1px solid rgba(255, 255, 255, .07);
+}
+
+.dv-orders-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.dv-orders-head h2 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.dv-orders-head p {
+  margin: 6px 0 0;
+  font-size: 15px;
+  color: #a8a8b2;
+}
+
+.dv-orders-list {
+  display: grid;
+  gap: 14px;
+}
+
+.dv-order-card {
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: #1a1a1e;
+  border: 1px solid rgba(255, 255, 255, .09);
+  display: grid;
+  gap: 14px;
+}
+
+.dv-order-card__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dv-order-card__id {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.dv-order-card__id code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .08);
+  color: #ffffff;
+}
+
+.dv-order-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dv-order-pill--paid { background: rgba(34, 197, 94, .16); color: #4ade80; }
+.dv-order-pill--pending { background: rgba(41, 151, 255, .18); color: #7dd3fc; }
+.dv-order-pill--review { background: rgba(245, 158, 11, .18); color: #fbbf24; }
+.dv-order-pill--expired { background: rgba(255, 255, 255, .08); color: #a1a1aa; }
+.dv-order-pill--failed { background: rgba(239, 68, 68, .18); color: #f87171; }
+
+.dv-order-card__meta {
+  font-size: 14px;
+  color: #b4b4be;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+
+.dv-key-reveal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(34, 197, 94, .09);
+  border: 1px solid rgba(34, 197, 94, .32);
+}
+
+.dv-key-reveal__code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+
+.dv-key-reveal__sub {
+  display: block;
+  font-size: 12.5px;
+  color: #86efac;
+  margin-top: 2px;
+}
+
+.dv-order-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dv-orders-empty {
+  padding: 28px 22px;
+  border-radius: 18px;
+  background: #1a1a1e;
+  border: 1px dashed rgba(255, 255, 255, .14);
+  text-align: center;
+  color: #9e9ea7;
+  font-size: 15px;
+}
+
+/* ---- Billing Modals (Auth & VietQR) ---- */
+.dv-dlg {
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 22px;
+  background: #1b1b20;
+  color: #ffffff;
+  width: min(500px, calc(100vw - 28px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .72);
+  font-family: var(--font-text);
+}
+
+.dv-dlg--qr {
+  width: min(640px, calc(100vw - 28px));
+}
+
+.dv-dlg::backdrop {
+  background: rgba(0, 0, 0, .72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.dv-dlg__in {
+  padding: 24px 26px;
+  display: grid;
+  gap: 16px;
+}
+
+.dv-dlg__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dv-dlg__head h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.dv-dlg__x {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: rgba(255, 255, 255, .05);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.dv-dlg__x:hover { background: rgba(255, 255, 255, .13); }
+
+.dv-dlg__sub {
+  margin: -6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #a8a8b2;
+}
+
+.dv-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: #ffffff;
+  color: #141416;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dv-google-btn:hover { background: #f2f2f5; }
+
+.dv-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #7c7c86;
+  font-size: 12.5px;
+}
+
+.dv-div::before,
+.dv-div::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, .10);
+}
+
+.dv-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+
+.dv-tabs button {
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #a8a8b2;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dv-tabs button.is-on {
+  background: rgba(255, 255, 255, .12);
+  color: #ffffff;
+}
+
+.dv-form {
+  display: grid;
+  gap: 12px;
+}
+
+.dv-field {
+  display: grid;
+  gap: 6px;
+}
+
+.dv-field span {
+  font-size: 13px;
+  color: #c8c8d0;
+}
+
+.dv-field input {
+  height: 42px;
+  padding: 0 13px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: #121215;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14.5px;
+}
+
+.dv-field input:focus {
+  outline: 2px solid #2997ff;
+  border-color: transparent;
+}
+
+.dv-err {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, .14);
+  border: 1px solid rgba(239, 68, 68, .35);
+  color: #fca5a5;
+  font-size: 13.5px;
+}
+
+.dv-ok {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(34, 197, 94, .14);
+  border: 1px solid rgba(34, 197, 94, .35);
+  color: #86efac;
+  font-size: 13.5px;
+}
+
+/* ---- VietQR Grid inside Modal ---- */
+.dv-qr-grid {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.dv-qr-box {
+  padding: 12px;
+  border-radius: 16px;
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+}
+
+.dv-qr-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.dv-qr-placeholder {
+  color: #141416;
+  font-size: 13px;
+  text-align: center;
+  padding: 10px;
+}
+
+.dv-bank-dl {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.dv-bank-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+
+.dv-bank-row dt {
+  font-size: 12px;
+  color: #9e9ea7;
+  margin-bottom: 2px;
+}
+
+.dv-bank-row dd {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #ffffff;
+  word-break: break-all;
+}
+
+.dv-bank-row--code dd {
+  color: #38bdf8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 16px;
+}
+
+.dv-qr-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(41, 151, 255, .10);
+  border: 1px solid rgba(41, 151, 255, .28);
+  font-size: 13.5px;
+  color: #bae6fd;
+}
+
+.dv-qr-notice {
+  margin: 0;
+  padding: 11px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .08);
+  font-size: 13px;
+  line-height: 1.55;
+  color: #b4b4be;
+}
+
+.dv-qr-success {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(34, 197, 94, .10);
+  border: 1px solid rgba(34, 197, 94, .35);
+  display: grid;
+  gap: 12px;
+  text-align: center;
+}
+
+.dv-qr-success h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #4ade80;
+}
+
+.dv-qr-success__code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 14px;
+  border-radius: 12px;
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, .14);
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .dv-qr-grid { grid-template-columns: minmax(0, 1fr); }
+  .dv-qr-box { max-width: 220px; margin: 0 auto; }
+}

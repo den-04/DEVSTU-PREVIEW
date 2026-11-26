@@ -27,6 +27,10 @@
     bugFilter: 'all',
     bugSearch: '',
     bugs: [],
+    ordFilter: 'all',
+    ordSearch: '',
+    orders: [],
+    ordStats: null,
     editingUserId: null,
     confirmAction: null
   };
@@ -271,15 +275,16 @@
     const p = location.pathname.replace(/\/+$/, '');
     if (p.endsWith('/admin/notifications')) return 'notifications';
     if (p.endsWith('/admin/keys')) return 'keys';
+    if (p.endsWith('/admin/orders')) return 'orders';
     if (p.endsWith('/admin/bugs')) return 'bugs';
     if (p.endsWith('/admin/accounts')) return 'accounts';
     const h = location.hash.replace(/^#/, '');
-    if (['accounts', 'notifications', 'keys', 'bugs'].includes(h)) return h;
+    if (['accounts', 'notifications', 'keys', 'orders', 'bugs'].includes(h)) return h;
     return 'accounts';
   }
 
   function switchTab(tab, updateHash = true) {
-    if (!['accounts', 'notifications', 'keys', 'bugs'].includes(tab)) tab = 'accounts';
+    if (!['accounts', 'notifications', 'keys', 'orders', 'bugs'].includes(tab)) tab = 'accounts';
     state.tab = tab;
     $$('.adm-navtab').forEach((btn) => {
       const active = btn.dataset.tab === tab;
@@ -289,6 +294,7 @@
     $('#panel-accounts').hidden = tab !== 'accounts';
     $('#panel-notifications').hidden = tab !== 'notifications';
     $('#panel-keys').hidden = tab !== 'keys';
+    $('#panel-orders').hidden = tab !== 'orders';
     $('#panel-bugs').hidden = tab !== 'bugs';
     if (updateHash && location.hash !== `#${tab}`) {
       history.replaceState(history.state, '', `${location.pathname}#${tab}`);
@@ -360,7 +366,7 @@
 
   /* ---- Data Loaders ---- */
   async function loadAllData() {
-    await Promise.all([loadStats(), loadAccounts(), loadKeys(), loadNotifications(), loadBugs().catch(() => {})]);
+    await Promise.all([loadStats(), loadAccounts(), loadKeys(), loadNotifications(), loadOrders().catch(() => {}), loadBugs().catch(() => {})]);
   }
 
   async function loadStats() {
@@ -599,6 +605,81 @@
         </tr>`;
       })
       .join('');
+  }
+
+  /* ---- VietQR Orders ---- */
+  async function loadOrders() {
+    try {
+      const res = await rpc('admin_list_orders', {
+        p_search: state.ordSearch,
+        p_status: state.ordFilter,
+        p_limit: 200
+      });
+      state.orders = Array.isArray(res?.items) ? res.items : [];
+      state.ordStats = res?.stats || null;
+      renderOrders();
+    } catch (err) {
+      const tb = $('#ord-tbody');
+      if (tb && (String(err?.message || '').includes('admin_list_orders') || err?.code === 'PGRST202')) {
+        tb.innerHTML = '<tr><td colspan="7" class="adm-empty">Chưa chạy file <code>supabase_orders_schema.sql</code> trong Supabase SQL Editor.</td></tr>';
+        return;
+      }
+      throw err;
+    }
+  }
+
+  function orderStatusBadge(st) {
+    if (st === 'paid') return '<span class="adm-pill adm-pill--green">Đã cấp Key</span>';
+    if (st === 'manual_review') return '<span class="adm-pill adm-pill--amber">Cần kiểm tra</span>';
+    if (st === 'pending') return '<span class="adm-pill adm-pill--blue">Chờ thanh toán</span>';
+    if (st === 'failed') return '<span class="adm-pill adm-pill--red">Lỗi</span>';
+    return '<span class="adm-pill">Hết hạn</span>';
+  }
+
+  function renderOrders() {
+    const tb = $('#ord-tbody');
+    if (!tb) return;
+    if (state.ordStats) {
+      const s = state.ordStats;
+      $('#tab-cnt-orders').textContent = s.total_orders ?? 0;
+      const rev = Number(s.total_revenue || 0).toLocaleString('vi-VN');
+      $('#ord-summary').innerHTML = `Đã thanh toán: <strong>${s.paid_orders || 0}</strong> · Doanh thu: <strong>${rev} đ</strong> · Cần kiểm tra: <strong>${s.review_orders || 0}</strong> · Chờ TT: <strong>${s.pending_orders || 0}</strong>`;
+    }
+    if (!state.orders.length) {
+      tb.innerHTML = '<tr><td colspan="7" class="adm-empty">Chưa có đơn hàng VietQR nào khớp bộ lọc.</td></tr>';
+      return;
+    }
+    tb.innerHTML = state.orders.map((o) => {
+      const periodTxt = o.is_lifetime ? 'Vĩnh viễn' : `${o.days || 365} ngày`;
+      const amtTxt = `${Number(o.amount || 0).toLocaleString('vi-VN')} đ`;
+      const keyCell = o.issued_key_code
+        ? `<button type="button" class="adm-key-btn" data-ord-act="copy-key">${esc(o.issued_key_code)}</button>
+           <div><small class="adm-muted">${Number(o.key_used_count) >= Number(o.key_max_uses || 1) ? 'Đã nhập trong app' : 'Chưa nhập app'}</small></div>`
+        : '<span class="adm-muted">Chưa cấp</span>';
+      const txCell = o.tx_id
+        ? `<div><small class="adm-code">${esc(o.tx_id)}</small></div>
+           <div><small class="adm-muted">${o.tx_amount ? Number(o.tx_amount).toLocaleString('vi-VN') + ' đ' : ''}</small></div>
+           ${o.admin_note ? `<div><small style="color:#fbbf24">${esc(o.admin_note)}</small></div>` : ''}`
+        : `<span class="adm-muted">${esc(o.admin_note || '—')}</span>`;
+      const issueBtn = o.status !== 'paid'
+        ? `<button type="button" class="adm-btn adm-btn--primary adm-btn--sm" data-ord-act="issue">Duyệt &amp; Cấp Key</button>`
+        : '';
+
+      return `<tr data-ord-id="${esc(o.id)}">
+        <td><strong>${esc(o.order_code)}</strong><div><small class="adm-muted">${fmtDateTime(o.created_at)}</small></div></td>
+        <td><strong>${esc(o.user_email)}</strong></td>
+        <td><strong>${esc(o.plan)}</strong><div><small class="adm-muted">${esc(periodTxt)} · ${esc(amtTxt)}</small></div></td>
+        <td>${orderStatusBadge(o.status)}</td>
+        <td>${keyCell}</td>
+        <td>${txCell}</td>
+        <td class="is-right">
+          <div class="adm-row-actions" style="justify-content:flex-end">
+            ${issueBtn}
+            <a class="adm-btn adm-btn--ghost adm-btn--sm" href="mailto:${esc(o.user_email)}?subject=${encodeURIComponent(`[DEVSTU] Đơn hàng #${o.order_code}`)}">Email</a>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
   }
 
   /* ---- Bug Reports ---- */
@@ -1156,6 +1237,43 @@
           toast(`Đã xoá key ${item.code}`, 'ok');
           await Promise.all([loadStats(), loadKeys()]);
         });
+      }
+    });
+
+    // VietQR Orders Search, Filters & Manual Key Issue
+    let ordSearchTimer = null;
+    $('#ord-search')?.addEventListener('input', (e) => {
+      state.ordSearch = e.target.value.trim();
+      clearTimeout(ordSearchTimer);
+      ordSearchTimer = setTimeout(() => loadOrders().catch((err) => toast(err.message, 'err')), 220);
+    });
+    $$('[data-ord-filter]').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        state.ordFilter = chip.dataset.ordFilter;
+        $$('[data-ord-filter]').forEach((c) => c.classList.toggle('is-active', c === chip));
+        loadOrders().catch((err) => toast(err.message, 'err'));
+      });
+    });
+    $('#ord-reload-btn')?.addEventListener('click', () => loadOrders().catch((err) => toast(err.message, 'err')));
+    $('#ord-tbody')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-ord-act]');
+      if (!btn) return;
+      const tr = btn.closest('tr');
+      const id = tr?.dataset.ordId;
+      const ord = state.orders.find((x) => x.id === id);
+      if (!ord) return;
+      if (btn.dataset.ordAct === 'copy-key' && ord.issued_key_code) {
+        copyText(ord.issued_key_code, `Đã copy key ${ord.issued_key_code}`);
+      } else if (btn.dataset.ordAct === 'issue') {
+        askConfirm(
+          'Duyệt đơn & Cấp Key thủ công',
+          `Sinh 1 mã Key mới (${ord.plan} · ${ord.is_lifetime ? 'Vĩnh viễn' : `${ord.days || 365} ngày`}) và gắn vào đơn #${ord.order_code} của ${ord.user_email}? (KHÔNG tự kích hoạt vào tài khoản.)`,
+          async () => {
+            const res = await rpc('admin_issue_order_key', { p_order_id: ord.id, p_note: 'Admin duyệt & cấp Key thủ công' });
+            toast(`Đã cấp key ${res?.issued_key_code || ''} cho đơn #${ord.order_code}`, 'ok');
+            await Promise.all([loadStats(), loadKeys(), loadOrders()]);
+          }
+        );
       }
     });
 

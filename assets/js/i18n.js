@@ -178,6 +178,8 @@
       'Click <strong>More info</strong> → <strong>Run anyway</strong>. The app does not require Administrator privileges.',
     'Liên hệ kích hoạt bản quyền / hoá đơn studio qua email ducdoan04.work@gmail.com.':
       'Contact <a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a> for license activation or studio invoices.',
+    'Thanh toán tự động qua VietQR sẽ cấp ngay mã Key riêng (không tự kích hoạt vào tài khoản) và lưu lại trong Lịch sử đơn hàng. Hỗ trợ: ducdoan04.work@gmail.com.':
+      'Automatic VietQR payment immediately issues a standalone Key (never auto-activated) and saves it to your Order History. Support: <a href="mailto:ducdoan04.work@gmail.com">ducdoan04.work@gmail.com</a>.',
     'Bộ ứng dụng xử lý và phục dựng ảnh chuyên nghiệp chạy hoàn toàn trên thiết bị (On-Device / Offline Suite), được xây dựng bởi ducdoan-04 tại Đà Nẵng, Việt Nam.':
       'A professional photo editing and retouching suite running 100% on-device (Offline Suite), built by <strong>ducdoan-04</strong> in Da Nang, Vietnam.',
     'Gồm da-retouch-v1, ranh-cuoi-v1, tao-khoi-v1, da-than-v1, ao-retouch-v1, toc-retouch-v1 kết hợp MediaPipe 478 điểm mốc khuôn mặt.':
@@ -784,6 +786,22 @@
     'LaMa Xoá vật thể, Depth v2 Bokeh, SCUNet Khử nhiễu': 'LaMa Object Erase, Depth v2 Bokeh, SCUNet Denoise',
     'Chế độ STU Ultra (Rust SIMD) & 13 màu tóc Salon': 'STU Ultra (Rust SIMD) & 13 Salon hair colors',
     'Tải & kích hoạt Pro': 'Download & Activate Pro',
+    'Mua ngay qua VietQR (Nhận Key)': 'Buy via VietQR (Get Key)',
+    'Lịch sử đơn hàng & Kho Key của tôi': 'My Orders & Purchased Keys',
+    'Toàn bộ đơn VietQR và mã Key đã mua được lưu theo tài khoản để bạn copy lại hoặc báo hỗ trợ nếu gặp lỗi thanh toán.':
+      'All your VietQR orders and purchased Keys are saved to your account so you can copy them anytime or request support if anything goes wrong.',
+    'Làm mới': 'Refresh',
+    'Đăng nhập tài khoản DEVSTU': 'Sign in to DEVSTU',
+    'Đăng nhập để lưu lịch sử đơn hàng & nhận mã Key kích hoạt ngay cả khi bạn lỡ đóng trình duyệt.':
+      'Sign in to save your order history and retrieve your activation Key anytime — even if you close this tab.',
+    'Tiếp tục với Google': 'Continue with Google',
+    'hoặc dùng Gmail': 'or use Email',
+    'Mã OTP 6 số': '6-digit OTP',
+    'Mật khẩu': 'Password',
+    'Mã OTP 6 số (gửi qua Email)': '6-digit OTP code (sent via Email)',
+    'Gửi mã OTP': 'Send OTP',
+    'Xác nhận OTP': 'Verify OTP',
+    'Thanh toán VietQR · Nhận mã Key': 'VietQR Checkout · Get Activation Key',
     '365 ngày · ưu tiên hỗ trợ': '365 days · priority support',
     'Dành cho retoucher hi-end & studio quy mô lớn.': 'Built for high-end retouchers & commercial studios.',
     'Toàn bộ tính năng Pro · STU Ultra': 'Everything in Pro · STU Ultra',
