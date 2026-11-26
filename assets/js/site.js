@@ -301,4 +301,228 @@
   if (window.DEVSTU_I18N) {
     window.DEVSTU_I18N.onChange(renderNavAuth);
   }
+
+  // Dynamic Promo Banner Directly Under Header (configured via Admin Console)
+  var PROMO_CACHE_KEY = 'devstu_promo_cache_v1';
+  var PROMO_DISMISS_KEY = 'devstu_promo_dismiss_v1';
+  var promoData = null;
+  var promoTimerId = null;
+
+  function localizePromoHref(url) {
+    var u = String(url || '').trim();
+    if (!u || !isEn() || u.charAt(0) !== '/') return u;
+    var map = {
+      '/': '/en/',
+      '/bang-gia/': '/en/pricing/',
+      '/bang-gia': '/en/pricing/',
+      '/tai-xuong/': '/en/download/',
+      '/tai-xuong': '/en/download/',
+      '/don-hang/': '/en/orders/',
+      '/don-hang': '/en/orders/',
+      '/gioi-thieu/': '/en/about/',
+      '/gioi-thieu': '/en/about/',
+      '/blog/': '/en/blog/',
+      '/blog': '/en/blog/',
+      '/dang-nhap/': '/en/login/',
+      '/dang-nhap': '/en/login/'
+    };
+    var hashIdx = u.indexOf('#');
+    var hash = hashIdx >= 0 ? u.slice(hashIdx) : '';
+    var base = hashIdx >= 0 ? u.slice(0, hashIdx) : u;
+    var qIdx = base.indexOf('?');
+    var query = qIdx >= 0 ? base.slice(qIdx) : '';
+    var pathOnly = qIdx >= 0 ? base.slice(0, qIdx) : base;
+    return (map[pathOnly] || pathOnly) + query + hash;
+  }
+
+  function isAllowedOnCurrentPage(promo) {
+    if (!promo || promo.pages !== 'home_pricing') return true;
+    var p = (location.pathname || '/').replace(/\/+$/, '') || '/';
+    return p === '/' || p === '/en' || p === '/bang-gia' || p === '/en/pricing';
+  }
+
+  function promoSignature(p) {
+    if (!p) return '';
+    return String(p.updated_at || '') + '|' + String(p.message_vi || '') + '|' + String(p.coupon_code || '');
+  }
+
+  function stopPromoCountdown() {
+    if (promoTimerId) {
+      clearInterval(promoTimerId);
+      promoTimerId = null;
+    }
+  }
+
+  function removePromoBanner() {
+    stopPromoCountdown();
+    var old = document.querySelector('.site-promo');
+    if (old) old.remove();
+  }
+
+  function formatPromoLeft(ms) {
+    var totalSec = Math.max(0, Math.floor(ms / 1000));
+    var days = Math.floor(totalSec / 86400);
+    var hours = Math.floor((totalSec % 86400) / 3600);
+    var mins = Math.floor((totalSec % 3600) / 60);
+    var secs = totalSec % 60;
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var hms = pad(hours) + ':' + pad(mins) + ':' + pad(secs);
+    if (days > 0) return t('Còn ' + days + 'n ' + hms, days + 'd ' + hms + ' left');
+    return t('Còn ' + hms, hms + ' left');
+  }
+
+  function renderPromoBanner(promo) {
+    promoData = promo || null;
+    var nav = document.querySelector('.site-nav');
+    if (!nav) return;
+
+    if (!promo || !promo.enabled || !promo.message_vi || !isAllowedOnCurrentPage(promo)) {
+      removePromoBanner();
+      return;
+    }
+
+    if (promo.ends_at) {
+      var endMs = new Date(promo.ends_at).getTime();
+      if (!Number.isNaN(endMs) && endMs <= Date.now()) {
+        removePromoBanner();
+        return;
+      }
+    }
+
+    if (promo.dismissible !== false) {
+      try {
+        if (sessionStorage.getItem(PROMO_DISMISS_KEY) === promoSignature(promo)) {
+          removePromoBanner();
+          return;
+        }
+      } catch (_) {}
+    }
+
+    var badge = isEn() && promo.badge_en ? promo.badge_en : promo.badge_vi;
+    var msg = isEn() && promo.message_en ? promo.message_en : promo.message_vi;
+    var ctaLabel = isEn() && promo.cta_label_en ? promo.cta_label_en : promo.cta_label_vi;
+    var ctaUrl = localizePromoHref(promo.cta_url || '');
+    var theme = /^(gold|blue|emerald|rose|violet)$/.test(promo.theme || '') ? promo.theme : 'gold';
+    var hasClose = promo.dismissible !== false;
+
+    var bar = document.querySelector('.site-promo');
+    if (!bar) {
+      bar = document.createElement('div');
+      var anchor = (menu && menu.parentNode === nav.parentNode) ? menu : nav;
+      anchor.insertAdjacentElement('afterend', bar);
+    }
+
+    bar.className = 'site-promo site-promo--' + theme + (hasClose ? '' : ' site-promo--no-x');
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', t('Thông báo khuyến mãi', 'Promotional announcement'));
+
+    var html = '<div class="site-promo__in">';
+    if (badge) html += '<span class="site-promo__badge">' + escHtml(badge) + '</span>';
+    html += '<span class="site-promo__msg">' + escHtml(msg) + '</span>';
+    if (promo.coupon_code) {
+      html += '<button type="button" class="site-promo__code" data-promo-copy="' + escHtml(promo.coupon_code) + '" title="' + escHtml(t('Bấm để copy mã', 'Click to copy code')) + '">' + escHtml(promo.coupon_code) + '</button>';
+    }
+    if (promo.ends_at) {
+      html += '<span class="site-promo__timer" data-promo-timer></span>';
+    }
+    if (ctaLabel && ctaUrl) {
+      var ext = /^https?:\/\//i.test(ctaUrl) ? ' target="_blank" rel="noopener noreferrer"' : '';
+      html += '<a class="site-promo__cta" href="' + escHtml(ctaUrl) + '"' + ext + '>' + escHtml(ctaLabel) + '</a>';
+    }
+    html += '</div>';
+    if (hasClose) {
+      html += '<button type="button" class="site-promo__x" data-promo-close aria-label="' + escHtml(t('Đóng băng rôn', 'Dismiss banner')) + '">✕</button>';
+    }
+    bar.innerHTML = html;
+
+    stopPromoCountdown();
+    if (promo.ends_at) {
+      var targetMs = new Date(promo.ends_at).getTime();
+      var tick = function () {
+        var timerEl = bar.querySelector('[data-promo-timer]');
+        if (!timerEl) return;
+        var diff = targetMs - Date.now();
+        if (diff <= 0) {
+          removePromoBanner();
+          return;
+        }
+        timerEl.textContent = formatPromoLeft(diff);
+      };
+      tick();
+      promoTimerId = setInterval(tick, 1000);
+    }
+  }
+
+  async function fetchPromoBanner() {
+    if (!document.querySelector('.site-nav')) return;
+
+    try {
+      var rawCache = sessionStorage.getItem(PROMO_CACHE_KEY);
+      if (rawCache) {
+        var cached = JSON.parse(rawCache);
+        if (cached && cached.ts && Date.now() - cached.ts < 20000) {
+          renderPromoBanner(cached.promo || null);
+          return;
+        }
+      }
+    } catch (_) {}
+
+    var loadedPromo = null;
+    try {
+      var res = await fetch('/api/promo', { cache: 'no-store' });
+      if (res.ok) {
+        var data = await res.json();
+        loadedPromo = data && data.active ? data.promo : null;
+      } else if (res.status === 404) {
+        // Fallback when running static dev-server locally without /api/promo
+        var stRes = await fetch(SB_URL + '/storage/v1/object/public/site-config/promo-banner.json?t=' + Date.now(), { cache: 'no-store' });
+        if (stRes.ok) loadedPromo = await stRes.json();
+      }
+    } catch (_) {}
+
+    try {
+      sessionStorage.setItem(PROMO_CACHE_KEY, JSON.stringify({ ts: Date.now(), promo: loadedPromo }));
+    } catch (_) {}
+
+    renderPromoBanner(loadedPromo);
+  }
+
+  document.addEventListener('click', function (ev) {
+    var copyBtn = ev.target.closest('[data-promo-copy]');
+    if (copyBtn) {
+      var code = copyBtn.getAttribute('data-promo-copy') || '';
+      if (!code) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).catch(function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      copyBtn.textContent = t('Đã copy!', 'Copied!');
+      setTimeout(function () { copyBtn.textContent = code; }, 1600);
+      return;
+    }
+
+    if (ev.target.closest('[data-promo-close]')) {
+      if (promoData) {
+        try { sessionStorage.setItem(PROMO_DISMISS_KEY, promoSignature(promoData)); } catch (_) {}
+      }
+      removePromoBanner();
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fetchPromoBanner);
+  } else {
+    fetchPromoBanner();
+  }
+  if (window.DEVSTU_I18N) {
+    window.DEVSTU_I18N.onChange(function () {
+      if (promoData) renderPromoBanner(promoData);
+    });
+  }
 })();

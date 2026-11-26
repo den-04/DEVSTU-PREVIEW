@@ -9,9 +9,9 @@
   <title>DEVSTU Admin · Quản lý Tài khoản, Thông báo &amp; Key Premium</title>
   <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/css/site.css?v=20261126">
-  <link rel="stylesheet" href="/admin/admin.css?v=20261126">
-  <script src="/admin/admin.js?v=20261126" defer></script>
+  <link rel="stylesheet" href="/assets/css/site.css?v=20261126e">
+  <link rel="stylesheet" href="/admin/admin.css?v=20261126e">
+  <script src="/admin/admin.js?v=20261126e" defer></script>
 </head>
 
 <body class="adm-body">
@@ -152,6 +152,10 @@
             <button type="button" class="adm-navtab" data-tab="orders" role="tab" aria-selected="false">
               Đơn hàng QR
               <span class="adm-count" id="tab-cnt-orders">0</span>
+            </button>
+            <button type="button" class="adm-navtab" data-tab="promo" role="tab" aria-selected="false">
+              Băng rôn KM
+              <span class="adm-count" id="tab-cnt-promo">Tắt</span>
             </button>
             <button type="button" class="adm-navtab" data-tab="bugs" role="tab" aria-selected="false">
               Báo lỗi
@@ -509,6 +513,140 @@
                   <tr><td colspan="7" class="adm-empty">Đang tải danh sách đơn hàng…</td></tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 6: PROMO BANNER -->
+        <section class="adm-panel" id="panel-promo" role="tabpanel" hidden>
+          <div class="adm-split">
+            <div class="adm-card">
+              <h2>Cấu hình băng rôn khuyến mãi dưới Header</h2>
+              <p class="adm-sub">Chỉnh trực tiếp nội dung, mã giảm giá, màu sắc và thời gian đếm ngược — lưu xong là website tự cập nhật ngay không cần sửa code.</p>
+
+              <form id="prm-form" class="adm-form">
+                <label class="adm-check">
+                  <input type="checkbox" id="prm-enabled">
+                  <span><strong>Bật hiển thị băng rôn khuyến mãi trên website</strong></span>
+                </label>
+
+                <div class="adm-grid-2">
+                  <label class="adm-field">
+                    <span>Giao diện màu sắc</span>
+                    <select id="prm-theme">
+                      <option value="gold">Vàng Gold · Pro Studio</option>
+                      <option value="blue">Xanh dương · DEVSTU</option>
+                      <option value="emerald">Xanh ngọc · Flash Sale</option>
+                      <option value="rose">Đỏ hồng · Lễ / Sự kiện</option>
+                      <option value="violet">Tím · AI Studio</option>
+                    </select>
+                  </label>
+                  <label class="adm-field">
+                    <span>Phạm vi hiển thị</span>
+                    <select id="prm-pages">
+                      <option value="all">Tất cả các trang</option>
+                      <option value="home_pricing">Chỉ Trang chủ &amp; Bảng giá</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="adm-grid-2">
+                  <label class="adm-field">
+                    <span>Nhãn nổi bật (Badge)</span>
+                    <input type="text" id="prm-badge-vi" maxlength="32" placeholder="VD: ƯU ĐÃI, GIẢM 50%, HOT">
+                  </label>
+                  <label class="adm-field">
+                    <span>Mã giảm giá / Mã Key tặng kèm (tuỳ chọn)</span>
+                    <input type="text" id="prm-code" maxlength="40" placeholder="VD: DEVSTU50 (bấm copy được)">
+                  </label>
+                </div>
+
+                <label class="adm-field">
+                  <span>Nội dung khuyến mãi *</span>
+                  <textarea id="prm-msg-vi" rows="2" maxlength="320"
+                    placeholder="VD: Mở khoá trọn bộ Pro · STU Ultra Vĩnh viễn chỉ 39.000đ — Nhận mã Key tự động sau 5 giây!"></textarea>
+                </label>
+
+                <div class="adm-grid-2">
+                  <label class="adm-field">
+                    <span>Chữ trên nút bấm (CTA)</span>
+                    <input type="text" id="prm-cta-vi" maxlength="40" placeholder="Mua ngay →">
+                  </label>
+                  <label class="adm-field">
+                    <span>Đường dẫn khi bấm</span>
+                    <input type="text" id="prm-cta-url" maxlength="240" placeholder="/bang-gia/">
+                  </label>
+                </div>
+
+                <div class="adm-grid-2">
+                  <label class="adm-field">
+                    <span>Tự động kết thúc &amp; đếm ngược đến (tuỳ chọn)</span>
+                    <input type="datetime-local" id="prm-ends-at">
+                  </label>
+                  <div class="adm-field" style="justify-content:flex-end">
+                    <label class="adm-check" style="height:40px">
+                      <input type="checkbox" id="prm-dismissible" checked>
+                      <span>Cho phép khách bấm ✕ đóng tạm</span>
+                    </label>
+                  </div>
+                </div>
+
+                <details class="adm-bug-details">
+                  <summary>Bản dịch Tiếng Anh (tuỳ chọn cho /en/ — để trống sẽ dùng Tiếng Việt)</summary>
+                  <div class="adm-form">
+                    <div class="adm-grid-2">
+                      <label class="adm-field">
+                        <span>Badge (English)</span>
+                        <input type="text" id="prm-badge-en" maxlength="32" placeholder="PROMO">
+                      </label>
+                      <label class="adm-field">
+                        <span>CTA Label (English)</span>
+                        <input type="text" id="prm-cta-en" maxlength="40" placeholder="Buy now →">
+                      </label>
+                    </div>
+                    <label class="adm-field">
+                      <span>Message (English)</span>
+                      <textarea id="prm-msg-en" rows="2" maxlength="320"
+                        placeholder="Unlock Pro · STU Ultra Lifetime for just 39,000 VND — Instant Key issued!"></textarea>
+                    </label>
+                  </div>
+                </details>
+
+                <div class="adm-row-actions">
+                  <button type="submit" class="adm-btn adm-btn--primary" id="prm-save-btn">Lưu &amp; Xuất bản ngay</button>
+                  <button type="button" class="adm-btn adm-btn--ghost" id="prm-disable-btn">Tắt băng rôn</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="adm-card">
+              <div class="adm-card__head">
+                <h2>Xem trước trực tiếp &amp; Mẫu điền nhanh</h2>
+                <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" id="prm-reload-btn">Tải lại</button>
+              </div>
+
+              <div class="adm-promo-mock">
+                <div class="adm-promo-mock__nav">
+                  <div class="adm-promo-mock__brand">
+                    <img src="/icons/logo-64.png" alt="DEVSTU" width="20" height="20">
+                    <span>DEVSTU</span>
+                  </div>
+                  <div class="adm-promo-mock__links">
+                    <span>Tính năng</span>
+                    <span>Bảng giá</span>
+                    <span>Tải xuống</span>
+                  </div>
+                  <span class="adm-promo-mock__btn">Tải app</span>
+                </div>
+                <div id="prm-live-preview"></div>
+              </div>
+
+              <p class="adm-preview__cap" style="margin-top:16px">Mẫu điền nhanh 1 chạm (có thể sửa lại trước khi xuất bản):</p>
+              <div class="adm-tpl-grid">
+                <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" data-prm-tpl="lifetime39">Ưu đãi Vĩnh viễn 39k</button>
+                <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" data-prm-tpl="year19">Gói 1 năm 19k</button>
+                <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" data-prm-tpl="flash">Flash Sale 24h có đồng hồ</button>
+              </div>
             </div>
           </div>
         </section>

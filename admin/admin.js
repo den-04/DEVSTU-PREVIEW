@@ -31,6 +31,7 @@
     ordSearch: '',
     orders: [],
     ordStats: null,
+    promo: null,
     editingUserId: null,
     confirmAction: null
   };
@@ -276,15 +277,16 @@
     if (p.endsWith('/admin/notifications')) return 'notifications';
     if (p.endsWith('/admin/keys')) return 'keys';
     if (p.endsWith('/admin/orders')) return 'orders';
+    if (p.endsWith('/admin/promo')) return 'promo';
     if (p.endsWith('/admin/bugs')) return 'bugs';
     if (p.endsWith('/admin/accounts')) return 'accounts';
     const h = location.hash.replace(/^#/, '');
-    if (['accounts', 'notifications', 'keys', 'orders', 'bugs'].includes(h)) return h;
+    if (['accounts', 'notifications', 'keys', 'orders', 'promo', 'bugs'].includes(h)) return h;
     return 'accounts';
   }
 
   function switchTab(tab, updateHash = true) {
-    if (!['accounts', 'notifications', 'keys', 'orders', 'bugs'].includes(tab)) tab = 'accounts';
+    if (!['accounts', 'notifications', 'keys', 'orders', 'promo', 'bugs'].includes(tab)) tab = 'accounts';
     state.tab = tab;
     $$('.adm-navtab').forEach((btn) => {
       const active = btn.dataset.tab === tab;
@@ -295,6 +297,7 @@
     $('#panel-notifications').hidden = tab !== 'notifications';
     $('#panel-keys').hidden = tab !== 'keys';
     $('#panel-orders').hidden = tab !== 'orders';
+    $('#panel-promo').hidden = tab !== 'promo';
     $('#panel-bugs').hidden = tab !== 'bugs';
     if (updateHash && location.hash !== `#${tab}`) {
       history.replaceState(history.state, '', `${location.pathname}#${tab}`);
@@ -366,7 +369,7 @@
 
   /* ---- Data Loaders ---- */
   async function loadAllData() {
-    await Promise.all([loadStats(), loadAccounts(), loadKeys(), loadNotifications(), loadOrders().catch(() => {}), loadBugs().catch(() => {})]);
+    await Promise.all([loadStats(), loadAccounts(), loadKeys(), loadNotifications(), loadOrders().catch(() => {}), loadPromo().catch(() => {}), loadBugs().catch(() => {})]);
   }
 
   async function loadStats() {
@@ -681,6 +684,179 @@
         </td>
       </tr>`;
     }).join('');
+  }
+
+  /* ---- Dynamic Header Promo Banner (/api/promo) ---- */
+  function isoToLocalInput(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function localInputToIso(val) {
+    const s = String(val || '').trim();
+    if (!s) return null;
+    const d = new Date(s);
+    return Number.isNaN(d.getTime()) ? null : d.toISOString();
+  }
+
+  function fillPromoForm(cfg) {
+    const c = cfg || {};
+    if ($('#prm-enabled')) $('#prm-enabled').checked = Boolean(c.enabled);
+    if ($('#prm-theme')) $('#prm-theme').value = c.theme || 'gold';
+    if ($('#prm-pages')) $('#prm-pages').value = c.pages || 'all';
+    if ($('#prm-badge-vi')) $('#prm-badge-vi').value = c.badge_vi ?? 'ƯU ĐÃI';
+    if ($('#prm-code')) $('#prm-code').value = c.coupon_code || '';
+    if ($('#prm-msg-vi')) $('#prm-msg-vi').value = c.message_vi || '';
+    if ($('#prm-cta-vi')) $('#prm-cta-vi').value = c.cta_label_vi ?? 'Mua ngay →';
+    if ($('#prm-cta-url')) $('#prm-cta-url').value = c.cta_url ?? '/bang-gia/';
+    if ($('#prm-ends-at')) $('#prm-ends-at').value = isoToLocalInput(c.ends_at);
+    if ($('#prm-dismissible')) $('#prm-dismissible').checked = c.dismissible !== false;
+    if ($('#prm-badge-en')) $('#prm-badge-en').value = c.badge_en ?? 'PROMO';
+    if ($('#prm-cta-en')) $('#prm-cta-en').value = c.cta_label_en ?? 'Buy now →';
+    if ($('#prm-msg-en')) $('#prm-msg-en').value = c.message_en || '';
+    updatePromoBadgeCount(Boolean(c.enabled && c.message_vi));
+    updatePromoPreview();
+  }
+
+  function readPromoForm() {
+    return {
+      enabled: Boolean($('#prm-enabled')?.checked),
+      theme: $('#prm-theme')?.value || 'gold',
+      pages: $('#prm-pages')?.value || 'all',
+      badge_vi: ($('#prm-badge-vi')?.value || '').trim(),
+      badge_en: ($('#prm-badge-en')?.value || '').trim(),
+      message_vi: ($('#prm-msg-vi')?.value || '').trim(),
+      message_en: ($('#prm-msg-en')?.value || '').trim(),
+      coupon_code: ($('#prm-code')?.value || '').trim(),
+      cta_label_vi: ($('#prm-cta-vi')?.value || '').trim(),
+      cta_label_en: ($('#prm-cta-en')?.value || '').trim(),
+      cta_url: ($('#prm-cta-url')?.value || '').trim(),
+      ends_at: localInputToIso($('#prm-ends-at')?.value || ''),
+      dismissible: Boolean($('#prm-dismissible')?.checked)
+    };
+  }
+
+  function updatePromoBadgeCount(isActive) {
+    const cnt = $('#tab-cnt-promo');
+    if (cnt) cnt.textContent = isActive ? 'Đang bật' : 'Tắt';
+  }
+
+  function updatePromoPreview() {
+    const box = $('#prm-live-preview');
+    if (!box) return;
+    const c = readPromoForm();
+    if (!c.enabled) {
+      box.innerHTML = '<div class="adm-promo-mock__off">Băng rôn đang <strong>Tắt</strong> — bật ô “Bật hiển thị” ở bên trái rồi bấm Lưu để xuất bản.</div>';
+      return;
+    }
+    const theme = /^(gold|blue|emerald|rose|violet)$/.test(c.theme) ? c.theme : 'gold';
+    const msg = c.message_vi || 'Nhập nội dung khuyến mãi để xem trước tại đây…';
+    let timerHtml = '';
+    if (c.ends_at) {
+      const diff = new Date(c.ends_at).getTime() - Date.now();
+      if (diff > 0) {
+        const s = Math.floor(diff / 1000);
+        const d = Math.floor(s / 86400);
+        const h = String(Math.floor((s % 86400) / 3600)).padStart(2, '0');
+        const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+        const sc = String(s % 60).padStart(2, '0');
+        timerHtml = `<span class="site-promo__timer">${d > 0 ? `Còn ${d}n ${h}:${m}:${sc}` : `Còn ${h}:${m}:${sc}`}</span>`;
+      } else {
+        timerHtml = '<span class="site-promo__timer">Đã hết hạn</span>';
+      }
+    }
+    box.innerHTML = `
+      <div class="site-promo site-promo--${theme}${c.dismissible ? '' : ' site-promo--no-x'}">
+        <div class="site-promo__in">
+          ${c.badge_vi ? `<span class="site-promo__badge">${esc(c.badge_vi)}</span>` : ''}
+          <span class="site-promo__msg">${esc(msg)}</span>
+          ${c.coupon_code ? `<span class="site-promo__code">${esc(c.coupon_code)}</span>` : ''}
+          ${timerHtml}
+          ${c.cta_label_vi && c.cta_url ? `<span class="site-promo__cta">${esc(c.cta_label_vi)}</span>` : ''}
+        </div>
+        ${c.dismissible ? '<span class="site-promo__x" aria-hidden="true">✕</span>' : ''}
+      </div>`;
+  }
+
+  async function loadPromo() {
+    const s = await refreshSessionIfNeeded(false);
+    if (!s?.access_token) return;
+    let cfg = null;
+    try {
+      const res = await fetch('/api/promo?admin=1', {
+        headers: { Authorization: `Bearer ${s.access_token}` },
+        cache: 'no-store'
+      });
+      if (res.ok) {
+        const data = await res.json();
+        cfg = data?.config || null;
+      } else if (res.status === 404) {
+        const stRes = await fetch(`${SB_URL}/storage/v1/object/public/site-config/promo-banner.json?t=${Date.now()}`, { cache: 'no-store' });
+        if (stRes.ok) cfg = await stRes.json();
+      }
+    } catch {}
+    state.promo = cfg || { enabled: false, theme: 'gold', pages: 'all', badge_vi: 'ƯU ĐÃI', badge_en: 'PROMO', cta_label_vi: 'Mua ngay →', cta_label_en: 'Buy now →', cta_url: '/bang-gia/', dismissible: true };
+    fillPromoForm(state.promo);
+  }
+
+  async function savePromo(overrideEnabled = null) {
+    const s = await refreshSessionIfNeeded(false);
+    if (!s?.access_token) {
+      toast('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.', 'err');
+      return;
+    }
+    const payload = readPromoForm();
+    if (overrideEnabled !== null) {
+      payload.enabled = Boolean(overrideEnabled);
+      if ($('#prm-enabled')) $('#prm-enabled').checked = payload.enabled;
+    }
+    if (payload.enabled && !payload.message_vi) {
+      toast('Vui lòng nhập nội dung khuyến mãi trước khi bật.', 'err');
+      $('#prm-msg-vi')?.focus();
+      return;
+    }
+
+    const saveBtn = $('#prm-save-btn');
+    const disBtn = $('#prm-disable-btn');
+    if (saveBtn) saveBtn.disabled = true;
+    if (disBtn) disBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/promo', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${s.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      const txt = await res.text();
+      let data = {};
+      try { data = txt ? JSON.parse(txt) : {}; } catch {}
+
+      if (res.status === 404) {
+        throw new Error('Endpoint /api/promo chỉ chạy khi deploy lên Vercel (không chạy trên dev-server tĩnh).');
+      }
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || data?.message || `HTTP ${res.status}`);
+      }
+
+      state.promo = data.config;
+      fillPromoForm(state.promo);
+      try {
+        sessionStorage.removeItem('devstu_promo_cache_v1');
+        sessionStorage.removeItem('devstu_promo_dismiss_v1');
+      } catch {}
+      toast(payload.enabled ? 'Đã lưu & xuất bản băng rôn khuyến mãi!' : 'Đã tắt băng rôn khuyến mãi.', 'ok');
+    } catch (err) {
+      toast('Lỗi lưu băng rôn: ' + err.message, 'err');
+    } finally {
+      if (saveBtn) saveBtn.disabled = false;
+      if (disBtn) disBtn.disabled = false;
+    }
   }
 
   /* ---- Bug Reports ---- */
@@ -1278,6 +1454,72 @@
       }
     });
 
+    // Promo Banner Editor & Quick Templates
+    ['#prm-enabled', '#prm-theme', '#prm-pages', '#prm-badge-vi', '#prm-code', '#prm-msg-vi', '#prm-cta-vi', '#prm-cta-url', '#prm-ends-at', '#prm-dismissible'].forEach((sel) => {
+      $(sel)?.addEventListener('input', updatePromoPreview);
+      $(sel)?.addEventListener('change', updatePromoPreview);
+    });
+    $('#prm-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      savePromo();
+    });
+    $('#prm-disable-btn')?.addEventListener('click', () => savePromo(false));
+    $('#prm-reload-btn')?.addEventListener('click', () => loadPromo().then(() => toast('Đã tải lại cấu hình băng rôn', 'ok')).catch((err) => toast(err.message, 'err')));
+
+    const PROMO_TPLS = {
+      lifetime39: {
+        enabled: true,
+        theme: 'gold',
+        pages: 'all',
+        badge_vi: 'ƯU ĐÃI',
+        badge_en: 'PROMO',
+        coupon_code: '',
+        message_vi: 'Mở khoá trọn bộ Pro · STU Ultra Vĩnh viễn chỉ 39.000đ — Trả một lần, tự động cấp Key sau 5s!',
+        message_en: 'Unlock Pro · STU Ultra Lifetime for just 39,000 VND — One-time payment, instant Key!',
+        cta_label_vi: 'Mua ngay →',
+        cta_label_en: 'Buy now →',
+        cta_url: '/bang-gia/',
+        ends_at: null,
+        dismissible: true
+      },
+      year19: {
+        enabled: true,
+        theme: 'blue',
+        pages: 'all',
+        badge_vi: 'TIẾT KIỆM',
+        badge_en: 'DEAL',
+        coupon_code: '',
+        message_vi: 'Trải nghiệm trọn bộ 6 mô hình AI Làm đẹp da & STU Ultra gói 1 năm chỉ 19.000đ (không tự gia hạn).',
+        message_en: 'Full 6 U-Net Skin AI models & STU Ultra for 1 year at just 19,000 VND (non-recurring).',
+        cta_label_vi: 'Xem bảng giá →',
+        cta_label_en: 'See pricing →',
+        cta_url: '/bang-gia/',
+        ends_at: null,
+        dismissible: true
+      },
+      flash: {
+        enabled: true,
+        theme: 'rose',
+        pages: 'all',
+        badge_vi: 'FLASH SALE',
+        badge_en: 'FLASH SALE',
+        coupon_code: 'DEVSTU39K',
+        message_vi: 'Giảm sâu gói Pro STU Ultra — Thanh toán VietQR nhận Key riêng ngay lập tức!',
+        message_en: 'Limited Flash Sale on Pro STU Ultra — Pay via VietQR for instant Key delivery!',
+        cta_label_vi: 'Săn ưu đãi →',
+        cta_label_en: 'Claim deal →',
+        cta_url: '/bang-gia/',
+        ends_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+        dismissible: true
+      }
+    };
+    $$('[data-prm-tpl]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tpl = PROMO_TPLS[btn.dataset.prmTpl];
+        if (tpl) fillPromoForm(tpl);
+      });
+    });
+
     // Bug Reports Filter, Search & Actions
     let bugSearchTimer = null;
     $('#bug-search').addEventListener('input', (e) => {
@@ -1362,6 +1604,7 @@
     state.tab = resolveInitialTab();
     bindEvents();
     updateNotificationPreview();
+    updatePromoPreview();
     try {
       await handleOAuthCallbackIfPresent();
     } catch (err) {

@@ -164,6 +164,14 @@
       "destination": "/admin/index.html"
     },
     {
+      "source": "/admin/promo",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/promo/",
+      "destination": "/admin/index.html"
+    },
+    {
       "source": "/admin/bugs",
       "destination": "/admin/index.html"
     },

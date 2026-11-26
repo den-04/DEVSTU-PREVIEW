@@ -45,6 +45,7 @@ const EN_REWRITES = {
   '/admin/notifications': 'admin/index.html',
   '/admin/keys': 'admin/index.html',
   '/admin/orders': 'admin/index.html',
+  '/admin/promo': 'admin/index.html',
   '/admin/bugs': 'admin/index.html'
 };
 
