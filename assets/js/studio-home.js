@@ -56,22 +56,87 @@
     const slCon = wk.querySelector('[data-ds-sl="con"]');
     const slSkin = wk.querySelector('[data-ds-sl="skin"]');
 
-    const LOOK_META = {
-      0: { exp: ['+0.25 EV', '62%'], temp: ['5600K', '55%'], con: ['+12', '58%'], skin: ['AI 75%', '75%'] },
-      1: { exp: ['+0.35 EV', '68%'], temp: ['6150K', '76%'], con: ['+18', '64%'], skin: ['AI 78%', '78%'] },
-      2: { exp: ['+0.55 EV', '76%'], temp: ['5200K', '46%'], con: ['-8', '44%'], skin: ['AI 85%', '85%'] },
-      3: { exp: ['+0.30 EV', '64%'], temp: ['5450K', '52%'], con: ['+6', '52%'], skin: ['AI 82%', '82%'] },
-      4: { exp: ['+0.15 EV', '54%'], temp: ['5900K', '66%'], con: ['+24', '74%'], skin: ['AI 65%', '65%'] }
+    const rangeExp = wk.querySelector('[data-ds-range="exp"]');
+    const rangeTemp = wk.querySelector('[data-ds-range="temp"]');
+    const rangeCon = wk.querySelector('[data-ds-range="con"]');
+    const rangeSkin = wk.querySelector('[data-ds-range="skin"]');
+
+    const PRESETS = {
+      0: { exp: 25, temp: 5600, con: 12, skin: 75 },
+      1: { exp: 35, temp: 6150, con: 18, skin: 78 },
+      2: { exp: 55, temp: 5200, con: -8, skin: 85 },
+      3: { exp: 30, temp: 5450, con: 6,  skin: 82 },
+      4: { exp: 15, temp: 5900, con: 24, skin: 65 }
     };
 
-    const ws = { shot: 1, auto: true, look: 0, synced: false, done: new Set([1]) };
+    const makeShotState = (done) => ({
+      auto: true,
+      userDisabled: false,
+      look: 0,
+      done,
+      ...PRESETS[0]
+    });
 
-    const setMeter = (el, val) => {
-      if (!el || !val) return;
+    const shots = {
+      1: makeShotState(true),
+      2: makeShotState(false),
+      3: makeShotState(false),
+      4: makeShotState(false),
+      5: makeShotState(false),
+      6: makeShotState(false)
+    };
+
+    const ws = { shot: 1, allSynced: false };
+
+    const getRawSrc = (n) => (n === 1 ? `${STUDIO}hero-raw.webp` : `${STUDIO}shoot-${n}-raw.webp`);
+    const getAfterSrc = (n, s) => {
+      if (!s.done || !s.auto) return getRawSrc(n);
+      if (s.look >= 1 && s.look <= 4) {
+        return n === 1 ? `${STUDIO}hero-look-${s.look}.webp` : `${STUDIO}shoot-${n}-look-${s.look}.webp`;
+      }
+      return n === 1 ? `${STUDIO}hero-auto.webp` : `${STUDIO}shoot-${n}-edit.webp`;
+    };
+    const getThumbSrc = (n, s) => {
+      if (!s.done || !s.auto) return `${STUDIO}shoot-${n}-raw-240.webp`;
+      if (s.look >= 1 && s.look <= 4) {
+        return n === 1 ? `${STUDIO}hero-look-${s.look}-240.webp` : `${STUDIO}shoot-${n}-look-${s.look}-240.webp`;
+      }
+      return `${STUDIO}shoot-${n}-edit-240.webp`;
+    };
+
+    const computeFilter = (s) => {
+      if (!s.done || !s.auto) return '';
+      const base = PRESETS[s.look] || PRESETS[0];
+      const dExp = (s.exp - base.exp) / 100;
+      const dCon = (s.con - base.con) / 100;
+      const dTemp = (s.temp - base.temp) / 1400;
+      const dSkin = (s.skin - base.skin) / 100;
+      if (dExp === 0 && dCon === 0 && dTemp === 0 && dSkin === 0) return '';
+
+      const parts = [];
+      const bright = Math.max(0.65, Math.min(1.45, 1 + dExp * 0.42 + dSkin * 0.04));
+      if (Math.abs(bright - 1) > 0.002) parts.push(`brightness(${bright.toFixed(3)})`);
+
+      const con = Math.max(0.70, Math.min(1.40, 1 + dCon * 0.50));
+      if (Math.abs(con - 1) > 0.002) parts.push(`contrast(${con.toFixed(3)})`);
+
+      if (dTemp > 0.005) {
+        parts.push(`sepia(${(dTemp * 0.22).toFixed(3)})`);
+        parts.push(`saturate(${(1 + dTemp * 0.14).toFixed(3)})`);
+      } else if (dTemp < -0.005) {
+        parts.push(`hue-rotate(${(dTemp * 14).toFixed(1)}deg)`);
+        parts.push(`saturate(${(1 + Math.abs(dTemp) * 0.06).toFixed(3)})`);
+      }
+      return parts.join(' ');
+    };
+
+    const setMeter = (el, inp, text, pct, rawVal) => {
+      if (!el) return;
       const sp = el.querySelector('span');
-      const bar = el.querySelector('i');
-      if (sp) sp.textContent = val[0];
-      if (bar) bar.style.setProperty('--v', val[1]);
+      const track = el.querySelector('.ds-meter__track');
+      if (sp) sp.textContent = text;
+      if (track) track.style.setProperty('--v', pct);
+      if (inp && rawVal !== undefined) inp.value = String(rawVal);
     };
 
     const setImg = (img, src) => {
@@ -79,81 +144,150 @@
     };
 
     const paintWs = () => {
-      if (ws.shot === 1) {
-        setImg(imgRaw, `${STUDIO}hero-raw.webp`);
-        const afterSrc = !ws.auto
-          ? `${STUDIO}hero-raw.webp`
-          : ws.look
-          ? `${STUDIO}hero-look-${ws.look}.webp`
-          : `${STUDIO}hero-auto.webp`;
-        setImg(imgAfter, afterSrc);
-      } else {
-        setImg(imgRaw, `${STUDIO}shoot-${ws.shot}-raw.webp`);
-        const isDone = ws.done.has(ws.shot);
-        setImg(imgAfter, `${STUDIO}shoot-${ws.shot}-${isDone ? 'edit' : 'raw'}.webp`);
-      }
+      const n = ws.shot;
+      const cur = shots[n];
+
+      setImg(imgRaw, getRawSrc(n));
+      setImg(imgAfter, getAfterSrc(n, cur));
+      if (imgAfter) imgAfter.style.filter = computeFilter(cur);
 
       if (autoBtn) {
-        autoBtn.setAttribute('aria-pressed', String(ws.auto));
+        autoBtn.setAttribute('aria-pressed', String(cur.auto));
         const txt = autoBtn.querySelector('[data-ds-auto-lbl]');
-        if (txt) txt.textContent = ws.auto ? t('AI Auto-Retouch: Bật', 'AI Auto-Retouch: On') : t('Chỉnh giúp tôi (Auto)', 'Auto-Retouch Off');
+        if (txt) txt.textContent = cur.auto ? t('AI Auto-Retouch: Bật', 'AI Auto-Retouch: On') : t('Chỉnh giúp tôi (Auto)', 'Auto-Retouch Off');
       }
 
+      const lookPrefix = n === 1 ? 'hero' : `shoot-${n}`;
       for (const b of lookBtns) {
-        b.setAttribute('aria-pressed', String(ws.auto && Number(b.dataset.dsLook) === ws.look));
+        const k = Number(b.dataset.dsLook);
+        b.setAttribute('aria-pressed', String(cur.auto && k === cur.look));
+        setImg(b.querySelector('img'), `${STUDIO}${lookPrefix}-look-${k}-240.webp`);
       }
-      if (resetBtn) resetBtn.setAttribute('aria-pressed', String(ws.auto && ws.look === 0));
+      if (resetBtn) resetBtn.setAttribute('aria-pressed', String(cur.auto && cur.look === 0));
 
+      let doneCount = 0;
       for (const s of shotBtns) {
-        const n = Number(s.dataset.dsShot);
-        s.setAttribute('aria-pressed', String(n === ws.shot));
-        const isDone = ws.done.has(n);
-        s.classList.toggle('done', isDone);
+        const sn = Number(s.dataset.dsShot);
+        const st = shots[sn];
+        const isEdited = st.done && st.auto;
+        if (st.done) doneCount++;
+        s.setAttribute('aria-pressed', String(sn === n));
+        s.classList.toggle('done', isEdited);
+        setImg(s.querySelector('img'), getThumbSrc(sn, st));
         const stSpan = s.querySelector('[data-ds-shot-st]');
-        if (stSpan) stSpan.textContent = isDone ? t('Đã chỉnh', 'Edited') : t('Ảnh RAW', 'RAW');
+        if (stSpan) {
+          stSpan.textContent = isEdited ? t('Đã chỉnh', 'Edited') : (st.done ? t('Tắt AI', 'AI Off') : t('Ảnh RAW', 'RAW'));
+        }
       }
 
-      if (badgeEl) badgeEl.textContent = t(`Ảnh ${ws.shot} / 6`, `Shot ${ws.shot} / 6`);
-      if (countEl) countEl.textContent = t(`6 ảnh · đã chỉnh ${ws.done.size}`, `6 shots · ${ws.done.size} edited`);
-      if (syncBtn && ws.synced) syncBtn.textContent = t('✓ Đã đồng bộ cả 6 ảnh', '✓ Synced all 6 photos');
+      if (badgeEl) badgeEl.textContent = t(`Ảnh ${n} / 6`, `Shot ${n} / 6`);
+      if (countEl) countEl.textContent = t(`6 ảnh · đã chỉnh ${doneCount}`, `6 shots · ${doneCount} edited`);
+      if (syncBtn) {
+        syncBtn.disabled = ws.allSynced;
+        syncBtn.textContent = ws.allSynced ? t('✓ Đã đồng bộ cả 6 ảnh', '✓ Synced all 6 photos') : t('Đồng bộ cả 6 ảnh', 'Sync all 6 shots');
+      }
 
-      const meters = ws.auto
-        ? (LOOK_META[ws.look] || LOOK_META[0])
-        : { exp: ['0.00 EV', '50%'], temp: ['5500K', '50%'], con: ['0', '50%'], skin: ['0%', '0%'] };
-      setMeter(slExp, meters.exp);
-      setMeter(slTemp, meters.temp);
-      setMeter(slCon, meters.con);
-      setMeter(slSkin, meters.skin);
+      if (cur.auto) {
+        const expText = `${cur.exp >= 0 ? '+' : ''}${(cur.exp / 100).toFixed(2)} EV`;
+        const conText = `${cur.con >= 0 ? '+' : ''}${cur.con}`;
+        setMeter(slExp, rangeExp, expText, `${Math.max(0, Math.min(100, (cur.exp + 100) / 2))}%`, cur.exp);
+        setMeter(slTemp, rangeTemp, `${cur.temp}K`, `${Math.max(0, Math.min(100, (cur.temp - 4200) / 28))}%`, cur.temp);
+        setMeter(slCon, rangeCon, conText, `${Math.max(0, Math.min(100, cur.con + 50))}%`, cur.con);
+        setMeter(slSkin, rangeSkin, `AI ${cur.skin}%`, `${Math.max(0, Math.min(100, cur.skin))}%`, cur.skin);
+      } else {
+        setMeter(slExp, rangeExp, '0.00 EV', '50%', 0);
+        setMeter(slTemp, rangeTemp, '5500K', '46.4%', 5500);
+        setMeter(slCon, rangeCon, '0', '50%', 0);
+        setMeter(slSkin, rangeSkin, '0%', '0%', 0);
+      }
+    };
+
+    const runSync = () => {
+      if (ws.allSynced) return;
+      const src = shots[ws.shot];
+      if (!src.auto) {
+        src.auto = true;
+        src.userDisabled = false;
+      }
+      src.done = true;
+      const tpl = { look: src.look, exp: src.exp, temp: src.temp, con: src.con, skin: src.skin };
+      ws.allSynced = true;
+      paintWs();
+
+      shotBtns.forEach((btn, idx) => {
+        const sn = Number(btn.dataset.dsShot);
+        setTimeout(() => {
+          Object.assign(shots[sn], tpl, { auto: true, userDisabled: false, done: true });
+          paintWs();
+        }, 90 * idx);
+      });
     };
 
     shotBtns.forEach((btn) => btn.addEventListener('click', () => {
-      ws.shot = Number(btn.dataset.dsShot) || 1;
+      const n = Number(btn.dataset.dsShot) || 1;
+      ws.shot = n;
+      const st = shots[n];
+      st.done = true;
+      if (!st.userDisabled) st.auto = true;
       paintWs();
     }));
 
     modeBtns.forEach((btn) => btn.addEventListener('click', () => {
-      modeBtns.forEach((x) => x.classList.toggle('on', x === btn));
+      modeBtns.forEach((x) => {
+        const on = x === btn;
+        x.classList.toggle('on', on);
+        x.setAttribute('aria-selected', String(on));
+      });
+      if (btn.dataset.dsMode === 'sync') runSync();
     }));
 
     autoBtn?.addEventListener('click', () => {
-      ws.shot = 1;
-      ws.auto = !ws.auto;
-      if (!ws.auto) ws.look = 0;
+      const cur = shots[ws.shot];
+      cur.done = true;
+      cur.auto = !cur.auto;
+      cur.userDisabled = !cur.auto;
+      ws.allSynced = false;
       paintWs();
     });
 
     lookBtns.forEach((btn) => btn.addEventListener('click', () => {
-      ws.shot = 1;
-      ws.auto = true;
-      ws.look = Number(btn.dataset.dsLook) || 1;
+      const cur = shots[ws.shot];
+      const k = Number(btn.dataset.dsLook) || 1;
+      cur.done = true;
+      cur.auto = true;
+      cur.userDisabled = false;
+      cur.look = k;
+      Object.assign(cur, PRESETS[k] || PRESETS[1]);
+      ws.allSynced = false;
       paintWs();
     }));
 
     resetBtn?.addEventListener('click', () => {
-      ws.shot = 1;
-      ws.auto = true;
-      ws.look = 0;
+      const cur = shots[ws.shot];
+      cur.done = true;
+      cur.auto = true;
+      cur.userDisabled = false;
+      cur.look = 0;
+      Object.assign(cur, PRESETS[0]);
+      ws.allSynced = false;
       paintWs();
+    });
+
+    [
+      ['exp', rangeExp],
+      ['temp', rangeTemp],
+      ['con', rangeCon],
+      ['skin', rangeSkin]
+    ].forEach(([key, inp]) => {
+      inp?.addEventListener('input', () => {
+        const cur = shots[ws.shot];
+        cur.done = true;
+        cur.auto = true;
+        cur.userDisabled = false;
+        cur[key] = Number(inp.value);
+        ws.allSynced = false;
+        paintWs();
+      });
     });
 
     cmpToggle?.addEventListener('click', () => {
@@ -162,27 +296,7 @@
       cmp?.classList.toggle('is-off', !next);
     });
 
-    syncBtn?.addEventListener('click', () => {
-      if (ws.synced) return;
-      ws.synced = true;
-      ws.auto = true;
-      if (ws.look === 0) ws.look = 1;
-      syncBtn.disabled = true;
-      paintWs();
-
-      shotBtns.forEach((btn, idx) => {
-        const n = Number(btn.dataset.dsShot);
-        setTimeout(() => {
-          ws.done.add(n);
-          const thumb = btn.querySelector('img');
-          if (thumb) thumb.src = n === 1 ? `${STUDIO}hero-look-${ws.look}-240.webp` : `${STUDIO}shoot-${n}-edit.webp`;
-          paintWs();
-          if (idx === shotBtns.length - 1 && syncBtn) {
-            syncBtn.textContent = t('✓ Đã đồng bộ cả 6 ảnh', '✓ Synced all 6 photos');
-          }
-        }, 120 * idx);
-      });
-    });
+    syncBtn?.addEventListener('click', runSync);
 
     if (window.DEVSTU_I18N) window.DEVSTU_I18N.onChange(paintWs);
     paintWs();

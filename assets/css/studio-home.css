@@ -715,10 +715,11 @@
 .ds-meter__top span { color: var(--ds-gold); font-family: ui-monospace, monospace; font-size: 11px; }
 
 .ds-meter__track {
-  height: 5px;
+  position: relative;
+  height: 7px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, .09);
-  overflow: hidden;
+  background: rgba(255, 255, 255, .10);
+  cursor: pointer;
 }
 
 .ds-meter__track i {
@@ -727,7 +728,39 @@
   width: var(--v, 50%);
   border-radius: 9999px;
   background: linear-gradient(90deg, var(--ds-cyan), var(--ds-gold));
-  transition: width .28s ease;
+  transition: width .08s linear;
+  pointer-events: none;
+}
+
+.ds-meter__track::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: var(--v, 50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--ds-gold);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .55);
+  pointer-events: none;
+  transition: left .08s linear, transform .12s ease;
+}
+
+.ds-meter__track:hover::after {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.ds-meter__track input[type=range] {
+  position: absolute;
+  inset: -7px 0;
+  width: 100%;
+  height: 21px;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  z-index: 2;
 }
 
 .ds-sync-box {

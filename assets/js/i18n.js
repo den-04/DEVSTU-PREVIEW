@@ -1302,7 +1302,11 @@
     'LUT Film cổ điển': 'Classic Film LUT',
     'LUT Trong trẻo': 'Crystal Clear LUT',
     'LUT Biển xanh': 'Azure Coast LUT',
-    'LUT Đen trắng mềm': 'Soft Monochrome LUT'
+    'LUT Đen trắng mềm': 'Soft Monochrome LUT',
+    'Phơi sáng': 'Exposure',
+    'Nhiệt màu': 'Color Temp',
+    'Tương phản': 'Contrast',
+    'U-Net Skin AI': 'U-Net Skin AI'
   };
 
   function collectDom() {
