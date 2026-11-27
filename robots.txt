@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /vendor/
+Disallow: /cache_t/
+Disallow: /hptul/
+
+Sitemap: https://devstu.vercel.app/sitemap.xml

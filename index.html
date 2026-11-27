@@ -8,10 +8,127 @@
   <meta name="description"
     content="DEVSTU Desktop Studio: mở RAW 16-bit bằng LibRaw, làm đẹp da 6 mô hình U-Net AI, xoá vật thể LaMa, tách phông Depth v2 và đồng bộ màu cả buổi chụp — chạy 100% offline trên máy bạn.">
   <meta name="theme-color" content="#09090b">
-  <meta property="og:title" content="DEVSTU · Phòng tối AI hậu kỳ ảnh cưới &amp; chân dung">
-  <meta property="og:description"
-    content="Hậu kỳ ảnh cưới, kỷ yếu &amp; chân dung chạy 100% offline bằng Rust SIMD + WebGPU. Không giới hạn xuất, không tính credit.">
-  <meta property="og:image" content="/assets/img/home/devstu-workflow.webp">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://devstu.vercel.app/">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:site_name" content="DEVSTU">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://devstu.vercel.app/">
+  <meta property="og:title" content="DEVSTU · Phòng tối AI hậu kỳ ảnh cưới &amp; chân dung trên Windows">
+  <meta property="og:description" content="DEVSTU Desktop Studio: mở RAW 16-bit bằng LibRaw, làm đẹp da 6 mô hình U-Net AI, xoá vật thể LaMa, tách phông Depth v2 và đồng bộ màu cả buổi chụp — chạy 100% offline trên máy bạn.">
+  <meta property="og:image" content="https://devstu.vercel.app/assets/img/home/devstu-workflow.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DEVSTU · Phòng tối AI hậu kỳ ảnh cưới &amp; chân dung trên Windows">
+  <meta name="twitter:description" content="DEVSTU Desktop Studio: mở RAW 16-bit bằng LibRaw, làm đẹp da 6 mô hình U-Net AI, xoá vật thể LaMa, tách phông Depth v2 và đồng bộ màu cả buổi chụp — chạy 100% offline trên máy bạn.">
+  <meta name="twitter:image" content="https://devstu.vercel.app/assets/img/home/devstu-workflow.webp">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://devstu.vercel.app/#org",
+        "name": "DEVSTU",
+        "url": "https://devstu.vercel.app/",
+        "logo": "https://devstu.vercel.app/icons/icon-512.png",
+        "email": "ducdoan04.work@gmail.com",
+        "founder": {
+          "@type": "Person",
+          "name": "ducdoan-04"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Đà Nẵng",
+          "addressCountry": "VN"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://devstu.vercel.app/#website",
+        "url": "https://devstu.vercel.app/",
+        "name": "DEVSTU",
+        "inLanguage": "vi-VN",
+        "publisher": {
+          "@id": "https://devstu.vercel.app/#org"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://devstu.vercel.app/#app",
+        "name": "DEVSTU Desktop",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Windows 10, Windows 11 (64-bit)",
+        "softwareVersion": "1.0.0",
+        "downloadUrl": "https://devstu.vercel.app/tai-xuong/",
+        "screenshot": "https://devstu.vercel.app/assets/img/home/devstu-workflow.webp",
+        "publisher": {
+          "@id": "https://devstu.vercel.app/#org"
+        },
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Standard (Miễn phí)",
+            "price": "0",
+            "priceCurrency": "VND",
+            "availability": "https://schema.org/InStock",
+            "url": "https://devstu.vercel.app/tai-xuong/"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pro · STU Ultra (365 ngày)",
+            "price": "19000",
+            "priceCurrency": "VND",
+            "availability": "https://schema.org/InStock",
+            "url": "https://devstu.vercel.app/bang-gia/"
+          },
+          {
+            "@type": "Offer",
+            "name": "Pro · STU Ultra (Vĩnh viễn)",
+            "price": "39000",
+            "priceCurrency": "VND",
+            "availability": "https://schema.org/InStock",
+            "url": "https://devstu.vercel.app/bang-gia/"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Ảnh của tôi có bị gửi lên internet hay máy chủ nào không?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Không bao giờ. Toàn bộ quá trình đọc file RAW, chạy AI Skin Retouch, xoá vật thể LaMa và xuất file đều chạy 100% cục bộ bằng Rust SIMD và WebGPU ngay trên máy tính Windows của bạn."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Máy không có card đồ hoạ rời RTX có chạy được DEVSTU không?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Có. DEVSTU tự động thích ứng giữa GPU rời (WebGPU) và vi xử lý CPU với tập lệnh SIMD. Bạn có thể kiểm tra ngay hiệu năng phần cứng của máy tại trang Tải xuống bằng bài đo WebGPU trực tiếp trên trình duyệt."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Sau khi chuyển khoản VietQR mua gói Pro, mã Key hoạt động thế nào?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ngay sau khi giao dịch VietQR hoàn tất, hệ thống cấp ngay 1 mã Key riêng và lưu lại an toàn trong mục “Lịch sử đơn hàng & Kho Key” trên tài khoản của bạn. Key không tự kích hoạt trước, bạn chủ động copy dán vào ứng dụng DEVSTU Desktop bất kỳ lúc nào."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Có nhập được Preset Lightroom (.xmp) và file màu .cube sẵn có không?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Có. Cả phiên bản Standard (0đ) lẫn Pro đều hỗ trợ nhập trực tiếp file .xmp, .lrtemplate từ Lightroom Classic và LUT 3D .cube từ Photoshop hoặc DaVinci Resolve."
+            }
+          }
+        ]
+      }
+    ]
+  }</script>
   <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
