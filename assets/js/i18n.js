@@ -135,6 +135,7 @@
     'Bảng giá phần mềm chỉnh ảnh AI DEVSTU – Bản 0đ & Vĩnh viễn': 'DEVSTU AI Photo Editor Pricing – Free & Lifetime Plans',
     'Giới thiệu DEVSTU – Phần mềm chỉnh ảnh & retouch da AI': 'About DEVSTU – AI Photo Editing & Skin Retouching Suite',
     'Blog kinh nghiệm chỉnh ảnh, blend màu & tải LUT | DEVSTU': 'Blog – Photo Editing, Color Grading & Free LUTs | DEVSTU',
+    'Chỉnh sửa ảnh bằng AI miễn phí – Phần mềm DEVSTU PC': 'Free AI Photo Editor for PC – DEVSTU Desktop',
     '404 · Không tìm thấy trang | DEVSTU': '404 · Page Not Found | DEVSTU'
   };
 
@@ -178,7 +179,9 @@
     'Tìm hiểu DEVSTU – phần mềm chỉnh ảnh AI và làm mịn da hàng loạt trên máy tính phát triển bởi ducdoan-04 tại Đà Nẵng. Xử lý offline, không tốn credit.':
       'Learn about DEVSTU — the offline AI photo editor and batch skin retoucher for PC built by ducdoan-04 in Da Nang, Vietnam. Zero export credits.',
     'Chia sẻ kinh nghiệm chỉnh ảnh cưới, kỷ yếu, làm mịn da tự nhiên, sửa lỗi lệch màu ảnh đăng Facebook và tải Preset Lightroom / LUT .cube miễn phí.':
-      'Guides on wedding & yearbook editing, natural skin retouching, fixing washed-out Facebook photos, and free Lightroom presets / .cube LUTs.'
+      'Guides on wedding & yearbook editing, natural skin retouching, fixing washed-out Facebook photos, and free Lightroom presets / .cube LUTs.',
+    'Chỉnh sửa ảnh bằng AI miễn phí trên máy tính với DEVSTU: làm mịn da giữ vân da, xóa mụn, xóa vật thể, thay phông ảnh thẻ & chỉnh màu ảnh cưới hàng loạt.':
+      'Free AI photo editing on your PC with DEVSTU: natural pore-preserving skin smoothing, blemish & object removal, ID backdrops, and batch wedding color grading.'
   };
 
   // Specific elements containing mixed inline tags (<code>, <strong>, <a>), matched by normalized textContent so browser attribute serialization can never break matching
@@ -1344,6 +1347,9 @@
       'Download DEVSTU AI Photo Editor for Windows',
     'Bộ cài chính thức cho Windows 10 & Windows 11 (64-bit) — tích hợp trọn bộ làm mịn da giữ vân da, xóa vật thể, thay phông ảnh thẻ, lọc ảnh mờ và 111+ màu ảnh cưới chạy offline 100% trên máy tính.':
       'Official installer for Windows 10 & 11 (64-bit) — includes texture-preserving skin retouch, object erase, ID backdrops, smart culling & 111+ wedding color looks running 100% offline.',
+    'Chỉnh sửa ảnh bằng AI miễn phí · 100% Offline trên PC': 'Free AI Photo Editing · 100% Offline on PC',
+    'Chỉnh sửa ảnh bằng AI miễn phí': 'Free AI photo editing',
+    '& làm mịn da hàng loạt.': '& batch skin retouching.',
 
     // 404 Page
     'Không tìm thấy trang': 'Page not found',
