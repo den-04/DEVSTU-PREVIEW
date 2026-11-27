@@ -130,6 +130,11 @@
     'Đăng nhập tài khoản · DEVSTU': 'Sign In · DEVSTU',
     'Lịch sử đơn hàng & Kho Key · DEVSTU': 'Order History & Key Vault · DEVSTU',
     'DEVSTU · Phòng tối AI hậu kỳ ảnh cưới & chân dung trên Windows': 'DEVSTU · Offline AI Darkroom for Wedding & Portrait Post-Production',
+    'DEVSTU – Phần mềm chỉnh ảnh AI & làm mịn da hàng loạt PC': 'DEVSTU – AI Batch Photo Editor & Skin Retoucher for PC',
+    'Tải phần mềm chỉnh ảnh AI DEVSTU miễn phí cho Windows': 'Download DEVSTU Free AI Photo Editor for Windows',
+    'Bảng giá phần mềm chỉnh ảnh AI DEVSTU – Bản 0đ & Vĩnh viễn': 'DEVSTU AI Photo Editor Pricing – Free & Lifetime Plans',
+    'Giới thiệu DEVSTU – Phần mềm chỉnh ảnh & retouch da AI': 'About DEVSTU – AI Photo Editing & Skin Retouching Suite',
+    'Blog kinh nghiệm chỉnh ảnh, blend màu & tải LUT | DEVSTU': 'Blog – Photo Editing, Color Grading & Free LUTs | DEVSTU',
     '404 · Không tìm thấy trang | DEVSTU': '404 · Page Not Found | DEVSTU'
   };
 
@@ -163,7 +168,17 @@
     'DEVSTU Desktop Studio: mở RAW 16-bit bằng LibRaw, làm đẹp da 6 mô hình U-Net AI, xoá vật thể LaMa, tách phông Depth v2 và đồng bộ màu cả buổi chụp — chạy 100% offline trên máy bạn.':
       'DEVSTU Desktop Studio: native 16-bit LibRaw decoding, 6 U-Net AI skin models, LaMa object erase, Depth v2 bokeh, and full-shoot color sync — running 100% offline on your PC.',
     'Xem lại toàn bộ lịch sử đơn hàng VietQR và mã Key kích hoạt DEVSTU đã mua theo tài khoản của bạn.':
-      'Review your VietQR order history and retrieve purchased DEVSTU activation Keys saved to your account.'
+      'Review your VietQR order history and retrieve purchased DEVSTU activation Keys saved to your account.',
+    'Tải DEVSTU miễn phí cho Windows: phần mềm chỉnh ảnh AI hàng loạt, làm mịn da giữ vân da, xóa mụn, thay phông ảnh thẻ, lọc ảnh mờ & 111+ màu ảnh cưới.':
+      'Download DEVSTU free for Windows: batch AI photo editor, natural skin smoothing preserving pore texture, blemish removal, ID backdrop swap, culling & 111+ wedding looks.',
+    'Tải phần mềm chỉnh ảnh AI DEVSTU miễn phí cho máy tính Windows 10/11 (64-bit). Chỉnh ảnh RAW, làm mịn da, xóa vật thể offline & test cấu hình máy ngay.':
+      'Download DEVSTU free AI photo editor for Windows 10/11 (64-bit). Edit RAW photos, smooth skin, erase objects offline & benchmark your PC.',
+    'Bảng giá phần mềm chỉnh ảnh AI DEVSTU: Bản Standard 0đ miễn phí trọn đời, gói Pro mở khóa toàn bộ AI chỉ 19.000đ/năm hoặc 39.000đ dùng vĩnh viễn.':
+      'DEVSTU AI Photo Editor pricing: Free lifetime Standard plan, or unlock all AI models with Pro for just 19,000đ/year or 39,000đ lifetime.',
+    'Tìm hiểu DEVSTU – phần mềm chỉnh ảnh AI và làm mịn da hàng loạt trên máy tính phát triển bởi ducdoan-04 tại Đà Nẵng. Xử lý offline, không tốn credit.':
+      'Learn about DEVSTU — the offline AI photo editor and batch skin retoucher for PC built by ducdoan-04 in Da Nang, Vietnam. Zero export credits.',
+    'Chia sẻ kinh nghiệm chỉnh ảnh cưới, kỷ yếu, làm mịn da tự nhiên, sửa lỗi lệch màu ảnh đăng Facebook và tải Preset Lightroom / LUT .cube miễn phí.':
+      'Guides on wedding & yearbook editing, natural skin retouching, fixing washed-out Facebook photos, and free Lightroom presets / .cube LUTs.'
   };
 
   // Specific elements containing mixed inline tags (<code>, <strong>, <a>), matched by normalized textContent so browser attribute serialization can never break matching
@@ -347,6 +362,8 @@
       'Every DEVSTU color look can be compressed into a compact <code>devstu.vercel.app/?m=...</code> link to share with colleagues or inspect parameters directly on this page.',
     'Tải file .cube tiêu chuẩn dùng cho DEVSTU, Lightroom, Photoshop & DaVinci Resolve.':
       'Download standard <code>.cube</code> files compatible with DEVSTU, Lightroom, Photoshop &amp; DaVinci Resolve.',
+    'Tải miễn phí bộ LUT 3D chuẩn studio (Hàn Quốc trong trẻo, Chiều ấm nắng, Da trắng hồng, Film cổ điển...) dùng chung cho DEVSTU, Lightroom, Photoshop, Premiere & DaVinci, hoặc chia sẻ nhanh qua link devstu.vercel.app/?m=....':
+      'Download studio-grade 3D LUTs (Bright Korean, Warm Sunset, Fair Rosy, Classic Film...) for DEVSTU, Lightroom, Photoshop, Premiere &amp; DaVinci, or share via a <code>devstu.vercel.app/?m=...</code> link.',
     'Kéo hoặc chọn ảnh JPEG/PNG đã xuất vào khung dưới đây để kiểm tra trực tiếp ICC Profile, phát hiện ảnh đang ở Adobe RGB / Display P3 / CMYK hoặc vượt cỡ 2048 px, và xuất nhanh bản chuẩn sRGB. Ảnh xử lý 100% trên trình duyệt của bạn, không tải lên bất kỳ máy chủ nào.':
       'Drop or choose your exported JPEG/PNG below to inspect its <strong>ICC Profile</strong> directly, detect Adobe RGB / Display P3 / CMYK or oversized dimensions above 2048 px, and export a clean <strong>sRGB</strong> copy. <strong>100% processed locally in your browser — zero server uploads.</strong>'
   };
@@ -1240,6 +1257,93 @@
     'DEVSTU — AI Photo Retouching Suite · Đà Nẵng, Việt Nam ·': 'DEVSTU — AI Photo Retouching Suite · Da Nang, Vietnam ·',
     '© 2026 DEVSTU. Ảnh của bạn luôn được xử lý cục bộ trên thiết bị của bạn. Lightroom là thương hiệu của Adobe; DEVSTU hoạt động độc lập và không liên kết với bên thứ ba nào.':
       '© 2026 DEVSTU. Your photos are always processed locally on your device. Lightroom is a trademark of Adobe; DEVSTU operates independently with no third-party affiliation.',
+
+    // SEO-focused Homepage & Download Hero Copy (Nov 27 update)
+    'Phần mềm chỉnh ảnh AI trên máy tính · 100% Offline': 'PC AI Photo Editor · 100% Offline',
+    'Phần mềm chỉnh ảnh AI & làm mịn da': 'AI Batch Photo Editing & Skin',
+    'hàng loạt trên PC.': 'Retouching on PC.',
+    'Chỉnh màu ảnh cưới, kỷ yếu, chân dung studio, xóa mụn giữ nguyên vân da, thay phông ảnh thẻ và mở trực tiếp file RAW Canon, Sony, Nikon, Fujifilm — chạy mượt ngay trên máy bạn, không tốn credit mỗi tấm, không tải ảnh lên mạng.':
+      'Grade wedding, yearbook & studio portraits, remove blemishes while keeping skin pore texture, swap ID backdrops, and decode native Canon, Sony, Nikon & Fujifilm RAW files locally — zero per-photo credits, zero cloud uploads.',
+    'Miễn phí bản Standard 0đ': 'Free Standard Plan (0đ)',
+    'Xuất ảnh hàng loạt không tốn credit': 'Unlimited Batch Exports · Zero Credits',
+    'Làm mịn da giữ lỗ chân lông': 'Natural Skin Smoothing · Pores Kept',
+    '111+ Màu ảnh cưới & nhập Preset .XMP / LUT': '111+ Wedding Looks & .XMP / .CUBE Import',
+    'Nhanh gấp nhiều lần chỉnh tay': 'Way Faster Than Manual Edits',
+    'Phần mềm chỉnh ảnh hàng loạt tối ưu cho thợ ảnh & studio Việt.':
+      'Batch photo editing optimized for photographers and studios.',
+    'Từ khâu lọc hàng nghìn tấm ảnh chụp về, cân sáng đồng loạt, retouch da mặt cho đến xuất file nét căng đăng Facebook — mọi bước đều gói gọn trong DEVSTU.':
+      'From culling thousands of shoot photos, batch exposure matching, and facial skin retouching to crisp sRGB social exports — everything runs inside DEVSTU.',
+    'Mở ảnh RAW & Xuất hàng loạt': '16-Bit RAW Decode & Batch Export',
+    'Đọc thẳng file RAW máy ảnh, chạy mượt cả trên laptop không card rời':
+      'Opens camera RAW files natively, fast even on laptops without a dGPU',
+    'Mở trực tiếp ảnh gốc Canon (.CR3), Sony (.ARW), Nikon (.NEF), Fujifilm (.RAF) và ảnh iPhone (.HEIC) ở chuẩn 16-bit. Tự động tận dụng GPU/CPU sẵn có để xuất hàng trăm ảnh trong chớp mắt.':
+      'Directly reads Canon (.CR3), Sony (.ARW), Nikon (.NEF), Fujifilm (.RAF), and iPhone (.HEIC) at 16-bit precision. Automatically leverages your GPU/CPU to export hundreds of photos rapidly.',
+    'Lọc ảnh hỏng tự động': 'Smart AI Culling',
+    'Lọc ảnh mờ, out nét & nhắm mắt trong vài giây':
+      'Filter blurry, out-of-focus & closed-eye shots in seconds',
+    'Tự động chấm điểm độ nét khuôn mặt, gom ảnh chụp trùng và tách riêng ảnh nhắm mắt sau buổi chụp. Bấm thử bộ lọc bên dưới:':
+      'Automatically scores facial sharpness, groups duplicates, and flags blinks after a shoot. Try filtering below:',
+    'Chỉnh màu tự động 1 chạm': 'One-Click Color Grading',
+    'Blend màu Ảnh cưới, Kỷ yếu, Áo dài & Ngoại cảnh':
+      'Color presets for Wedding, Yearbook, Ao Dai & Outdoor',
+    'Chọn đúng thể loại buổi chụp — AI tự cứu cháy sáng váy cưới trắng, làm trong trẻo màu nắng ngoại cảnh và khử ám xanh lá lên da mặt.':
+      'Choose your shoot type — AI recovers white dress highlights, keeps outdoor daylight fresh, and neutralizes green skin casts.',
+    'Chuẩn màu mạng xã hội & In lab': 'Social Media & Print sRGB Calibration',
+    'Xuất ảnh đăng Facebook, Zalo giữ nguyên màu & độ nét':
+      'Export photos for Facebook & Zalo with accurate colors',
+    'Tự động nhúng chuẩn màu sRGB quốc tế khi xuất JPEG, PNG hoặc TIFF 16-bit — chấm dứt lỗi ảnh chỉnh đẹp trên máy nhưng đăng mạng bị nhợt xám.':
+      'Automatically embeds sRGB ICC profiles on JPEG, PNG, or 16-bit TIFF export — preventing dull, washed-out social uploads.',
+    'Ảnh thẻ & Studio chuyên nghiệp': 'ID Photos & Studio Backdrops',
+    'Thay phông ảnh thẻ, phông studio & đổi 13 màu tóc':
+      'Swap ID/studio backdrops & apply 13 salon hair colors',
+    'Tự động tách nền giữ nguyên từng sợi tóc mai, ghép phông xanh/trắng ảnh thẻ chuẩn kích thước và nhận diện riêng Nam, Nữ, Trẻ em, Người lớn tuổi.':
+      'Cleanly segments hair wisps, swaps blue/white ID or studio backdrops, and adapts retouching per Male, Female, Child & Elder subjects.',
+    'Retouch chân dung tự nhiên': 'Natural Portrait Retouching',
+    'Làm mịn da AI, xóa mụn & quầng thâm': 'AI skin smoothing & blemish removal,',
+    'giữ nguyên vân da thật.': 'real pore texture preserved.',
+    'Khác với các app làm mịn khiến mặt bị phẳng lì như nhựa, công nghệ tách tần số AI của DEVSTU chỉ nhặt sạch mụn, vết thâm, bóng dầu và rãnh cười nhưng vẫn giữ sắc nét từng lỗ chân lông và sợi lông mi.':
+      'Unlike plastic airbrushing apps, DEVSTU AI Frequency Separation clears blemishes, shine, and laugh lines while keeping skin pores and eyelashes crisp.',
+    'Bộ công cụ hậu kỳ AI 4 trong 1': '4-in-1 On-Device AI Suite',
+    'Xóa vật thể, xóa phông, thay bầu trời & khử nhiễu ảnh thiếu sáng.':
+      'Object erase, optical bokeh, sky swap & low-light AI denoise.',
+    'Xóa người thừa trong ảnh du lịch, tạo hiệu ứng xóa phông ống kính khẩu lớn, ghép mây hoàng hôn tự nhiên và cứu ảnh chụp tối bị hạt nhiễu ISO cao ngay trên cùng một phần mềm.':
+      'Erase unwanted passersby, add natural lens bokeh, blend sunset skies, and recover noisy high-ISO shots all inside one app.',
+    'Kho màu Blend & Preset miễn phí': 'Free Color Presets & LUT Vault',
+    'Tải 8 bộ màu LUT .CUBE miễn phí & chia sẻ công thức màu qua link.':
+      'Download 8 free .CUBE LUTs & share color looks via link.',
+    'Tiết kiệm chi phí cho thợ ảnh': 'Built to Save Photographers Money',
+    'Chỉnh ảnh AI Offline không cần mạng — Không tốn tiền mua credit từng tấm.':
+      'Offline AI editing — Zero per-photo export credits.',
+    'Không lo lộ ảnh gốc của khách hàng và không tốn vài nghìn đồng cho mỗi tấm ảnh xuất ra. Bản Standard miễn phí trọn đời, hoặc mở khóa trọn bộ AI vĩnh viễn chỉ bằng giá một ly cà phê.':
+      'Keep client RAWs private with zero per-export credit charges. Start free forever on Standard, or unlock the full AI suite permanently for a one-time payment.',
+    'Phần mềm chỉnh ảnh AI DEVSTU có miễn phí không?':
+      'Is the DEVSTU AI photo editor free to use?',
+    'Có. Phiên bản DEVSTU Standard hoàn toàn miễn phí (0đ trọn đời), không giới hạn số lượng ảnh xuất hàng loạt, hỗ trợ mở file RAW 16-bit, làm mịn da xóa mụn cơ bản, 111+ bộ màu và nhập Preset Lightroom (.xmp) / LUT (.cube). Khi cần mở khóa toàn bộ công cụ AI nâng cao, bạn mới nâng cấp gói Pro (19.000đ/năm hoặc 39.000đ vĩnh viễn).':
+      'Yes. DEVSTU Standard is completely free (0đ lifetime) with unlimited batch exports, 16-bit RAW support, basic blemish retouch, 111+ looks, and Lightroom .xmp / .cube LUT import. Pro (19,000đ/yr or 39,000đ lifetime) unlocks advanced AI tools.',
+    'Làm mịn da bằng AI trong DEVSTU có bị bệt da, mất chi tiết không?':
+      'Does AI skin smoothing in DEVSTU make skin look blurry or plastic?',
+    'Không. DEVSTU tách riêng lớp màu sắc và lớp vân da (Frequency Separation kết hợp 6 mô hình U-Net AI), giúp xóa sạch mụn, thâm, quầng mắt và nếp nhăn nhưng vẫn giữ nguyên lỗ chân lông tự nhiên, chân mày và sợi tóc thật.':
+      'No. DEVSTU separates pigment from skin micro-texture using Frequency Separation + 6 U-Net AI models, clearing acne and shine while preserving authentic pores, brows, and hair strands.',
+    'Máy tính cấu hình yếu, không có card đồ họa rời có chạy được không?':
+      'Will DEVSTU run on a PC without a dedicated NVIDIA/AMD graphics card?',
+    'Chạy tốt. Phần mềm được tối ưu nhẹ cho Windows 10 và Windows 11 (64-bit), tự động chạy trên cả card đồ họa tích hợp (Intel/AMD onboard) lẫn card rời NVIDIA RTX. Bạn có thể bấm kiểm tra thử tốc độ máy ngay tại trang Tải xuống.':
+      'Yes. Engineered for Windows 10 & 11 (64-bit), DEVSTU adapts seamlessly across integrated graphics (Intel/AMD) and discrete RTX GPUs. Test your speed anytime on our Download page.',
+    'DEVSTU mở được đuôi ảnh RAW nào và có thêm được Preset Lightroom không?':
+      'Which RAW camera formats are supported, and can I import Lightroom Presets?',
+    'DEVSTU đọc trực tiếp hầu hết các định dạng ảnh RAW phổ biến như Canon (.CR2, .CR3), Sony (.ARW), Nikon (.NEF), Fujifilm (.RAF), ảnh iPhone (.HEIC) cùng JPEG/PNG/TIFF, đồng thời cho phép nhập thẳng file màu .xmp, .lrtemplate từ Lightroom và .cube từ Photoshop.':
+      'DEVSTU natively opens Canon (.CR2/.CR3), Sony (.ARW), Nikon (.NEF), Fujifilm (.RAF), iPhone (.HEIC), JPEG, PNG & TIFF, plus direct import of .xmp / .lrtemplate presets and .cube LUTs.',
+    'Ảnh của khách có bị tải lên mạng không và mua Key VietQR kích hoạt thế nào?':
+      'Are client photos uploaded online, and how does VietQR Key activation work?',
+    'Mọi quá trình chỉnh ảnh đều xử lý 100% offline ngay trên ổ cứng máy tính của bạn, rút mạng vẫn dùng bình thường. Khi thanh toán gói Pro qua VietQR, mã Key riêng sẽ được cấp tự động vào mục Lịch sử đơn hàng & Kho Key để bạn chủ động dán vào phần mềm bất cứ lúc nào.':
+      'All photo processing runs 100% offline on your PC—even with internet disconnected. Once paid via VietQR, your standalone Key appears in Order History & Key Vault to paste into DEVSTU Desktop whenever you like.',
+    'Tải phần mềm chỉnh ảnh AI DEVSTU miễn phí ngay hôm nay.':
+      'Download DEVSTU Free AI Photo Editor Today.',
+    'Cài đặt nhanh trên Windows 10/11, bắt đầu chỉnh màu và làm mịn da hàng loạt miễn phí 0đ — không cần thẻ ngân hàng, không giới hạn số ảnh xuất.':
+      'Quick setup on Windows 10/11 — start batch color grading and natural skin retouching for 0đ with no card required and unlimited exports.',
+    'Tải phần mềm chỉnh ảnh AI DEVSTU cho Windows':
+      'Download DEVSTU AI Photo Editor for Windows',
+    'Bộ cài chính thức cho Windows 10 & Windows 11 (64-bit) — tích hợp trọn bộ làm mịn da giữ vân da, xóa vật thể, thay phông ảnh thẻ, lọc ảnh mờ và 111+ màu ảnh cưới chạy offline 100% trên máy tính.':
+      'Official installer for Windows 10 & 11 (64-bit) — includes texture-preserving skin retouch, object erase, ID backdrops, smart culling & 111+ wedding color looks running 100% offline.',
 
     // 404 Page
     'Không tìm thấy trang': 'Page not found',
